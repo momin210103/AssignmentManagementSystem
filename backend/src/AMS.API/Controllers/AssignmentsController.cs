@@ -1,5 +1,6 @@
 using AMS.Application.Features.Assignments.Commands.CreateAssignment;
 using AMS.Application.Features.Assignments.Queries.GetAllAssignments;
+using AMS.Application.Features.Assignments.Queries.GetAssignmentById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,16 @@ public class AssignmentsController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         var result = await _mediator.Send(new GetAllAssignmentsQuery());
+
+        return Ok(result);
+    }
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var result = await _mediator.Send(new GetAssignmentByIdQuery(id));
+
+        if (result is null)
+            return NotFound();
 
         return Ok(result);
     }
