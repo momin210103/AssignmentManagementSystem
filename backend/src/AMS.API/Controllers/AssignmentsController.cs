@@ -1,4 +1,5 @@
 using AMS.Application.Features.Assignments.Commands.CreateAssignment;
+using AMS.Application.Features.Assignments.Commands.UpdateAssignment;
 using AMS.Application.Features.Assignments.Queries.GetAllAssignments;
 using AMS.Application.Features.Assignments.Queries.GetAssignmentById;
 using MediatR;
@@ -38,6 +39,17 @@ public class AssignmentsController : ControllerBase
 
         if (result is null)
             return NotFound();
+
+        return Ok(result);
+    }
+    [Authorize(Roles = "Teacher,Admin")]
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(
+        Guid id,
+        [FromBody] UpdateAssignmentRequest request)
+    {
+        var result = await _mediator.Send(
+            new UpdateAssignmentCommand(id, request));
 
         return Ok(result);
     }

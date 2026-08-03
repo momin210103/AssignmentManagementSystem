@@ -1,4 +1,5 @@
 using AMS.Application.Features.Assignments.Commands.CreateAssignment;
+using AMS.Application.Features.Assignments.Commands.UpdateAssignment;
 using AMS.Application.Features.Assignments.DTOs;
 using AMS.Domain.Entities;
 using AutoMapper;
@@ -14,6 +15,7 @@ public class AssignmentMappingProfile : Profile
             .ForMember(
                 dest => dest.Status,
                 opt => opt.MapFrom(src => src.Status.ToString()));
+        CreateMap<UpdateAssignmentRequest, Assignment>();
     }
     
 }
