@@ -1,6 +1,7 @@
 using AMS.Application.Features.Assignments.Commands.CreateAssignment;
 using AMS.Application.Features.Assignments.Commands.DeleteAssignment;
 using AMS.Application.Features.Assignments.Commands.PublishAssignment;
+using AMS.Application.Features.Assignments.Commands.UnpublishAssignment;
 using AMS.Application.Features.Assignments.Commands.UpdateAssignment;
 using AMS.Application.Features.Assignments.Queries.GetAllAssignments;
 using AMS.Application.Features.Assignments.Queries.GetAssignmentById;
@@ -69,6 +70,14 @@ public class AssignmentsController : ControllerBase
     public async Task<IActionResult> Publish(Guid id)
     {
         var result = await _mediator.Send(new PublishAssignmentCommand(id));
+        return Ok(result);
+    }
+
+    [Authorize(Roles = "Teacher,Admin")]
+    [HttpPatch("{id:guid}/unpublish")]
+    public async Task<IActionResult> Unpublish(Guid id)
+    {
+        var result = await _mediator.Send(new UnPublishAssignmentCommand(id));
         return Ok(result);
     }
 
