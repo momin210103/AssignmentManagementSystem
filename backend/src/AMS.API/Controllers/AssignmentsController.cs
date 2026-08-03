@@ -18,7 +18,8 @@ public class AssignmentsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateAssignmentRequest request)
     {
-        var result = await _mediator.Send(request);
+        var command = new CreateAssignmentCommand(request);
+        var result = await _mediator.Send(command);
         return Ok(result);
     }
 

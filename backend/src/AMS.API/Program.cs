@@ -92,6 +92,8 @@ using (var scope = app.Services.CreateScope())
 {
     await RoleSeeder.SeedAsync(scope.ServiceProvider);
     await UserSeeder.SeedAsync(scope.ServiceProvider);
+    await SubjectSeeder.SeedAsync(scope.ServiceProvider);
+    await ClassSeeder.SeedAsync(scope.ServiceProvider);
 }
 
 if (app.Environment.IsDevelopment())
