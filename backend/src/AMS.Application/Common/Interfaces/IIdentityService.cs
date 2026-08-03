@@ -1,0 +1,13 @@
+namespace AMS.Application.Common.Interfaces;
+
+public interface IIdentityService
+{
+    Task<(bool Succeeded, Guid? UserId,IEnumerable<string> Errors)> RegisterAsync(
+        string fullName,
+        string email,
+        string password);
+
+    Task<string?> LoginAsync(
+        string email,
+        string password);
+}
