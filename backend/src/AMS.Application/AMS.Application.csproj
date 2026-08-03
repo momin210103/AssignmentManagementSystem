@@ -11,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Assignments\Commands\DeleteAssignment\" />
     <Folder Include="Features\Assignments\Validators\" />
     <Folder Include="Features\Authentication\DTOs\" />
     <Folder Include="Features\Authentication\Interfaces\" />

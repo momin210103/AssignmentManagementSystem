@@ -1,4 +1,5 @@
 using AMS.Application.Features.Assignments.Commands.CreateAssignment;
+using AMS.Application.Features.Assignments.Commands.DeleteAssignment;
 using AMS.Application.Features.Assignments.Commands.UpdateAssignment;
 using AMS.Application.Features.Assignments.Queries.GetAllAssignments;
 using AMS.Application.Features.Assignments.Queries.GetAssignmentById;
@@ -50,6 +51,14 @@ public class AssignmentsController : ControllerBase
     {
         var result = await _mediator.Send(
             new UpdateAssignmentCommand(id, request));
+
+        return Ok(result);
+    }
+    [Authorize(Roles = "Teacher,Admin")]
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var result = await _mediator.Send(new DeleteAssignmentCommand(id));
 
         return Ok(result);
     }
