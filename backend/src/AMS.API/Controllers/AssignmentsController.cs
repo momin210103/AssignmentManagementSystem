@@ -1,4 +1,5 @@
 using AMS.Application.Features.Assignments.Commands.CreateAssignment;
+using AMS.Application.Features.Assignments.Queries.GetAllAssignments;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,13 @@ public class AssignmentsController : ControllerBase
     {
         var command = new CreateAssignmentCommand(request);
         var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var result = await _mediator.Send(new GetAllAssignmentsQuery());
+
         return Ok(result);
     }
 

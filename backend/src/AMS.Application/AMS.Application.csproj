@@ -13,8 +13,6 @@
   <ItemGroup>
     <Folder Include="Features\Assignments\Commands\DeleteAssignment\" />
     <Folder Include="Features\Assignments\Commands\UpdateAssignment\" />
-    <Folder Include="Features\Assignments\DTOs\" />
-    <Folder Include="Features\Assignments\Queries\GetAllAssignments\" />
     <Folder Include="Features\Assignments\Queries\GetAssignmentById\" />
     <Folder Include="Features\Assignments\Validators\" />
     <Folder Include="Features\Authentication\DTOs\" />
