@@ -19,6 +19,8 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
 
         });
+        services.AddScoped<IApplicationDbContext>(provider =>
+            provider.GetRequiredService<ApplicationDbContext>());
 
         services
             .AddIdentityCore<ApplicationUser>(options =>
@@ -35,6 +37,8 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<ApplicationDbContext>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IIdentityService, IdentityService>();
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
         return services;
 
     }

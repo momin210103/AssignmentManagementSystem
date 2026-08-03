@@ -4,6 +4,7 @@ using AMS.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using AMS.Application.Common.Mappings;
 using AMS.Infrastructure.Persistence.Seed;
 using Microsoft.OpenApi.Models;
 
@@ -75,6 +76,7 @@ builder.Services
         };
     });
 builder.Services.AddAuthorization();
+builder.Services.AddAutoMapper(Assembly.Load("AMS.Application"));
 
 
 builder.Services.AddMediatR(cfg =>
