@@ -5,6 +5,8 @@ using AMS.Application.Features.Assignments.Commands.UnpublishAssignment;
 using AMS.Application.Features.Assignments.Commands.UpdateAssignment;
 using AMS.Application.Features.Assignments.Queries.GetAllAssignments;
 using AMS.Application.Features.Assignments.Queries.GetAssignmentById;
+using AMS.Application.Features.Assignments.Queries.GetMyAssignments;
+using AMS.Application.Features.Assignments.Queries.GetPublishedAssignments;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -78,6 +80,22 @@ public class AssignmentsController : ControllerBase
     public async Task<IActionResult> Unpublish(Guid id)
     {
         var result = await _mediator.Send(new UnPublishAssignmentCommand(id));
+        return Ok(result);
+    }
+    [Authorize]
+    [HttpGet("published")]
+    public async Task<IActionResult> GetPublishedAssignments()
+    {
+        var result = await _mediator.Send(new GetPublishedAssignmentsQuery());
+
+        return Ok(result);
+    }
+    [Authorize(Roles = "Teacher")]
+    [HttpGet("my")]
+    public async Task<IActionResult> GetMyAssignments()
+    {
+        var result = await _mediator.Send(new GetMyAssignmentsQuery());
+
         return Ok(result);
     }
 
