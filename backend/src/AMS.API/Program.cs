@@ -4,6 +4,7 @@ using AMS.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using AMS.Infrastructure.Persistence.Seed;
 using Microsoft.OpenApi.Models;
 
 
@@ -84,6 +85,12 @@ builder.Services.AddMediatR(cfg =>
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    await RoleSeeder.SeedAsync(scope.ServiceProvider);
+    await UserSeeder.SeedAsync(scope.ServiceProvider);
+}
 
 if (app.Environment.IsDevelopment())
 {

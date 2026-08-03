@@ -1,5 +1,6 @@
 using AMS.Application.Common;
 using AMS.Application.Common.Interfaces;
+using AMS.Domain.Constants;
 using Microsoft.AspNetCore.Identity;
 
 namespace AMS.Infrastructure.Identity;
@@ -34,6 +35,8 @@ public class IdentityService : IIdentityService
 
         if (result.Succeeded)
         {
+            await _userManager.AddToRoleAsync(user, Roles.Student);
+
             return (true, user.Id, Enumerable.Empty<string>());
         }
 
@@ -53,9 +56,12 @@ public class IdentityService : IIdentityService
 
         if (!validPassword)
             return null;
+        var roles = await _userManager.GetRolesAsync(user);
+        
 
         return await _jwtTokenGenerator.GenerateTokenAsync(
             user.Id,
-            user.Email!);
+            user.Email!,
+            roles);
     }
 }

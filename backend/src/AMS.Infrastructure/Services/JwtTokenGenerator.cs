@@ -16,7 +16,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
     {
         _jwtSettings = options.Value;
     }
-    public Task<string> GenerateTokenAsync(Guid userId, string email)
+    public Task<string> GenerateTokenAsync(Guid userId, string email,IList<string> roles)
     {
         var claims = new List<Claim>
         {
@@ -24,6 +24,10 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new(JwtRegisteredClaimNames.Email, email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
@@ -43,4 +47,6 @@ public class JwtTokenGenerator : IJwtTokenGenerator
 
         return Task.FromResult(jwt);
     }
+
+    
 }

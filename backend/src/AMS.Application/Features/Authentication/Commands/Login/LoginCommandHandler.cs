@@ -17,6 +17,8 @@ public sealed class LoginCommandHandler
         LoginCommand request,
         CancellationToken cancellationToken)
     {
+        
+
         var token = await _identityService.LoginAsync(
             request.Request.Email,
             request.Request.Password);
