@@ -7,4 +7,5 @@ public class StudentClass : BaseEntity
     public Guid StudentId { get; set; }
 
     public Guid ClassId { get; set; }
+    
 }

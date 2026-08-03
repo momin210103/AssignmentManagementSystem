@@ -18,4 +18,5 @@ public class Submission : BaseEntity
     public string? Feedback { get; set; }
 
     public SubmissionStatus Status { get; set; }
+    
 }

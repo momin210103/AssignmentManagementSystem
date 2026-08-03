@@ -23,4 +23,5 @@ public class Assignment : BaseEntity
     public Guid ClassId { get; set; }
 
     public Guid SubjectId { get; set; }
+    
 }
