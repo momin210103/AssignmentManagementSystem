@@ -2,6 +2,7 @@ using AMS.Application.Features.Submissions.Commands.CreateSubmission;
 using AMS.Application.Features.Submissions.Commands.GradeSubmission;
 using AMS.Application.Features.Submissions.Queries.GetAssignmentSubmissions;
 using AMS.Application.Features.Submissions.Queries.GetMySubmissions;
+using AMS.Application.Features.Submissions.Queries.GetMySubmissionsById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -57,6 +58,13 @@ public class SubmissionsController : ControllerBase
         var result = await _mediator.Send(
             new GradeSubmissionCommand(submissionId, request));
 
+        return Ok(result);
+    }
+    [Authorize(Roles = "Student")]
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var result = await _mediator.Send(new GetMySubmissionByIdQuery(id));
         return Ok(result);
     }
 }

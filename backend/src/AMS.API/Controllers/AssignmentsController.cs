@@ -7,6 +7,7 @@ using AMS.Application.Features.Assignments.Queries.GetAllAssignments;
 using AMS.Application.Features.Assignments.Queries.GetAssignmentById;
 using AMS.Application.Features.Assignments.Queries.GetMyAssignments;
 using AMS.Application.Features.Assignments.Queries.GetPublishedAssignments;
+using AMS.Application.Features.Submissions.Queries.GetMySubmissionsById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -98,5 +99,7 @@ public class AssignmentsController : ControllerBase
 
         return Ok(result);
     }
+
+    
 
 }
