@@ -1,5 +1,6 @@
 using AMS.Application.Features.Submissions.Commands.CreateSubmission;
 using AMS.Application.Features.Submissions.Commands.GradeSubmission;
+using AMS.Application.Features.Submissions.Commands.ResubmitSubmission;
 using AMS.Application.Features.Submissions.Queries.GetAssignmentSubmissions;
 using AMS.Application.Features.Submissions.Queries.GetMySubmissions;
 using AMS.Application.Features.Submissions.Queries.GetMySubmissionsById;
@@ -65,6 +66,17 @@ public class SubmissionsController : ControllerBase
     public async Task<IActionResult> GetById(Guid id)
     {
         var result = await _mediator.Send(new GetMySubmissionByIdQuery(id));
+        return Ok(result);
+    }
+    [Authorize(Roles = "Student")]
+    [HttpPut("{submissionId:guid}/resubmit")]
+    public async Task<IActionResult> Resubmit(
+        Guid submissionId,
+        [FromBody] ResubmitSubmissionRequest request)
+    {
+        var result = await _mediator.Send(
+            new ResubmitSubmissionCommand(submissionId, request));
+
         return Ok(result);
     }
 }
