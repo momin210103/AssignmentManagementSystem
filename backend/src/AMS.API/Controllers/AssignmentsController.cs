@@ -32,6 +32,7 @@ public class AssignmentsController : ControllerBase
         return Ok(result);
     }
     [HttpGet]
+    [Authorize(Roles = "Teacher,Admin")]
     public async Task<IActionResult> GetAll()
     {
         var result = await _mediator.Send(new GetAllAssignmentsQuery());

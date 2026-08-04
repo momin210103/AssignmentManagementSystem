@@ -102,4 +102,13 @@ public class IdentityService : IIdentityService
             PhoneNumber = x.PhoneNumber
         }).ToList();
     }
+
+    public async Task<Dictionary<Guid, string>> GetTeacherNamesAsync()
+    {
+        var teachers = await _userManager.GetUsersInRoleAsync("Teacher");
+
+        return teachers.ToDictionary(
+            x => x.Id,
+            x => x.FullName);
+    }
 }

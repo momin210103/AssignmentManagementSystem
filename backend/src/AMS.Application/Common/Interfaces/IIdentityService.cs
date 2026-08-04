@@ -18,4 +18,7 @@ public interface IIdentityService
     Task<List<TeacherDto>> GetTeachersAsync();
     
     Task<List<StudentDto>> GetStudentsAsync();
+    
+    Task<Dictionary<Guid, string>> GetTeacherNamesAsync();
+    
 }
