@@ -1,5 +1,4 @@
 using AMS.Application.Features.Authentication.Commands.Login;
-using AMS.Application.Features.Authentication.Commands.Register;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,13 +16,14 @@ public class AuthController : ControllerBase
         _sender = sender;
     }
 
-    [HttpPost("register")]
+    
+    /*[HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
         var result = await _sender.Send(new RegisterCommand(request));
 
         return Ok(result);
-    }
+    }*/
     
 
     [HttpPost("login")]

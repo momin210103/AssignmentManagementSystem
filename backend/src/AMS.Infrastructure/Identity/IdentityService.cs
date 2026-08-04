@@ -163,5 +163,17 @@ public class IdentityService : IIdentityService
         }
 
         return (false, null, result.Errors.Select(x => x.Description));
+        
+    }
+    public async Task<bool> DeleteUserAsync(Guid userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+
+        if (user is null)
+            return false;
+
+        var result = await _userManager.DeleteAsync(user);
+
+        return result.Succeeded;
     }
 }

@@ -35,4 +35,6 @@ public interface IIdentityService
             string email,
             string password);
     
+    Task<bool> DeleteUserAsync(Guid userId);
+    
 }

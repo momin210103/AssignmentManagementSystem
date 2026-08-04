@@ -34,6 +34,23 @@ public class CreateSubmissionCommandHandler : IRequestHandler<CreateSubmissionCo
         // Assignment Published?
         if (assignment.Status != AssignmentStatus.Published)
             throw new Exception("Assignment Not Published");
+        
+        // Student belongs to assignment class?
+        var studentClass = await _context.StudentClasses
+            .FirstOrDefaultAsync(
+                x => x.StudentId == _currentUserService.UserId,
+                cancellationToken);
+
+        if (studentClass is null)
+        {
+            throw new Exception("Student is not assigned to any class.");
+        }
+
+        if (studentClass.ClassId != assignment.ClassId)
+        {
+            throw new Exception(
+                "You cannot submit this assignment because it is not assigned to your class.");
+        }
         // Already Submitted?
         var alreadySubmitted = await _context.Submissions
             .AnyAsync(
