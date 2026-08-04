@@ -1,5 +1,6 @@
 using AMS.Application.Features.Admin.Subject.Commands.CreateSubject;
 using AMS.Application.Features.Admin.Subject.Queries.GetAllSubjects;
+using AMS.Application.Features.Admin.Subjects.Commands.DeleteSubject;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,5 +37,12 @@ public class SubjectsController : ControllerBase
         var result = await _mediator.Send(new GetAllSubjectsQuery());
         return Ok(result);
     }
+
+    [HttpDelete("delete")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var result = await _mediator.Send(new DeleteSubjectCommand(id));
+        return Ok(result);
+    }    
     
 }
