@@ -1,4 +1,5 @@
 using AMS.Application.Features.Admin.TeacherAssign.Commands.CreateTeacherAssign;
+using AMS.Application.Features.Admin.TeacherAssign.Commands.DeleteTeacherAssign;
 using AMS.Application.Features.Admin.TeacherAssign.Queries.GetAllTeacherAssign;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,14 @@ public class TeacherAssignController: ControllerBase
     {
         var result = await _mediator.Send(
             new GetAllTeacherAssignQuery());
+
+        return Ok(result);
+    }
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var result = await _mediator.Send(
+            new DeleteTeacherAssignCommand(id));
 
         return Ok(result);
     }
