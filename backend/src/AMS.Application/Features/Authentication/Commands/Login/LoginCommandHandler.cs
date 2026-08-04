@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using MediatR;
 
@@ -25,7 +26,7 @@ public sealed class LoginCommandHandler
 
         if (token is null)
         {
-            throw new Exception("Invalid email or password.");
+            throw new BadRequestException("Invalid email or password.");
         }
 
         return new LoginResponse

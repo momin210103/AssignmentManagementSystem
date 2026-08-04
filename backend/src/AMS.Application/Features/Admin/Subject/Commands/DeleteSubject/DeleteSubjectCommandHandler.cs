@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Application.Features.Admin.Subject.Commands.DeleteSubject;
 using MediatR;
@@ -26,7 +27,7 @@ public class DeleteSubjectCommandHandler
                 cancellationToken);
 
         if (subject is null)
-            throw new Exception("Subject not found.");
+            throw new NotFoundException("Subject not found.");
 
         // Business Rule:
         // Subject is assigned to any assignment?
@@ -36,7 +37,7 @@ public class DeleteSubjectCommandHandler
                 cancellationToken);
 
         if (assignmentExists)
-            throw new Exception(
+            throw new BadRequestException(
                 "This subject is already used in assignments and cannot be deleted.");
 
         // Business Rule:
@@ -47,7 +48,7 @@ public class DeleteSubjectCommandHandler
                 cancellationToken);
 
         if (teacherAssigned)
-            throw new Exception(
+            throw new BadRequestException(
                 "This subject is assigned to a teacher and cannot be deleted.");
 
         _context.Subjects.Remove(subject);

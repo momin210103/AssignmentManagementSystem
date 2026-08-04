@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Domain.Entities;
 using MediatR;
@@ -30,7 +31,7 @@ public class CreateStudentCommandHandler
                 cancellationToken);
 
         if (classroom is null)
-            throw new Exception("Class not found.");
+            throw new NotFoundException("Class not found.");
 
         // 2. Create student account
         var result = await _identityService.CreateStudentAsync(
@@ -40,7 +41,7 @@ public class CreateStudentCommandHandler
 
         if (!result.Succeeded)
         {
-            throw new Exception(string.Join(", ", result.Errors));
+            throw new BadRequestException(string.Join(", ", result.Errors));
         }
 
         // 3. Assign student to class

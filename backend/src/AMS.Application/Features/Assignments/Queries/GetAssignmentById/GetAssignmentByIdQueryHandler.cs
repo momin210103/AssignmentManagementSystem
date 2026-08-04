@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Application.Features.Assignments.DTOs;
 using AutoMapper;
@@ -31,7 +32,7 @@ public class GetAssignmentByIdQueryHandler
                 cancellationToken);
 
         if (assignment is null)
-            return null;
+            throw new NotFoundException("Assingment not found");
 
         return _mapper.Map<AssignmentDto>(assignment);
     }

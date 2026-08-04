@@ -4,6 +4,7 @@ using AMS.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using AMS.API.Middleware;
 using AMS.Application.Common.Mappings;
 using AMS.Infrastructure.Persistence.Seed;
 using Microsoft.OpenApi.Models;
@@ -103,7 +104,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 
 app.UseAuthorization();

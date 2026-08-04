@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,7 @@ public class DeleteTeacherAssignCommandHandler
                 cancellationToken);
 
         if (teacherAssign is null)
-            throw new Exception("Teacher assignment not found.");
+            throw new NotFoundException("Teacher assignment not found.");
 
         _context.TeacherSubjects.Remove(teacherAssign);
 

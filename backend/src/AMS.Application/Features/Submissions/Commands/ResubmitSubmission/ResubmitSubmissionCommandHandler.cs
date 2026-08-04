@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Domain.Enums;
 using MediatR;
@@ -30,11 +31,11 @@ public class ResubmitSubmissionCommandHandler
                 cancellationToken);
 
         if (submission is null)
-            throw new Exception("Submission not found.");
+            throw new NotFoundException("Submission not found.");
 
         // Only owner can resubmit
         if (submission.StudentId != _currentUserService.UserId)
-            throw new UnauthorizedAccessException(
+            throw new ForbiddenException(
                 "You are not allowed to update this submission.");
 
         // Assignment exists?
@@ -44,16 +45,16 @@ public class ResubmitSubmissionCommandHandler
                 cancellationToken);
 
         if (assignment is null)
-            throw new Exception("Assignment not found.");
+            throw new NotFoundException("Assignment not found.");
 
         // Deadline check
         if (DateTime.UtcNow > assignment.Deadline)
-            throw new Exception(
+            throw new BadRequestException(
                 "Submission deadline has passed. Resubmission is not allowed.");
 
         // Strict LMS
         if (submission.Status == SubmissionStatus.Reviewed)
-            throw new Exception(
+            throw new BadRequestException(
                 "This submission has already been reviewed and cannot be resubmitted.");
 
         // Update

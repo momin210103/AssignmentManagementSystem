@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Domain.Enums;
 using MediatR;
@@ -22,13 +23,13 @@ public class PublishAssignmentCommandHandler : IRequestHandler<PublishAssignment
                 x => x.Id == request.Id, cancellationToken);
         if (assignment is null)
         {
-            throw new Exception("Assignment not found");
+            throw new NotFoundException("Assignment not found");
         }
 
         if (assignment.TeacherId != _currentUserService.UserId)
-            throw new UnauthorizedAccessException("You are not allowed to publish this assignment");
+            throw new ForbiddenException("You are not allowed to publish this assignment");
         if (assignment.Status == AssignmentStatus.Published)
-            throw new Exception("Assignment is already published");
+            throw new BadRequestException("Assignment is already published");
         assignment.Status = AssignmentStatus.Published;
         await _context.SaveChangesAsync(cancellationToken);
         return new PublishAssignmentResponse

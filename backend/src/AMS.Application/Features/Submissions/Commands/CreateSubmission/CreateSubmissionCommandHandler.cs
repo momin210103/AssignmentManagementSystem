@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Domain.Entities;
 using AMS.Domain.Enums;
@@ -43,12 +44,12 @@ public class CreateSubmissionCommandHandler : IRequestHandler<CreateSubmissionCo
 
         if (studentClass is null)
         {
-            throw new Exception("Student is not assigned to any class.");
+            throw new ForbiddenException("Student is not assigned to any class.");
         }
 
         if (studentClass.ClassId != assignment.ClassId)
         {
-            throw new Exception(
+            throw new ForbiddenException(
                 "You cannot submit this assignment because it is not assigned to your class.");
         }
         // Already Submitted?
@@ -57,7 +58,7 @@ public class CreateSubmissionCommandHandler : IRequestHandler<CreateSubmissionCo
                 x => x.AssignmentId == request.Request.AssignmentId && x.StudentId == _currentUserService.UserId,
                 cancellationToken);
         if (alreadySubmitted)
-            throw new Exception("You have already submitted this assignment");
+            throw new BadRequestException("You have already submitted this assignment");
         var submission = _mapper.Map<Submission>(request.Request);
         
         submission.StudentId = _currentUserService.UserId;

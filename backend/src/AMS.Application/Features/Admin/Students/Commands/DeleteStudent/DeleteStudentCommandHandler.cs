@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +31,7 @@ public class DeleteStudentCommandHandler
 
         if (hasSubmissions)
         {
-            throw new Exception(
+            throw new BadRequestException(
                 "Cannot delete student because submissions exist.");
         }
 
@@ -51,7 +52,7 @@ public class DeleteStudentCommandHandler
 
         if (!deleted)
         {
-            throw new Exception("Student not found.");
+            throw new NotFoundException("Student not found.");
         }
 
         await _context.SaveChangesAsync(cancellationToken);

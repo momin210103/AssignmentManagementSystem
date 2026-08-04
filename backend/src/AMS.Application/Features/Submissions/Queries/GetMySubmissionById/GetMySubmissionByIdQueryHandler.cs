@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Application.Features.Submissions.DTOs;
 using AutoMapper;
@@ -30,7 +31,7 @@ public class GetMySubmissionByIdQueryHandler : IRequestHandler<GetMySubmissionBy
                      x.StudentId == _currentUserService.UserId,
                 cancellationToken);
         if (submission is null)
-            throw new Exception("Submission Not found");
+            throw new NotFoundException("Submission Not found");
         return _mapper.Map<SubmissionDto>(submission);
     }
 }

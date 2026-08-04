@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,7 @@ public class DeleteTeacherCommandHandler
 
         if (hasAssignments)
         {
-            throw new Exception(
+            throw new BadRequestException(
                 "Cannot delete teacher because assignments exist.");
         }
 
@@ -49,7 +50,7 @@ public class DeleteTeacherCommandHandler
 
         if (!deleted)
         {
-            throw new Exception("Teacher not found.");
+            throw new NotFoundException("Teacher not found.");
         }
 
         await _context.SaveChangesAsync(cancellationToken);

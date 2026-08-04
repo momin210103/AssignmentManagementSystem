@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Domain.Entities;
 using AutoMapper;
@@ -34,13 +35,13 @@ public class UpdateAssignmentCommandHandler
 
         if (assignment is null)
         {
-            throw new Exception("Assignment not found.");
+            throw new NotFoundException("Assignment not found.");
         }
 
         // Teacher can update only own assignment
         if (assignment.TeacherId != _currentUserService.UserId)
         {
-            throw new UnauthorizedAccessException(
+            throw new ForbiddenException(
                 "You are not allowed to update this assignment.");
         }
 

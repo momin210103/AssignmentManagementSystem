@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using MediatR;
 
@@ -24,7 +25,7 @@ public class CreateTeacherCommandHandler
 
         if (!result.Succeeded)
         {
-            throw new Exception(string.Join(", ", result.Errors));
+            throw new BadRequestException(string.Join(", ", result.Errors));
         }
 
         return new CreateTeacherResponse

@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Domain.Entities;
 using AMS.Domain.Enums;
@@ -34,7 +35,7 @@ public class CreateAssignmentCommandHandler : IRequestHandler<CreateAssignmentCo
 
         if (!isAssigned)
         {
-            throw new Exception(
+            throw new ForbiddenException(
                 "You are not assigned to this class and subject.");
         }
         var assignment = _mapper.Map<Assignment>(request.Request);

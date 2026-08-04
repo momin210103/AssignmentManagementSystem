@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Domain.Entities;
 using AutoMapper;
@@ -25,7 +26,7 @@ public class CreateTeacherAssignCommandHandler : IRequestHandler<CreateTeacherAs
         //1. Teacher Exists?
         var isTeacher = await _identityService.IsTeacherAsync(request.Request.TeacherId);
         if (!isTeacher)
-            throw new Exception("Selected user is not a teacher");
+            throw new NotFoundException("Selected user is not a teacher");
         // 3. Class exists?
         var classExists = await _context.ClassRooms
             .AnyAsync(
@@ -33,7 +34,7 @@ public class CreateTeacherAssignCommandHandler : IRequestHandler<CreateTeacherAs
                 cancellationToken);
 
         if (!classExists)
-            throw new Exception("Class not found.");
+            throw new NotFoundException("Class not found.");
 
         // 4. Subject exists?
         var subjectExists = await _context.Subjects
@@ -42,7 +43,7 @@ public class CreateTeacherAssignCommandHandler : IRequestHandler<CreateTeacherAs
                 cancellationToken);
 
         if (!subjectExists)
-            throw new Exception("Subject not found.");
+            throw new NotFoundException("Subject not found.");
 
         // 5. Duplicate mapping?
         var alreadyAssigned = await _context.TeacherSubjects
@@ -53,7 +54,7 @@ public class CreateTeacherAssignCommandHandler : IRequestHandler<CreateTeacherAs
                 cancellationToken);
 
         if (alreadyAssigned)
-            throw new Exception(
+            throw new BadRequestException(
                 "This teacher is already assigned to this class and subject.");
 
         // 6. Create mapping

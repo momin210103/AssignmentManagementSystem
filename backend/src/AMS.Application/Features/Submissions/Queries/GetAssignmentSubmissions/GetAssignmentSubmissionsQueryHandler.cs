@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Application.Features.Submissions.DTOs;
 using AutoMapper;
@@ -34,10 +35,10 @@ public class GetAssignmentSubmissionsQueryHandler
                 cancellationToken);
 
         if (assignment is null)
-            throw new Exception("Assignment not found.");
+            throw new NotFoundException("Assignment not found.");
 
         if (assignment.TeacherId != _currentUserService.UserId)
-            throw new UnauthorizedAccessException(
+            throw new ForbiddenException(
                 "You are not allowed to view these submissions.");
 
         var submissions = await _context.Submissions

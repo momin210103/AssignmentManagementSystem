@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Application.Features.Admin.Subject.Commands.CreateSubject;
 using AMS.Domain.Entities;
@@ -32,7 +33,7 @@ public class CreateSubjectCommandHandler
                 cancellationToken);
 
         if (exists)
-            throw new Exception("Subject already exists.");
+            throw new BadRequestException("Subject already exists.");
 
         // Map Request -> Entity
         var subject = _mapper.Map<Domain.Entities.Subject>(request.Request);

@@ -1,3 +1,4 @@
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Domain.Enums;
 using MediatR;
@@ -22,17 +23,17 @@ public class UnPublishAssignmentCommandHandler : IRequestHandler<UnPublishAssign
             .FirstOrDefaultAsync(x => x.Id == request.Id);
         if (assignment is null)
         {
-            throw new Exception("Assignment not found");
+            throw new NotFoundException("Assignment not found");
         }
 
         if (assignment.TeacherId != _currentUserService.UserId)
         {
-            throw new UnauthorizedAccessException("You are not allowed to Unpublish assignment");
+            throw new ForbiddenException("You are not allowed to Unpublish assignment");
         }
 
         if (assignment.Status == AssignmentStatus.Draft)
         {
-            throw new Exception("Assignment is draft");
+            throw new BadRequestException("Assignment is draft");
         }
 
         assignment.Status = AssignmentStatus.Draft;
