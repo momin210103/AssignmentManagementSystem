@@ -10,6 +10,7 @@ public interface IApplicationDbContext
     DbSet<Subject> Subjects { get; }
     DbSet<TeacherSubject> TeacherSubjects { get; }
     DbSet<ClassRoom> ClassRooms { get; }
+    DbSet<StudentClass> StudentClasses { get; }
     
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

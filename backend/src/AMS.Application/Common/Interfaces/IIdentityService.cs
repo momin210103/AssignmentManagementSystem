@@ -29,4 +29,10 @@ public interface IIdentityService
             string email,
             string password);
     
+    Task<(bool Succeeded, Guid? UserId, IEnumerable<string> Errors)>
+        CreateStudentAsync(
+            string fullName,
+            string email,
+            string password);
+    
 }
