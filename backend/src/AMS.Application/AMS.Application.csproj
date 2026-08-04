@@ -16,6 +16,8 @@
     <Folder Include="Features\Authentication\Interfaces\" />
     <Folder Include="Features\Authentication\Responses\" />
     <Folder Include="Features\Authentication\Validators\" />
+    <Folder Include="Features\Submissions\DTOs\" />
+    <Folder Include="Features\Submissions\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

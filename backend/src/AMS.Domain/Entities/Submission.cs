@@ -10,6 +10,8 @@ public class Submission : BaseEntity
     public Guid StudentId { get; set; }
 
     public string Answer { get; set; } = string.Empty;
+    
+    public string? FileUrl { get; set; } = string.Empty;
 
     public DateTime SubmittedAt { get; set; }
 
@@ -18,5 +20,7 @@ public class Submission : BaseEntity
     public string? Feedback { get; set; }
 
     public SubmissionStatus Status { get; set; }
+    
+    public DateTime? ReviewedAt { get; set; }
     
 }
