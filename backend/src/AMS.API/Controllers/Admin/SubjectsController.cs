@@ -1,4 +1,5 @@
 using AMS.Application.Features.Admin.Subject.Commands.CreateSubject;
+using AMS.Application.Features.Admin.Subject.Queries.GetAllSubjects;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ public class SubjectsController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost]
+    [HttpPost("createsubject")]
     public async Task<IActionResult> Create(
         [FromBody] CreateSubjectRequest request)
     {
@@ -28,4 +29,12 @@ public class SubjectsController : ControllerBase
             new { id = result.Id },
             result);
     }
+
+    [HttpGet("getall")]
+    public async Task<IActionResult> GetAll()
+    {
+        var result = await _mediator.Send(new GetAllSubjectsQuery());
+        return Ok(result);
+    }
+    
 }
