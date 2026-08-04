@@ -120,4 +120,26 @@ public class IdentityService : IIdentityService
             x => x.Id,
             x => x.FullName);
     }
+
+    public async Task<(bool Succeeded, Guid? UserId, IEnumerable<string> Errors)> CreateTeacherAsync(string fullName, string email, string password)
+    {
+        var user = new ApplicationUser
+        {
+            Id = Guid.NewGuid(),
+            FullName = fullName,
+            UserName = email,
+            Email = email
+        };
+
+        var result = await _userManager.CreateAsync(user, password);
+
+        if (result.Succeeded)
+        {
+            await _userManager.AddToRoleAsync(user, Roles.Teacher);
+
+            return (true, user.Id, Enumerable.Empty<string>());
+        }
+
+        return (false, null, result.Errors.Select(x => x.Description));
+    }
 }

@@ -23,4 +23,10 @@ public interface IIdentityService
     
     Task<Dictionary<Guid, string>> GetStudentNamesAsync();
     
+    Task<(bool Succeeded, Guid? UserId, IEnumerable<string> Errors)>
+        CreateTeacherAsync(
+            string fullName,
+            string email,
+            string password);
+    
 }
