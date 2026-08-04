@@ -1,4 +1,5 @@
 using AMS.Application.Features.Submissions.Commands.CreateSubmission;
+using AMS.Application.Features.Submissions.Commands.GradeSubmission;
 using AMS.Application.Features.Submissions.Queries.GetAssignmentSubmissions;
 using AMS.Application.Features.Submissions.Queries.GetMySubmissions;
 using MediatR;
@@ -43,6 +44,18 @@ public class SubmissionsController : ControllerBase
     {
         var result = await _mediator.Send(
             new GetAssignmentSubmissionsQuery(assignmentId));
+
+        return Ok(result);
+    }
+    
+    [Authorize(Roles = "Teacher")]
+    [HttpPatch("{submissionId:guid}/grade")]
+    public async Task<IActionResult> Grade(
+        Guid submissionId,
+        [FromBody] GradeSubmissionRequest request)
+    {
+        var result = await _mediator.Send(
+            new GradeSubmissionCommand(submissionId, request));
 
         return Ok(result);
     }
