@@ -7,6 +7,7 @@ public interface IApplicationDbContext
 {
     DbSet<Assignment> Assignments { get; }
     DbSet<Submission> Submissions { get; }
+    DbSet<Subject> Subjects { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
