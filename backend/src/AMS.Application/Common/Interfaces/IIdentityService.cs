@@ -1,3 +1,4 @@
+using AMS.Application.Features.Admin.Users.Queries.GetStudents;
 using AMS.Application.Features.Admin.Users.Queries.GetTeachers;
 
 namespace AMS.Application.Common.Interfaces;
@@ -15,4 +16,6 @@ public interface IIdentityService
     Task<bool> IsTeacherAsync(Guid userId);
     
     Task<List<TeacherDto>> GetTeachersAsync();
+    
+    Task<List<StudentDto>> GetStudentsAsync();
 }

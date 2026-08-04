@@ -3,6 +3,7 @@ using AMS.Domain.Entities;
 using AMS.Domain.Enums;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace AMS.Application.Features.Assignments.Commands.CreateAssignment;
 
@@ -23,6 +24,19 @@ public class CreateAssignmentCommandHandler : IRequestHandler<CreateAssignmentCo
 
     public async Task<CreateAssignmentResponse> Handle(CreateAssignmentCommand request, CancellationToken cancellationToken)
     {
+        // Check teacher assignment
+        var isAssigned = await _context.TeacherSubjects
+            .AnyAsync(x =>
+                    x.TeacherId == _currentUserService.UserId &&
+                    x.ClassId == request.Request.ClassId &&
+                    x.SubjectId == request.Request.SubjectId,
+                cancellationToken);
+
+        if (!isAssigned)
+        {
+            throw new Exception(
+                "You are not assigned to this class and subject.");
+        }
         var assignment = _mapper.Map<Assignment>(request.Request);
         
         assignment.TeacherId = _currentUserService.UserId;

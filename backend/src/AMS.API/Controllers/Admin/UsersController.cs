@@ -1,3 +1,4 @@
+using AMS.Application.Features.Admin.Users.Queries.GetStudents;
 using AMS.Application.Features.Admin.Users.Queries.GetTeachers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -18,6 +19,14 @@ public class UsersController :  ControllerBase
     public async Task<IActionResult> GetTeachers()
     {
         var result = await _mediator.Send(new GetTeachersQuery());
+
+        return Ok(result);
+    }
+    
+    [HttpGet("students")]
+    public async Task<IActionResult> GetStudents()
+    {
+        var result = await _mediator.Send(new GetStudentsQuery());
 
         return Ok(result);
     }

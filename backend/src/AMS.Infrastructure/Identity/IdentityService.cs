@@ -1,5 +1,6 @@
 using AMS.Application.Common;
 using AMS.Application.Common.Interfaces;
+using AMS.Application.Features.Admin.Users.Queries.GetStudents;
 using AMS.Application.Features.Admin.Users.Queries.GetTeachers;
 using AMS.Domain.Constants;
 using Microsoft.AspNetCore.Identity;
@@ -86,6 +87,19 @@ public class IdentityService : IIdentityService
             Id = x.Id,
             FullName = x.FullName,
             Email = x.Email!
+        }).ToList();
+        
+    }
+    public async Task<List<StudentDto>> GetStudentsAsync()
+    {
+        var students = await _userManager.GetUsersInRoleAsync("Student");
+
+        return students.Select(x => new StudentDto
+        {
+            Id = x.Id,
+            FullName = x.FullName,
+            Email = x.Email ?? string.Empty,
+            PhoneNumber = x.PhoneNumber
         }).ToList();
     }
 }
