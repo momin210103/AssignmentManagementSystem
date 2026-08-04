@@ -64,4 +64,16 @@ public class IdentityService : IIdentityService
             user.Email!,
             roles);
     }
+
+    public async Task<bool> IsTeacherAsync(Guid userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+
+        if (user is null)
+            return false;
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        return roles.Contains("Teacher");
+    }
 }

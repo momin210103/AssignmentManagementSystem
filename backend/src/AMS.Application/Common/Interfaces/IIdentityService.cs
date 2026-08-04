@@ -10,4 +10,5 @@ public interface IIdentityService
     Task<string?> LoginAsync(
         string email,
         string password);
+    Task<bool> IsTeacherAsync(Guid userId);
 }
