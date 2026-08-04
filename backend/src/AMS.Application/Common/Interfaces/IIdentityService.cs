@@ -21,4 +21,6 @@ public interface IIdentityService
     
     Task<Dictionary<Guid, string>> GetTeacherNamesAsync();
     
+    Task<Dictionary<Guid, string>> GetStudentNamesAsync();
+    
 }

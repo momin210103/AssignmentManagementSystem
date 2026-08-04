@@ -111,4 +111,13 @@ public class IdentityService : IIdentityService
             x => x.Id,
             x => x.FullName);
     }
+    
+    public async Task<Dictionary<Guid, string>> GetStudentNamesAsync()
+    {
+        var students = await _userManager.GetUsersInRoleAsync("Student");
+
+        return students.ToDictionary(
+            x => x.Id,
+            x => x.FullName);
+    }
 }
