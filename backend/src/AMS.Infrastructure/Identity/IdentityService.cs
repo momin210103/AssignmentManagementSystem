@@ -1,5 +1,6 @@
 using AMS.Application.Common;
 using AMS.Application.Common.Interfaces;
+using AMS.Application.Features.Admin.Users.Queries.GetTeachers;
 using AMS.Domain.Constants;
 using Microsoft.AspNetCore.Identity;
 
@@ -75,5 +76,16 @@ public class IdentityService : IIdentityService
         var roles = await _userManager.GetRolesAsync(user);
 
         return roles.Contains("Teacher");
+    }
+
+    public async Task<List<TeacherDto>> GetTeachersAsync()
+    {
+        var teachers = await _userManager.GetUsersInRoleAsync("Teacher");
+        return teachers.Select(x => new TeacherDto
+        {
+            Id = x.Id,
+            FullName = x.FullName,
+            Email = x.Email!
+        }).ToList();
     }
 }

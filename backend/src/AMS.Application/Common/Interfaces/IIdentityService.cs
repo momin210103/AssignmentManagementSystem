@@ -1,3 +1,5 @@
+using AMS.Application.Features.Admin.Users.Queries.GetTeachers;
+
 namespace AMS.Application.Common.Interfaces;
 
 public interface IIdentityService
@@ -11,4 +13,6 @@ public interface IIdentityService
         string email,
         string password);
     Task<bool> IsTeacherAsync(Guid userId);
+    
+    Task<List<TeacherDto>> GetTeachersAsync();
 }
