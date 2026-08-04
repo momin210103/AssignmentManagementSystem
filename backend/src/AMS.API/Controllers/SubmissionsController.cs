@@ -1,4 +1,5 @@
 using AMS.Application.Features.Submissions.Commands.CreateSubmission;
+using AMS.Application.Features.Submissions.Queries.GetAssignmentSubmissions;
 using AMS.Application.Features.Submissions.Queries.GetMySubmissions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -32,6 +33,16 @@ public class SubmissionsController : ControllerBase
     public async Task<IActionResult> GetMySubmissions()
     {
         var result = await _mediator.Send(new GetMySubmissionsQuery());
+
+        return Ok(result);
+    }
+    [Authorize(Roles = "Teacher")]
+    [HttpGet("/api/assignments/{assignmentId:guid}/submissions")]
+    public async Task<IActionResult> GetAssignmentSubmissions(
+        Guid assignmentId)
+    {
+        var result = await _mediator.Send(
+            new GetAssignmentSubmissionsQuery(assignmentId));
 
         return Ok(result);
     }

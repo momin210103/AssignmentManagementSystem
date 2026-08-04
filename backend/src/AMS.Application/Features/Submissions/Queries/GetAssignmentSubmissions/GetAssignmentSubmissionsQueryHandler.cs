@@ -1,0 +1,51 @@
+using AMS.Application.Common.Interfaces;
+using AMS.Application.Features.Submissions.DTOs;
+using AutoMapper;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
+namespace AMS.Application.Features.Submissions.Queries.GetAssignmentSubmissions;
+
+public class GetAssignmentSubmissionsQueryHandler
+    : IRequestHandler<GetAssignmentSubmissionsQuery, List<SubmissionDto>>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+    private readonly ICurrentUserService _currentUserService;
+
+    public GetAssignmentSubmissionsQueryHandler(
+        IApplicationDbContext context,
+        IMapper mapper,
+        ICurrentUserService currentUserService)
+    {
+        _context = context;
+        _mapper = mapper;
+        _currentUserService = currentUserService;
+    }
+
+    public async Task<List<SubmissionDto>> Handle(
+        GetAssignmentSubmissionsQuery request,
+        CancellationToken cancellationToken)
+    {
+        var assignment = await _context.Assignments
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                x => x.Id == request.AssignmentId,
+                cancellationToken);
+
+        if (assignment is null)
+            throw new Exception("Assignment not found.");
+
+        if (assignment.TeacherId != _currentUserService.UserId)
+            throw new UnauthorizedAccessException(
+                "You are not allowed to view these submissions.");
+
+        var submissions = await _context.Submissions
+            .AsNoTracking()
+            .Where(x => x.AssignmentId == request.AssignmentId)
+            .OrderByDescending(x => x.SubmittedAt)
+            .ToListAsync(cancellationToken);
+
+        return _mapper.Map<List<SubmissionDto>>(submissions);
+    }
+}
