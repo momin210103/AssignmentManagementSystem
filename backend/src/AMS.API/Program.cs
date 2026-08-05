@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using AMS.API.Middleware;
+using AMS.Application.Common.Behaviors;
 using AMS.Application.Common.Mappings;
 using AMS.Infrastructure.Persistence.Seed;
+using FluentValidation;
+using MediatR;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -85,6 +88,12 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(Assembly.Load("AMS.Application"));
 });
+
+builder.Services.AddValidatorsFromAssembly(
+    Assembly.Load("AMS.Application"));
+builder.Services.AddTransient(
+    typeof(IPipelineBehavior<,>),
+    typeof(ValidationBehavior<,>));
 
 // Serilog Configure
 builder.Host.UseSerilog((context, configuration) =>

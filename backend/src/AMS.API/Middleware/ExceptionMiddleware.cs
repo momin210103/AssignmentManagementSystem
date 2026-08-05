@@ -38,14 +38,30 @@ public class ExceptionMiddleware
             BadRequestException => StatusCodes.Status400BadRequest,
             UnauthorizedException => StatusCodes.Status401Unauthorized,
             ForbiddenException => StatusCodes.Status403Forbidden,
+            ValidationException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
         };
         context.Response.StatusCode = statusCode;
-        var response = new ErrorResponse
+        ErrorResponse errorResponse;
+        if (exception is ValidationException validationException)
         {
-            Success = false,
-            Message = exception.Message
-        };
-        await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            errorResponse = new ErrorResponse
+            {
+                Success = false,
+                Message = validationException.Message,
+                Errors = validationException.Errors
+            };
+        }
+        else
+        {
+            errorResponse = new ErrorResponse
+            {
+                Success = false,
+                Message = exception.Message
+            };
+            
+        }
+        
+        await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
     }
 }
