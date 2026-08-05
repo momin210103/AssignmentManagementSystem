@@ -1,5 +1,6 @@
 using AMS.Application.Features.Admin.Students.Commands.CreateStudent;
 using AMS.Application.Features.Admin.Students.Commands.DeleteStudent;
+using AMS.Application.Features.Admin.Students.Commands.UpdateStudent;
 using AMS.Application.Features.Admin.Teachers.Commands.CreateTeacher;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,13 @@ public class AdminStudentsController : ControllerBase
         var result = await _mediator.Send(
             new DeleteStudentCommand(id));
 
+        return Ok(result);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateStudentRequest request)
+    {
+        var result = await _mediator.Send(new UpdateStudentCommand(id,request));
         return Ok(result);
     }
 }

@@ -203,4 +203,32 @@ public class IdentityService : IIdentityService
             throw new BadRequestException(
                 string.Join(", ", result.Errors.Select(x => x.Description)));
     }
+
+    public async Task UpdateStudentAsync(
+        Guid studentId,
+        string fullName,
+        string email)
+    {
+        var student = await _userManager.FindByIdAsync(studentId.ToString());
+
+        if (student is null)
+            throw new NotFoundException("Student not found.");
+
+        var existingUser = await _userManager.FindByEmailAsync(email);
+
+        if (existingUser is not null && existingUser.Id != studentId)
+            throw new BadRequestException("Email already exists.");
+
+        student.FullName = fullName;
+        student.Email = email;
+        student.UserName = email;
+
+        var result = await _userManager.UpdateAsync(student);
+
+        if (!result.Succeeded)
+        {
+            throw new BadRequestException(
+                string.Join(", ", result.Errors.Select(x => x.Description)));
+        }
+    }
 }

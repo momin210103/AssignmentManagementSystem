@@ -36,7 +36,7 @@ public class AdminTeachersController : ControllerBase
 
         return Ok(result);
     }
-    [Authorize(Roles = "Admin")]
+    
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(
         Guid id,

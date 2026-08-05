@@ -42,4 +42,9 @@ public interface IIdentityService
         string fullName,
         string email);
     
+    Task UpdateStudentAsync(
+        Guid studentId,
+        string fullName,
+        string email);
+    
 }
