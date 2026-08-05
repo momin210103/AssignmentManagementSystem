@@ -1,5 +1,6 @@
 using System.Text.Json;
 using AMS.Application.Common.Exceptions;
+using AMS.Application.Common.Models;
 
 namespace AMS.API.Middleware;
 
@@ -37,9 +38,9 @@ public class ExceptionMiddleware
             _ => StatusCodes.Status500InternalServerError
         };
         context.Response.StatusCode = statusCode;
-        var response = new
+        var response = new ErrorResponse
         {
-            Sucess = false,
+            Success = false,
             Message = exception.Message
         };
         await context.Response.WriteAsync(JsonSerializer.Serialize(response));
