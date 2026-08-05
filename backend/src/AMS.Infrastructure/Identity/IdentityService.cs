@@ -1,4 +1,5 @@
 using AMS.Application.Common;
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Application.Features.Admin.Users.Queries.GetStudents;
 using AMS.Application.Features.Admin.Users.Queries.GetTeachers;
@@ -175,5 +176,31 @@ public class IdentityService : IIdentityService
         var result = await _userManager.DeleteAsync(user);
 
         return result.Succeeded;
+    }
+
+    public async Task UpdateTeacherAsync(
+        Guid teacherId,
+        string fullName,
+        string email)
+    {
+        var teacher = await _userManager.FindByIdAsync(teacherId.ToString());
+
+        if (teacher is null)
+            throw new NotFoundException("Teacher not found.");
+
+        var emailExists = await _userManager.FindByEmailAsync(email);
+
+        if (emailExists is not null && emailExists.Id != teacherId)
+            throw new BadRequestException("Email already exists.");
+
+        teacher.FullName = fullName;
+        teacher.Email = email;
+        teacher.UserName = email;
+
+        var result = await _userManager.UpdateAsync(teacher);
+
+        if (!result.Succeeded)
+            throw new BadRequestException(
+                string.Join(", ", result.Errors.Select(x => x.Description)));
     }
 }

@@ -37,4 +37,9 @@ public interface IIdentityService
     
     Task<bool> DeleteUserAsync(Guid userId);
     
+    Task UpdateTeacherAsync(
+        Guid teacherId,
+        string fullName,
+        string email);
+    
 }
