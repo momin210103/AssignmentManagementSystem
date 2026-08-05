@@ -8,6 +8,7 @@ using AMS.API.Middleware;
 using AMS.Application.Common.Mappings;
 using AMS.Infrastructure.Persistence.Seed;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -85,6 +86,11 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(Assembly.Load("AMS.Application"));
 });
 
+// Serilog Configure
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration.ReadFrom.Configuration(context.Configuration);
+});
 
 
 var app = builder.Build();
@@ -109,6 +115,8 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 app.MapControllers();
+Log.Information("Application started.");
 app.Run();
+/*Log.CloseAndFlush();*/
 
 
