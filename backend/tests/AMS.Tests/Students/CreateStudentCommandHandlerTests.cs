@@ -1,4 +1,5 @@
 using System.Net.Security;
+using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
 using AMS.Application.Features.Admin.Students.Commands.CreateStudent;
 using AMS.Domain.Entities;
@@ -82,5 +83,134 @@ public class CreateStudentCommandHandlerTests
             Times.Once);
 
     }
-    
+
+    [Fact]
+    public async Task Should_Throw_NotFoundException_When_Class_Does_Not_Exist()
+    {
+        // Arragne
+        var request = new CreateStudentRequest
+        {
+            FullName = "John Doe",
+            Email = "john@gmail.com",
+            Password = "Password@123",
+        };
+        _context.Should().NotBeNull();
+
+        _context.ClassRooms.Should().NotBeNull();
+
+        _context.StudentClasses.Should().NotBeNull();
+        // Act
+       
+        var command = new CreateStudentCommand(request);
+        Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
+        
+        // Act
+        await act.Should().ThrowAsync<NotFoundException>().WithMessage("Class not found.");
+        
+        _identityMock.Verify(
+            x => x.CreateStudentAsync(
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()),
+            Times.Never()
+            );
+
+    }
+
+    [Fact]
+    public async Task Should_Throw_BadRequestException_When_Identity_Creation_Fails()
+    {
+        // Arrange
+        var classId = Guid.NewGuid();
+        _context.ClassRooms.Add(new ClassRoom
+        {
+            Id = classId,
+            Name = "Class 10"
+
+        });
+        await _context.SaveChangesAsync();
+        
+        var request = new CreateStudentRequest
+        {
+            FullName = "John Doe",
+            Email = "momin@gmail.com",
+            Password = "Password@123",
+            ClassId = classId
+        };
+        var command  = new CreateStudentCommand(request);
+        var identityResult = (
+            Succeeded: false,
+            UserId: (Guid?)null,
+            Errors: new[] {"Identity creation failed."}
+        );
+        _identityMock
+            .Setup(x => x.CreateStudentAsync(
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+            .ReturnsAsync(identityResult);
+        // Act
+        Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
+        
+        // Assert
+        await act.Should()
+            .ThrowAsync<BadRequestException>()
+            .WithMessage("Identity creation failed.");
+        _identityMock.Verify(
+            x => x.CreateStudentAsync(
+                request.FullName,
+                request.Email,
+                request.Password),
+            Times.Once());
+        _context.StudentClasses.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Should_Create_StudentClass_Record_When_Request_Is_Valid()
+    {
+        var classId = Guid.NewGuid();
+        _context.ClassRooms.Add(new ClassRoom
+        {
+            Id = classId,
+            Name = "Class 10"
+        });
+        await _context.SaveChangesAsync();
+        var request = new CreateStudentRequest
+        {
+            FullName = "John Doe",
+            Email = "jonh@gmail.com",
+            Password = "Password@123",
+            ClassId = classId
+        };
+        var studentId = Guid.NewGuid();
+        var command = new CreateStudentCommand(request);
+        var identityResult = (
+            Succeeded: true,
+            UserId: (Guid?)studentId,
+            Errors: Enumerable.Empty<string>()
+        );
+        _identityMock.Setup(x => x.CreateStudentAsync(
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>()))
+            .ReturnsAsync(identityResult);
+        // Act
+        await _handler.Handle(command, CancellationToken.None);
+ 
+        // Assert
+
+        _context.StudentClasses.Should().HaveCount(1);
+
+        var studentClass = _context.StudentClasses.First();
+
+        studentClass.StudentId.Should().Be(studentId);
+        studentClass.ClassId.Should().Be(classId);
+
+        _identityMock.Verify(
+            x => x.CreateStudentAsync(
+                request.FullName,
+                request.Email,
+                request.Password),
+            Times.Once());
+    }
 }
