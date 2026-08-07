@@ -1,7 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import AuthLayout from "@/layouts/AuthLayout";
+import DashboardLayout from "@/layouts/DashboardLayout";
+
 import LoginPage from "@/features/auth/pages/LoginPage";
+import AdminDashboard from "@/features/admin/dashboard/pages/AdminDashboard";
+
 
 export const router = createBrowserRouter([
   {
@@ -11,6 +15,17 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <LoginPage />,
+      },
+    ],
+  },
+
+  {
+    path: "/admin",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "dashboard",
+        element: <AdminDashboard />,
       },
     ],
   },
