@@ -1,8 +1,10 @@
 using AMS.Application.Common;
 using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
+using AMS.Application.Common.Models;
 using AMS.Application.Features.Admin.Users.Queries.GetStudents;
 using AMS.Application.Features.Admin.Users.Queries.GetTeachers;
+using AMS.Application.Features.Authentication.Commands.Login;
 using AMS.Domain.Constants;
 using Microsoft.AspNetCore.Identity;
 
@@ -21,7 +23,7 @@ public class IdentityService : IIdentityService
         _jwtTokenGenerator = jwtTokenGenerator;
     }
 
-    public async Task<(bool Succeeded,Guid? UserId, IEnumerable<string> Errors)> RegisterAsync(
+    public async Task<(bool Succeeded, Guid? UserId, IEnumerable<string> Errors)> RegisterAsync(
         string fullName,
         string email,
         string password)
@@ -46,7 +48,7 @@ public class IdentityService : IIdentityService
         return (false, null, result.Errors.Select(x => x.Description));
     }
 
-    public async Task<string?> LoginAsync(
+    public async Task<LoginResult?> LoginAsync(
         string email,
         string password)
     {
@@ -59,13 +61,21 @@ public class IdentityService : IIdentityService
 
         if (!validPassword)
             return null;
-        var roles = await _userManager.GetRolesAsync(user);
-        
 
-        return await _jwtTokenGenerator.GenerateTokenAsync(
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var token = await _jwtTokenGenerator.GenerateTokenAsync(
             user.Id,
             user.Email!,
             roles);
+
+        return new LoginResult
+        {
+            Token = token,
+            FullName = user.FullName,
+            Email = user.Email!,
+            Role = roles.FirstOrDefault() ?? string.Empty
+        };
     }
 
     public async Task<bool> IsTeacherAsync(Guid userId)
@@ -89,7 +99,7 @@ public class IdentityService : IIdentityService
             FullName = x.FullName,
             Email = x.Email!
         }).ToList();
-        
+
     }
     public async Task<List<StudentDto>> GetStudentsAsync()
     {
@@ -112,7 +122,7 @@ public class IdentityService : IIdentityService
             x => x.Id,
             x => x.FullName);
     }
-    
+
     public async Task<Dictionary<Guid, string>> GetStudentNamesAsync()
     {
         var students = await _userManager.GetUsersInRoleAsync("Student");
@@ -164,7 +174,7 @@ public class IdentityService : IIdentityService
         }
 
         return (false, null, result.Errors.Select(x => x.Description));
-        
+
     }
     public async Task<bool> DeleteUserAsync(Guid userId)
     {

@@ -23,14 +23,19 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
             throw new Exception(string.Join(Environment.NewLine, result.Errors));
         }
 
-        var token = await _identityService.LoginAsync(
-            request.Request.Email,
-            request.Request.Password);
+        var loginResult = await _identityService.LoginAsync(
+    request.Request.Email,
+    request.Request.Password);
+
+        if (loginResult is null)
+        {
+            throw new Exception("User registered successfully but automatic login failed.");
+        }
 
         return new RegisterResponse
         {
             Email = request.Request.Email,
-            Token = token!,
+            Token = loginResult.Token,
             UserId = result.UserId!.Value,
         };
     }

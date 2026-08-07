@@ -1,3 +1,4 @@
+using AMS.Application.Common.Models;
 using AMS.Application.Features.Admin.Users.Queries.GetStudents;
 using AMS.Application.Features.Admin.Users.Queries.GetTeachers;
 
@@ -10,7 +11,7 @@ public interface IIdentityService
         string email,
         string password);
 
-    Task<string?> LoginAsync(
+    Task<LoginResult?> LoginAsync(
         string email,
         string password);
     Task<bool> IsTeacherAsync(Guid userId);

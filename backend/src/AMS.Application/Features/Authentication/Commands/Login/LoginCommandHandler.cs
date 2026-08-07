@@ -18,20 +18,21 @@ public sealed class LoginCommandHandler
         LoginCommand request,
         CancellationToken cancellationToken)
     {
-        
-
-        var token = await _identityService.LoginAsync(
+        var result = await _identityService.LoginAsync(
             request.Request.Email,
             request.Request.Password);
 
-        if (token is null)
+        if (result is null)
         {
             throw new BadRequestException("Invalid email or password.");
         }
 
         return new LoginResponse
         {
-            Token = token
+            Token = result.Token,
+            FullName = result.FullName,
+            Email = result.Email,
+            Role = result.Role
         };
     }
 }
