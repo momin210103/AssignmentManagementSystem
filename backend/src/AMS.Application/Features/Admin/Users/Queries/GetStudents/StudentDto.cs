@@ -9,4 +9,8 @@ public class StudentDto
     public string Email { get; set; } = string.Empty;
     
     public string? PhoneNumber { get; set; } = string.Empty;
+
+    public Guid ClassId { get; set; } 
+    public string ClassName { get; set; } = string.Empty;
+    public string Section { get; set; } = string.Empty;
 }
