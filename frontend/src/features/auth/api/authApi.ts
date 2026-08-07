@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios";
+import { api } from "@/api/axios";
 import type { LoginRequest, LoginResponse } from "../types/auth";
 
 export async function login(request: LoginRequest) {
