@@ -20,7 +20,7 @@ public class AdminStudentsController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     public async Task<IActionResult> Create(
         [FromBody] CreateStudentRequest request)
     {
@@ -41,7 +41,7 @@ public class AdminStudentsController : ControllerBase
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateStudentRequest request)
     {
-        var result = await _mediator.Send(new UpdateStudentCommand(id,request));
+        var result = await _mediator.Send(new UpdateStudentCommand(id, request));
         return Ok(result);
     }
 }

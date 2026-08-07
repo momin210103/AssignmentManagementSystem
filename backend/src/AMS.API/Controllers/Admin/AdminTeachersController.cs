@@ -19,7 +19,7 @@ public class AdminTeachersController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     public async Task<IActionResult> Create(
         [FromBody] CreateTeacherRequest request)
     {
