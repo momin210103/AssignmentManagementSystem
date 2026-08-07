@@ -4,9 +4,11 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Checkbox from "@/components/ui/Checkbox";
 import Input from "@/components/ui/Input";
+import { useNavigate } from "react-router-dom";
 
 import { useLoginForm } from "@/features/auth/hooks/useLoginForm";
 import { useLogin } from "@/features/auth/hooks/useLogin";
+import { useAuth } from "@/hooks/useAuth";
 import type { LoginFormData } from "@/features/auth/validation/loginSchema";
 
 export default function LoginForm() {
@@ -15,17 +17,36 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useLoginForm();
+
+  const auth = useAuth();
+
+  const navigate = useNavigate();
+
   const loginMutation = useLogin();
 
   const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await loginMutation.mutateAsync(data);
 
-      console.log(response);
-      alert("Login successful!");
+      auth.login(response.token, {
+        fullName: response.fullName,
+        email: response.email,
+        role: response.role,
+      });
 
-      // Next Step
-      // Navigate Dashboard
+      switch (response.role) {
+        case "Admin":
+          navigate("/admin/dashboard");
+          break;
+
+        case "Teacher":
+          navigate("/teacher/dashboard");
+          break;
+
+        default:
+          navigate("/student/dashboard");
+          break;
+      }
     } catch (error) {
       console.error(error);
     }
