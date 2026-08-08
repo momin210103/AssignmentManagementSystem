@@ -28,6 +28,11 @@ const menus = [
     icon: GraduationCap,
   },
   {
+    title: "Teacher Assign",
+    path: "/admin/teacher-assign",
+    icon: ClipboardList,
+  },
+  {
     title: "Subjects",
     path: "/admin/subjects",
     icon: BookOpen,

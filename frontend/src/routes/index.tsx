@@ -8,7 +8,7 @@ import AdminDashboard from "@/features/admin/dashboard/pages/AdminDashboard";
 import StudentListPage from "@/features/admin/students/pages/StudentListPage";
 import TeacherListPage from "@/features/admin/teachers/pages/TeacherListPage";
 import SubjectListPage from "@/features/admin/subjects/pages/SubjectListPage";
-
+import TeacherAssignListPage from "@/features/admin/teacher-assign/pages/TeacherAssignListPage";
 
 export const router = createBrowserRouter([
   {
@@ -39,11 +39,14 @@ export const router = createBrowserRouter([
         element: <TeacherListPage />,
       },
       {
+        path: "teacher-assign",
+        element: <TeacherAssignListPage />,
+      },
+      {
         path: "subjects",
         element: <SubjectListPage />,
       },
-      {
-      }
+      {},
     ],
   },
 ]);
