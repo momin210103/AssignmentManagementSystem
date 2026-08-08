@@ -9,6 +9,7 @@ import StudentListPage from "@/features/admin/students/pages/StudentListPage";
 import TeacherListPage from "@/features/admin/teachers/pages/TeacherListPage";
 import SubjectListPage from "@/features/admin/subjects/pages/SubjectListPage";
 import TeacherAssignListPage from "@/features/admin/teacher-assign/pages/TeacherAssignListPage";
+import AssignmentListPage from "@/features/admin/assignments/pages/AssignmentListPage";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
       {
         path: "subjects",
         element: <SubjectListPage />,
+      },
+      {
+        path: "assignments",
+        element: <AssignmentListPage />,
       },
       {},
     ],
