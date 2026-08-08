@@ -2,43 +2,30 @@ import { Eye, Pencil, Trash2 } from "lucide-react";
 
 import Card from "@/components/ui/Card";
 
+import { useStudents } from "../hooks/useStudents";
+
+import type { Student } from "../services/studentApi";
 type StudentTableProps = {
   search: string;
+  onEditStudent: (student: Student) => void;
 };
 
-const students = [
-  {
-    id: 1,
-    fullName: "Ariful Islam",
-    email: "ariful@gmail.com",
-    department: "CSE",
-    semester: "8th",
-    status: "Active",
-  },
-  {
-    id: 2,
-    fullName: "Nusrat Jahan",
-    email: "nusrat@gmail.com",
-    department: "EEE",
-    semester: "6th",
-    status: "Active",
-  },
-  {
-    id: 3,
-    fullName: "Tanvir Ahmed",
-    email: "tanvir@gmail.com",
-    department: "BBA",
-    semester: "4th",
-    status: "Inactive",
-  },
-];
+export default function StudentTable({ search,onEditStudent }: StudentTableProps) {
+  const { data: students = [], isLoading } = useStudents();
 
-export default function StudentTable({ search }: StudentTableProps) {
   const filteredStudents = students.filter(
     (student) =>
       student.fullName.toLowerCase().includes(search.toLowerCase()) ||
       student.email.toLowerCase().includes(search.toLowerCase()),
   );
+
+  if (isLoading) {
+    return (
+      <Card className="p-6">
+        <p className="text-center text-text-secondary">Loading students...</p>
+      </Card>
+    );
+  }
 
   return (
     <Card className="overflow-hidden">
@@ -54,15 +41,11 @@ export default function StudentTable({ search }: StudentTableProps) {
             </th>
 
             <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">
-              Department
+              Class
             </th>
 
             <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">
-              Semester
-            </th>
-
-            <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">
-              Status
+              Phone
             </th>
 
             <th className="px-6 py-4 text-center text-sm font-semibold text-text-secondary">
@@ -84,36 +67,34 @@ export default function StudentTable({ search }: StudentTableProps) {
               <td className="px-6 py-4 text-text-secondary">{student.email}</td>
 
               <td className="px-6 py-4 text-text-secondary">
-                {student.department}
+                {student.className} ({student.section})
               </td>
 
               <td className="px-6 py-4 text-text-secondary">
-                {student.semester}
-              </td>
-
-              <td className="px-6 py-4">
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                    student.status === "Active"
-                      ? "bg-success/10 text-success"
-                      : "bg-danger/10 text-danger"
-                  }`}
-                >
-                  {student.status}
-                </span>
+                {student.phoneNumber ?? "-"}
               </td>
 
               <td className="px-6 py-4">
                 <div className="flex justify-center gap-3">
-                  <button className="text-primary hover:opacity-80">
+                  <button
+                    className="text-primary transition hover:opacity-70"
+                    title="View"
+                  >
                     <Eye size={18} />
                   </button>
 
-                  <button className="text-warning hover:opacity-80">
+                  <button
+                    onClick={() => onEditStudent(student)}
+                    className="text-warning transition hover:opacity-70"
+                    title="Edit"
+                  >
                     <Pencil size={18} />
                   </button>
 
-                  <button className="text-danger hover:opacity-80">
+                  <button
+                    className="text-danger transition hover:opacity-70"
+                    title="Delete"
+                  >
                     <Trash2 size={18} />
                   </button>
                 </div>
@@ -121,9 +102,9 @@ export default function StudentTable({ search }: StudentTableProps) {
             </tr>
           ))}
 
-          {filteredStudents.length === 0 && (
+          {!isLoading && filteredStudents.length === 0 && (
             <tr>
-              <td colSpan={6} className="py-12 text-center text-text-muted">
+              <td colSpan={5} className="py-10 text-center text-text-muted">
                 No students found.
               </td>
             </tr>
