@@ -36,11 +36,19 @@ export type UpdateStudentRequest = {
   email?: string;
   classId?: string;
 };
-export const updateStudent = async(
-  id: string,
-  data: UpdateStudentRequest) =>{
-    const response = await api.put(`/admin/students/${id}`, data);
+export const updateStudent = async (id: string, data: UpdateStudentRequest) => {
+  const response = await api.put(`/admin/students/${id}`, data);
 
-    return response.data;
-  }
+  return response.data;
+};
 
+// Delete
+export type DeleteStudentRequest = {
+  id: string;
+};
+
+export const deleteStudent = async (id: string) => {
+  const response = await api.delete(`/admin/students/${id}`);
+
+  return response.data;
+};

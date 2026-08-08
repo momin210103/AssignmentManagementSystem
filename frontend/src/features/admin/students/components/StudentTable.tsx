@@ -5,14 +5,20 @@ import Card from "@/components/ui/Card";
 import { useStudents } from "../hooks/useStudents";
 
 import type { Student } from "../services/studentApi";
+
+import { useDeleteStudent } from "../hooks/useDeleteStudent";
+
 type StudentTableProps = {
   search: string;
   onEditStudent: (student: Student) => void;
 };
 
-export default function StudentTable({ search,onEditStudent }: StudentTableProps) {
+export default function StudentTable({
+  search,
+  onEditStudent,
+}: StudentTableProps) {
   const { data: students = [], isLoading } = useStudents();
-
+  const deleteStudentMutation = useDeleteStudent();
   const filteredStudents = students.filter(
     (student) =>
       student.fullName.toLowerCase().includes(search.toLowerCase()) ||
@@ -92,7 +98,17 @@ export default function StudentTable({ search,onEditStudent }: StudentTableProps
                   </button>
 
                   <button
-                    className="text-danger transition hover:opacity-70"
+                    onClick={() => {
+                      const confirmed = window.confirm(
+                        `Are you sure you want to delete ${student.fullName}?`,
+                      );
+
+                      if (confirmed) {
+                        deleteStudentMutation.mutate(student.id);
+                      }
+                    }}
+                    disabled={deleteStudentMutation.isPending}
+                    className="text-danger transition hover:opacity-70 disabled:opacity-50"
                     title="Delete"
                   >
                     <Trash2 size={18} />
