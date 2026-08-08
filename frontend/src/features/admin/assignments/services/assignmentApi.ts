@@ -3,14 +3,14 @@ import { api } from "@/api/axios";
 export interface Assignment {
   id: string;
   title: string;
-  description: string;
-  deadline: string;
-  maximumMarks: number;
-  status: number;
+  teacherName: string;
   teacherId: string;
   classId: string;
+  className: string;
   subjectId: string;
-  createdAt: string;
+  subjectName: string;
+  status: number;
+  deadline: string;
 }
 
 export const getAssignments = async (): Promise<Assignment[]> => {
