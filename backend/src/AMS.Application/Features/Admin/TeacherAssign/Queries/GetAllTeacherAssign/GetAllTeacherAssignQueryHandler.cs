@@ -9,17 +9,21 @@ public class GetAllTeacherAssignQueryHandler
     : IRequestHandler<GetAllTeacherAssignQuery, List<TeacherAssignDto>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IIdentityService _identityService;
 
     public GetAllTeacherAssignQueryHandler(
-        IApplicationDbContext context)
+        IApplicationDbContext context,
+        IIdentityService identityService)
     {
         _context = context;
+        _identityService = identityService;
     }
 
     public async Task<List<TeacherAssignDto>> Handle(
         GetAllTeacherAssignQuery request,
         CancellationToken cancellationToken)
     {
+        var teacherNames = await _identityService.GetTeacherNamesAsync();
         var teacherAssigns = await (
                 from ts in _context.TeacherSubjects
                 join classroom in _context.ClassRooms
@@ -43,8 +47,15 @@ public class GetAllTeacherAssignQueryHandler
                 })
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+        foreach (var assignment in teacherAssigns)
+        {
+            assignment.TeacherName =
+                teacherNames.GetValueOrDefault(
+                    assignment.TeacherId,
+                    "Unknown");
+        }
 
         return teacherAssigns;
-        
+
     }
 }

@@ -6,6 +6,8 @@ public class TeacherAssignDto
 
     public Guid TeacherId { get; set; }
 
+    public string TeacherName { get; set; } = string.Empty;
+
     public Guid ClassId { get; set; }
     public string ClassName { get; set; } = string.Empty;
 
