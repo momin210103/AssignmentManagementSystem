@@ -6,6 +6,7 @@ import DashboardLayout from "@/layouts/DashboardLayout";
 import LoginPage from "@/features/auth/pages/LoginPage";
 import AdminDashboard from "@/features/admin/dashboard/pages/AdminDashboard";
 import StudentListPage from "@/features/admin/students/pages/StudentListPage";
+import TeacherListPage from "@/features/admin/teachers/pages/TeacherListPage";
 
 
 export const router = createBrowserRouter([
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
         path: "students",
         element: <StudentListPage />,
       },
+      {
+        path: "teachers",
+        element: <TeacherListPage />,
+      }
     ],
   },
 ]);
