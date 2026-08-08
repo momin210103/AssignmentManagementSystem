@@ -12,8 +12,11 @@ public class AdminAssignmentDto
     
     public Guid TeacherId { get; set; }
 
+    public Guid ClassId { get; set; }
+
     public string ClassName { get; set; } = string.Empty;
 
+    public Guid SubjectId { get; set; }
     public string SubjectName { get; set; } = string.Empty;
 
     public AssignmentStatus Status { get; set; }
