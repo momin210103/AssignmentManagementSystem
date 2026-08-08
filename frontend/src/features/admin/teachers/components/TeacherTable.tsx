@@ -3,6 +3,7 @@ import { Eye, Pencil, Trash2 } from "lucide-react";
 import Card from "@/components/ui/Card";
 
 import { useTeachers } from "../hooks/useTeachers";
+import { useDeleteTeacher } from "../hooks/useDeleteTeacher";
 
 type TeacherTableProps = {
   search: string;
@@ -10,6 +11,8 @@ type TeacherTableProps = {
 
 export default function TeacherTable({ search }: TeacherTableProps) {
   const { data: teachers = [], isLoading } = useTeachers();
+
+  const deleteTeacherMutation = useDeleteTeacher();
 
   const filteredTeachers = teachers.filter(
     (teacher) =>
@@ -73,7 +76,18 @@ export default function TeacherTable({ search }: TeacherTableProps) {
                   </button>
 
                   <button
-                    className="text-danger transition hover:opacity-70"
+                    type="button"
+                    onClick={() => {
+                      const confirmed = window.confirm(
+                        `Are you sure you want to delete ${teacher.fullName}?`,
+                      );
+
+                      if (confirmed) {
+                        deleteTeacherMutation.mutate(teacher.id);
+                      }
+                    }}
+                    disabled={deleteTeacherMutation.isPending}
+                    className="text-danger transition hover:opacity-70 disabled:opacity-50"
                     title="Delete"
                   >
                     <Trash2 size={18} />

@@ -14,15 +14,16 @@ export const createTeacher = async (data: CreateTeacherRequest): Promise<void> =
   await api.post("/admin/teachers/create", data);
 };
 
-
-// export type Teacher = {
-//   id: string;
-//   fullName: string;
-//   email: string;
-// };
+// Get
 
 export const getTeachers = async (): Promise<Teacher[]> => {
   const response = await api.get("/admin/users/teachers");
 
   return response.data;
+};
+
+// Delete
+
+export const deleteTeacher = async (id: string): Promise<void> => {
+  await api.delete(`/admin/teachers/${id}`);
 };
