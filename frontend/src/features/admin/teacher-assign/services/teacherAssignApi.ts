@@ -9,6 +9,19 @@ export interface TeacherAssign {
   subjectId: string;
   subjectName: string;
 }
+
+export interface CreateTeacherAssignRequest {
+  teacherId: string;
+  classId: string;
+  subjectId: string;
+}
+
+// Post
+export const createTeacherAssign = async (data: CreateTeacherAssignRequest): Promise<TeacherAssign> => {
+  const response = await api.post("/admin/teacher-assign", data);
+  return response.data;
+}
+// Get all teacher assign
 export const getTeacherAssigns = async (): Promise<TeacherAssign[]> => {
   const response = await api.get("/admin/teacher-assign");
   return response.data;
