@@ -26,3 +26,8 @@ export const getTeacherAssigns = async (): Promise<TeacherAssign[]> => {
   const response = await api.get("/admin/teacher-assign");
   return response.data;
 }
+
+// Delete
+export const deleteTeacherAssign = async (id: string): Promise<void> => {
+  await api.delete(`/admin/teacher-assign/${id}`);
+}

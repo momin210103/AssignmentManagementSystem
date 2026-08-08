@@ -2,6 +2,7 @@ import Card from "@/components/ui/Card";
 
 import { useTeacherAssign } from "@/features/admin/teacher-assign/hooks/useTeacherAssign";
 
+import { useDeleteTeacherAssign } from "@/features/admin/teacher-assign/hooks/useDeleteTeacherAssign";
 type TeacherAssignTableProps = {
   search: string;
 };
@@ -9,11 +10,9 @@ type TeacherAssignTableProps = {
 export default function TeacherAssignTable({
   search,
 }: TeacherAssignTableProps) {
-  const {
-    data: assign = [],
-    isLoading,
-    isError,
-  } = useTeacherAssign();
+  const { data: assign = [], isLoading, isError } = useTeacherAssign();
+
+  const deleteAssignMutation = useDeleteTeacherAssign();
 
   const filteredAssign = assign.filter(
     (assign) =>
@@ -88,7 +87,23 @@ export default function TeacherAssignTable({
               <td className="px-6 py-4 text-center">
                 <button
                   type="button"
-                  className="text-danger transition hover:opacity-70"
+                  disabled={deleteAssignMutation.isPending}
+                  onClick={() => {
+                    const confirmed = window.confirm(
+                      "Are you sure you want to delete this teacher assignment?",
+                    );
+
+                    if (confirmed) {
+                      deleteAssignMutation.mutate(assign.id);
+                    }
+                  }}
+                  className="
+    text-danger
+    transition
+    hover:opacity-70
+    disabled:cursor-not-allowed
+    disabled:opacity-50
+  "
                 >
                   Delete
                 </button>
