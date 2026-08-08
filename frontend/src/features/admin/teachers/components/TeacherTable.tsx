@@ -2,14 +2,19 @@ import { Eye, Pencil, Trash2 } from "lucide-react";
 
 import Card from "@/components/ui/Card";
 
-import { useTeachers } from "../hooks/useTeachers";
 import { useDeleteTeacher } from "../hooks/useDeleteTeacher";
+import { useTeachers } from "../hooks/useTeachers";
+import type { Teacher } from "../types/teacher";
 
 type TeacherTableProps = {
   search: string;
+  onEditTeacher: (teacher: Teacher) => void;
 };
 
-export default function TeacherTable({ search }: TeacherTableProps) {
+export default function TeacherTable({
+  search,
+  onEditTeacher,
+}: TeacherTableProps) {
   const { data: teachers = [], isLoading } = useTeachers();
 
   const deleteTeacherMutation = useDeleteTeacher();
@@ -61,20 +66,26 @@ export default function TeacherTable({ search }: TeacherTableProps) {
 
               <td className="px-6 py-4">
                 <div className="flex justify-center gap-3">
+                  {/* View */}
                   <button
+                    type="button"
                     className="text-primary transition hover:opacity-70"
                     title="View"
                   >
                     <Eye size={18} />
                   </button>
 
+                  {/* Edit */}
                   <button
+                    type="button"
+                    onClick={() => onEditTeacher(teacher)}
                     className="text-warning transition hover:opacity-70"
                     title="Edit"
                   >
                     <Pencil size={18} />
                   </button>
 
+                  {/* Delete */}
                   <button
                     type="button"
                     onClick={() => {

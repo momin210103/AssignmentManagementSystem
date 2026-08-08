@@ -1,49 +1,102 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 
 import { useCreateTeacher } from "../hooks/useCreateTeacher";
-import {TeacherSchema, type TeacherFormData} from "../schemas/teacherSchema";
-import { zodResolver } from "@hookform/resolvers/zod/src/index.js";
+import { useUpdateTeacher } from "../hooks/useUpdateTeacher";
+
+import {
+  TeacherSchema,
+  UpdateTeacherSchema,
+  type TeacherFormData,
+} from "../schemas/teacherSchema";
 
 type TeacherFormProps = {
+  teacher?: {
+    id: string;
+    fullName: string;
+    email: string;
+  };
   onSuccess: () => void;
   onCancel: () => void;
 };
 
-  
-export default function TeacherForm({ onSuccess, onCancel }: TeacherFormProps) {
+export default function TeacherForm({
+  teacher,
+  onSuccess,
+  onCancel,
+}: TeacherFormProps) {
+  const isEdit = !!teacher;
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<TeacherFormData>({
-    resolver: zodResolver(TeacherSchema),
+  } = useForm({
+    resolver: zodResolver(isEdit ? UpdateTeacherSchema : TeacherSchema),
     defaultValues: {
       fullName: "",
       email: "",
       password: "",
     },
   });
-  
 
   const createTeacherMutation = useCreateTeacher();
+  const updateTeacherMutation = useUpdateTeacher();
+
+  useEffect(() => {
+    if (teacher) {
+      reset({
+        fullName: teacher.fullName,
+        email: teacher.email,
+        password: "",
+      });
+    } else {
+      reset({
+        fullName: "",
+        email: "",
+        password: "",
+      });
+    }
+  }, [teacher, reset]);
 
   const onSubmit = async (data: TeacherFormData) => {
     try {
-      await createTeacherMutation.mutateAsync(data);
-      alert("Teacher created successfully.");
+      if (isEdit && teacher) {
+        await updateTeacherMutation.mutateAsync({
+          id: teacher.id,
+          data: {
+            fullName: data.fullName,
+            email: data.email,
+          },
+        });
+
+        alert("Teacher updated successfully.");
+      } else {
+        await createTeacherMutation.mutateAsync({
+          fullName: data.fullName,
+          email: data.email,
+          password: data.password!,
+        });
+
+        alert("Teacher created successfully.");
+      }
 
       reset();
       onSuccess();
     } catch (error) {
-      console.error(error);
-      alert("Failed to create teacher.");
+      console.error("Teacher operation failed:", error);
+
+      alert(isEdit ? "Failed to update teacher." : "Failed to create teacher.");
     }
   };
+
+  const isSubmitting =
+    createTeacherMutation.isPending || updateTeacherMutation.isPending;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -51,13 +104,7 @@ export default function TeacherForm({ onSuccess, onCancel }: TeacherFormProps) {
         label="Full Name"
         placeholder="Enter full name"
         error={errors.fullName?.message}
-        {...register("fullName", {
-          required: "Full name is required.",
-          minLength: {
-            value: 3,
-            message: "Full name must be at least 3 characters.",
-          },
-        })}
+        {...register("fullName")}
       />
 
       <Input
@@ -65,32 +112,30 @@ export default function TeacherForm({ onSuccess, onCancel }: TeacherFormProps) {
         label="Email"
         placeholder="Enter email"
         error={errors.email?.message}
-        {...register("email", {
-          required: "Email is required.",
-        })}
+        {...register("email")}
       />
 
-      <Input
-        type="password"
-        label="Password"
-        placeholder="********"
-        error={errors.password?.message}
-        {...register("password", {
-          required: "Password is required.",
-          minLength: {
-            value: 6,
-            message: "Password must be at least 6 characters.",
-          },
-        })}
-      />
+      {!isEdit && (
+        <Input
+          type="password"
+          label="Password"
+          placeholder="********"
+          error={errors.password?.message}
+          {...register("password")}
+        />
+      )}
 
       <div className="flex justify-end gap-3">
         <Button type="button" variant="secondary" onClick={onCancel}>
           Cancel
         </Button>
 
-        <Button type="submit" disabled={createTeacherMutation.isPending}>
-          {createTeacherMutation.isPending ? "Saving..." : "Add Teacher"}
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting
+            ? "Saving..."
+            : isEdit
+              ? "Update Teacher"
+              : "Add Teacher"}
         </Button>
       </div>
     </form>

@@ -22,6 +22,21 @@ export const getTeachers = async (): Promise<Teacher[]> => {
   return response.data;
 };
 
+// Put
+
+export type UpdateTeacherRequest = {
+  fullName: string;
+  email: string;
+  // phoneNumber: string | null;
+};
+
+export const updateTeacher = async (
+  id: string,
+  data: UpdateTeacherRequest,
+): Promise<void> => {
+  await api.put(`/admin/teachers/${id}`, data);
+};
+
 // Delete
 
 export const deleteTeacher = async (id: string): Promise<void> => {
