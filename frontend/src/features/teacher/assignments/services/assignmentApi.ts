@@ -1,6 +1,11 @@
 import { api } from "@/api/axios";
 
-import type { CreateAssignmentRequest, TeacherAssignment, TeacherAssignmentOption } from "../types/assignment";
+import type {
+  CreateAssignmentRequest,
+  TeacherAssignment,
+  TeacherAssignmentOption,
+  UpdateAssignmentRequest,
+} from "../types/assignment";
 
 export async function getTeacherAssignments() {
   const response = await api.get<TeacherAssignment[]>("assignments/teacher");
@@ -10,22 +15,34 @@ export async function getTeacherAssignments() {
 
 // post
 
-export async function createTeacherAssignment(
-  data: CreateAssignmentRequest,
-) {
-  const response = await api.post<TeacherAssignment>(
-    "/assignments",
-    data,
+export async function createTeacherAssignment(data: CreateAssignmentRequest) {
+  const response = await api.post<TeacherAssignment>("/assignments", data);
+
+  return response.data;
+}
+
+// get
+export async function getTeacherAssignmentOptions() {
+  const response = await api.get<TeacherAssignmentOption[]>(
+    "/teacher/assignments/options",
   );
 
   return response.data;
 }
 
-// put
-export async function getTeacherAssignmentOptions() {
-  const response = await api.get<TeacherAssignmentOption[]>(
-    "/teacher/assignments/options",
-  );
+// Put
+export async function updateTeacherAssignment(
+  id: string,
+  data: UpdateAssignmentRequest,
+) {
+  const response = await api.put<TeacherAssignment>(`/assignments/${id}`, data);
+
+  return response.data;
+}
+
+// Get by Id
+export async function getAssignmentById(id: string) {
+  const response = await api.get<TeacherAssignment>(`/assignments/${id}`);
 
   return response.data;
 }

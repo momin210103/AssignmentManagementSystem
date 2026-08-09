@@ -1,6 +1,8 @@
 import Card from "@/components/ui/Card";
 
-import { useTeacherAssignments } from "@/features/teacher/assignments/hooks/useAssignment";
+import { useTeacherAssignments } from "@/features/teacher/assignments/hooks/useTeacherAssignment";
+import { Edit } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function AssignmentTable() {
   const {
@@ -8,6 +10,8 @@ export default function AssignmentTable() {
     isLoading,
     isError,
   } = useTeacherAssignments();
+
+  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -56,6 +60,9 @@ export default function AssignmentTable() {
               <th className="px-6 py-4 text-center text-sm font-semibold text-text-secondary">
                 Status
               </th>
+              <th className="px-6 py-4 text-center text-sm font-semibold text-text-secondary">
+                Actions
+              </th>
             </tr>
           </thead>
 
@@ -97,6 +104,18 @@ export default function AssignmentTable() {
                   >
                     {assignment.status}
                   </span>
+                </td>
+                <td className="px-6 py-4 text-center">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      navigate(`/teacher/assignments/${assignment.id}/edit`)
+                    }
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-text-secondary transition hover:bg-primary/10 hover:text-primary"
+                    title="Edit assignment"
+                  >
+                    <Edit size={17} />
+                  </button>
                 </td>
               </tr>
             ))}

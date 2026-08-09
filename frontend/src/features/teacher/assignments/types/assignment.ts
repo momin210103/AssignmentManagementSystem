@@ -26,3 +26,12 @@ export interface TeacherAssignmentOption {
   subjectId: string;
   subjectName: string;
 }
+
+export interface UpdateAssignmentRequest {
+  title: string;
+  description: string;
+  deadline: string;
+  maximumMarks: number;
+  classId: string;
+  subjectId: string;
+}

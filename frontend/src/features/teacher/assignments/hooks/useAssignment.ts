@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getTeacherAssignments } from "../services/assignmentApi";
+import { getAssignmentById } from "../services/assignmentApi";
 
-export function useTeacherAssignments() {
+export function useAssignment(id: string) {
   return useQuery({
-    queryKey: ["teacher-assignments"],
-    queryFn: getTeacherAssignments,
+    queryKey: ["assignment", id],
+    queryFn: () => getAssignmentById(id),
+    enabled: !!id,
   });
 }
