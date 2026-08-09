@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AMS.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/submissions")]
 public class SubmissionsController : ControllerBase
 {
     private readonly IMediator _mediator;

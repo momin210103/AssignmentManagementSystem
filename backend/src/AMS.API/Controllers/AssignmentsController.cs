@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AMS.API.Controllers;
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/assignments")]
 public class AssignmentsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -92,8 +92,9 @@ public class AssignmentsController : ControllerBase
 
         return Ok(result);
     }
+
     [Authorize(Roles = "Teacher")]
-    [HttpGet("my")]
+    [HttpGet("teacher")]
     public async Task<IActionResult> GetMyAssignments()
     {
         var result = await _mediator.Send(new GetMyAssignmentsQuery());
