@@ -7,6 +7,7 @@ using AMS.Application.Features.Assignments.Queries.GetAllAssignments;
 using AMS.Application.Features.Assignments.Queries.GetAssignmentById;
 using AMS.Application.Features.Assignments.Queries.GetMyAssignments;
 using AMS.Application.Features.Assignments.Queries.GetPublishedAssignments;
+using AMS.Application.Features.Assignments.Queries.GetStudentAssignments;
 using AMS.Application.Features.Submissions.Queries.GetMySubmissionsById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -100,6 +101,14 @@ public class AssignmentsController : ControllerBase
     {
         var result = await _mediator.Send(new GetMyAssignmentsQuery());
 
+        return Ok(result);
+    }
+
+    [Authorize(Roles = "Student")]
+    [HttpGet("student")]
+    public async Task<IActionResult> GetStudentAssignments()
+    {
+        var result = await _mediator.Send(new GetStudentAssignmentsQuery());
         return Ok(result);
     }
 
