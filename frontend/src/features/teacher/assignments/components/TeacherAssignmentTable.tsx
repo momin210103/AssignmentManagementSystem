@@ -176,7 +176,15 @@ export default function TeacherAssignmentTable({
                           type="button"
                           title="Publish assignment"
                           disabled={isPublishing}
-                          onClick={() => publishMutation.mutate(assignment.id)}
+                          onClick={() => {
+                            const confirmed = window.confirm(
+                              "Are you sure you want to publish this assignment?",
+                            );
+
+                            if (!confirmed) return;
+
+                            publishMutation.mutate(assignment.id);
+                          }}
                           className="
                             inline-flex
                             h-9
@@ -201,22 +209,28 @@ export default function TeacherAssignmentTable({
                           type="button"
                           title="Unpublish assignment"
                           disabled={isUnpublishing}
-                          onClick={() =>
-                            unpublishMutation.mutate(assignment.id)
-                          }
+                          onClick={() => {
+                            const confirmed = window.confirm(
+                              "Are you sure you want to unpublish this assignment?",
+                            );
+
+                            if (!confirmed) return;
+
+                            unpublishMutation.mutate(assignment.id);
+                          }}
                           className="
-                            inline-flex
-                            h-9
-                            w-9
-                            items-center
-                            justify-center
-                            rounded-lg
-                            text-warning
-                            transition
-                            hover:bg-warning/10
-                            disabled:cursor-not-allowed
-                            disabled:opacity-50
-                          "
+                              inline-flex
+                              h-9
+                              w-9
+                              items-center
+                              justify-center
+                              rounded-lg
+                              text-warning
+                              transition
+                              hover:bg-warning/10
+                              disabled:cursor-not-allowed
+                              disabled:opacity-50
+                            "
                         >
                           <EyeOff size={17} />
                         </button>
