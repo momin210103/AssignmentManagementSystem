@@ -5,10 +5,12 @@ import Button from "@/components/ui/Button";
 
 import AssignmentTable from "../components/TeacherAssignmentTable";
 import AssignmentToolbar from "../components/TeacherAssignmentToolbar";
+import { useNavigate } from "react-router-dom";
 
 export default function AssignmentListPage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
+  const navigate = useNavigate();
 
   return (
     <div className="space-y-6">
@@ -24,7 +26,11 @@ export default function AssignmentListPage() {
           </p>
         </div>
 
-        <Button type="button" leftIcon={<Plus size={18} />}>
+        <Button
+          type="button"
+          leftIcon={<Plus size={18} />}
+          onClick={() => navigate("/teacher/assignments/create")}
+        >
           Create Assignment
         </Button>
       </div>

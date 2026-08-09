@@ -13,6 +13,7 @@ import AssignmentListPage from "@/features/admin/assignments/pages/AssignmentLis
 import TeacherDashboard from "@/features/teacher/dashboard/pages/TeacherDashboard";
 import StudentDashboard from "@/features/student/dashboard/pages/StudentDashboard";
 import TeacherAssignmentListPage from "@/features/teacher/assignments/pages/TeacherAssignmentListPage";
+import TeacherCreateAssignmentPage from "@/features/teacher/assignments/pages/TeacherCreateAssignmentPage";
 
 export const router = createBrowserRouter([
   {
@@ -66,9 +67,13 @@ export const router = createBrowserRouter([
         element: <TeacherDashboard />,
       },
       {
-        path:"assignments",
+        path: "assignments",
         element: <TeacherAssignmentListPage />,
-      }
+      },
+      {
+        path: "assignments/create",
+        element: <TeacherCreateAssignmentPage />,
+      },
     ],
   },
   {
@@ -80,5 +85,5 @@ export const router = createBrowserRouter([
         element: <StudentDashboard />,
       },
     ],
-  }
+  },
 ]);

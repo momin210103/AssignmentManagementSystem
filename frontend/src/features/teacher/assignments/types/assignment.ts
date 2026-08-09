@@ -10,3 +10,19 @@ export interface TeacherAssignment {
   subjectId: string;
   createdAt: string;
 }
+
+export interface CreateAssignmentRequest {
+  title: string;
+  description: string;
+  deadline: string;
+  maximumMarks: number;
+  classId: string;
+  subjectId: string;
+}
+
+export interface TeacherAssignmentOption {
+  classId: string;
+  className: string;
+  subjectId: string;
+  subjectName: string;
+}
