@@ -1,10 +1,11 @@
-import { Edit, Eye, EyeOff } from "lucide-react";
+import { Edit, Eye, EyeOff, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import Card from "@/components/ui/Card";
 
 import { usePublishAssignment } from "@/features/teacher/assignments/hooks/usePublishAssignment";
 import { useUnpublishAssignment } from "@/features/teacher/assignments/hooks/useUnpublishAssignment";
+import { useDeleteAssignment } from "@/features/teacher/assignments/hooks/useDeleteAssignment";
 
 import type { TeacherAssignment } from "../types/assignment";
 
@@ -23,6 +24,7 @@ export default function TeacherAssignmentTable({
 
   const publishMutation = usePublishAssignment();
   const unpublishMutation = useUnpublishAssignment();
+  const deleteMutation = useDeleteAssignment();
 
   if (isLoading) {
     return (
@@ -235,6 +237,35 @@ export default function TeacherAssignmentTable({
                           <EyeOff size={17} />
                         </button>
                       )}
+                      <button
+                        type="button"
+                        title="Delete assignment"
+                        disabled={deleteMutation.isPending}
+                        onClick={() => {
+                          const confirmed = window.confirm(
+                            `Are you sure you want to delete "${assignment.title}"?`,
+                          );
+
+                          if (!confirmed) return;
+
+                          deleteMutation.mutate(assignment.id);
+                        }}
+                        className="
+    inline-flex
+    h-9
+    w-9
+    items-center
+    justify-center
+    rounded-lg
+    text-danger
+    transition
+    hover:bg-danger/10
+    disabled:cursor-not-allowed
+    disabled:opacity-50
+  "
+                      >
+                        <Trash2 size={17} />
+                      </button>
                     </div>
                   </td>
                 </tr>
