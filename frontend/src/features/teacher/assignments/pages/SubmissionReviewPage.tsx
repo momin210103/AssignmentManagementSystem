@@ -55,7 +55,7 @@ export default function SubmissionReviewPage() {
       {
         onSuccess: () => {
           window.alert("Submission graded successfully.");
-          navigate(-1);
+          navigate(`/teacher/assignments/${submission.assignmentId}/submissions`);
         },
       },
     );

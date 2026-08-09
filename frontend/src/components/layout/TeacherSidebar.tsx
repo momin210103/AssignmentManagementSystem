@@ -21,11 +21,11 @@ const menus = [
     path: "/teacher/assignments",
     icon: ClipboardList,
   },
-  {
-    title: "Submissions",
-    path: "/teacher/submissions",
-    icon: Upload,
-  },
+  // {
+  //   title: "Submissions",
+  //   path: "/teacher/submissions",
+  //   icon: Upload,
+  // },
 ];
 
 export default function TeacherSidebar() {

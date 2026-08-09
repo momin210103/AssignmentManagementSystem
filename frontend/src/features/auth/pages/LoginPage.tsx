@@ -16,10 +16,10 @@ export default function LoginPage() {
       }}
     >
       <div className="mx-auto flex min-h-screen max-w-7xl items-center justify-center px-6">
-        <div className="grid w-full grid-cols-1 gap-14 lg:grid-cols-2">
+        <div className="grid w-full grid-cols-1 items-center gap-14 lg:grid-cols-2">
           <LoginHero />
 
-          <div>
+          <div className="mx-auto w-full max-w-md">
             <LoginForm />
 
             <DemoAccounts

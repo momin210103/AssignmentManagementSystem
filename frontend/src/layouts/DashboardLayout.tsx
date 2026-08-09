@@ -7,10 +7,10 @@ import TeacherSidebar from "@/components/layout/TeacherSidebar";
 import StudentSidebar from "@/components/layout/StudentSidebar";
 
 export default function DashboardLayout() {
+  const { user } = useAuth();
 
-  const {user} = useAuth();
   const renderSidebar = () => {
-    switch (user?.role){
+    switch (user?.role) {
       case "Admin":
         return <Sidebar />;
       case "Teacher":
@@ -18,17 +18,18 @@ export default function DashboardLayout() {
       case "Student":
         return <StudentSidebar />;
       default:
-        return null;  
+        return null;
     }
   };
 
-
   return (
     <div className="flex min-h-screen bg-slate-100">
-      {renderSidebar()}
+      <div className="sticky top-0 h-screen shrink-0">{renderSidebar()}</div>
 
-      <div className="flex flex-1 flex-col">
-        <Topbar />
+      <div className="flex min-h-screen flex-1 flex-col">
+        <div className="sticky top-0 z-10">
+          <Topbar />
+        </div>
 
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />

@@ -42,7 +42,7 @@ export default function TeacherAssignmentSubmissionsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-text-primary">
             Student Submissions
@@ -58,6 +58,7 @@ export default function TeacherAssignmentSubmissionsPage() {
           variant="secondary"
           leftIcon={<ArrowLeft size={18} />}
           onClick={() => navigate("/teacher/assignments")}
+          className="sm:w-auto"
         >
           Back to Assignments
         </Button>
