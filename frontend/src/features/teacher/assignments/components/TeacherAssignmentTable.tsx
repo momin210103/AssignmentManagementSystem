@@ -1,4 +1,4 @@
-import { Edit, Eye, EyeOff, Trash2 } from "lucide-react";
+import { Edit, Eye, EyeOff, Trash2, ClipboardList } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import Card from "@/components/ui/Card";
@@ -237,6 +237,31 @@ export default function TeacherAssignmentTable({
                           <EyeOff size={17} />
                         </button>
                       )}
+
+                      {/* Submissions */}
+                      <button
+                        type="button"
+                        title="View submissions"
+                        onClick={() =>
+                          navigate(
+                            `/teacher/assignments/${assignment.id}/submissions`,
+                          )
+                        }
+                        className="
+        inline-flex
+        h-9
+        w-9
+        items-center
+        justify-center
+        rounded-lg
+        text-primary
+        transition
+        hover:bg-primary/10
+      "
+                      >
+                        <ClipboardList size={17} />
+                      </button>
+
                       <button
                         type="button"
                         title="Delete assignment"

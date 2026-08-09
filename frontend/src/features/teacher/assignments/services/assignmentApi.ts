@@ -66,3 +66,32 @@ export async function deleteAssignment(id: string) {
 
   return response.data;
 }
+
+// Submitted Assignments
+import type { AssignmentSubmission } from "../types/submission";
+
+export async function getAssignmentSubmissions(assignmentId: string) {
+  const response = await api.get<AssignmentSubmission[]>(
+    `/assignments/${assignmentId}/submissions`,
+  );
+
+  return response.data;
+}
+
+// Grade Submission
+export type GradeSubmissionRequest = {
+  marks: number;
+  feedback: string;
+};
+
+export async function gradeSubmission(
+  submissionId: string,
+  data: GradeSubmissionRequest,
+) {
+  const response = await api.patch<AssignmentSubmission>(
+    `/submissions/${submissionId}/grade`,
+    data,
+  );
+
+  return response.data;
+}

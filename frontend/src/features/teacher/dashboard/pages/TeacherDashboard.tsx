@@ -200,97 +200,100 @@ export default function TeacherDashboard() {
         </div>
       </Card>
 
-      <Card>
-        <div className="border-b border-border p-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-text-primary">
-                Draft Assignments
-              </h2>
+      {/* Draft & Published — side by side */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <div className="border-b border-border p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-text-primary">
+                  Draft Assignments
+                </h2>
 
-              <p className="mt-1 text-sm text-text-secondary">
-                Assignments waiting to be published.
-              </p>
+                <p className="mt-1 text-sm text-text-secondary">
+                  Assignments waiting to be published.
+                </p>
+              </div>
+
+              <span className="rounded-full bg-warning/10 px-3 py-1 text-sm font-semibold text-warning">
+                {draftAssignments.length}
+              </span>
             </div>
-
-            <span className="rounded-full bg-warning/10 px-3 py-1 text-sm font-semibold text-warning">
-              {draftAssignments.length}
-            </span>
           </div>
-        </div>
 
-        <div className="p-5">
-          {draftAssignments.length === 0 ? (
-            <p className="py-6 text-center text-text-muted">
-              No draft assignments.
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {draftAssignments.slice(0, 5).map((assignment) => (
-                <div
-                  key={assignment.id}
-                  className="rounded-xl border border-border p-4"
-                >
-                  <h3 className="font-medium text-text-primary">
-                    {assignment.title}
-                  </h3>
-
-                  <p className="mt-1 text-sm text-text-secondary">
-                    Deadline:{" "}
-                    {new Date(assignment.deadline).toLocaleDateString()}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </Card>
-
-      <Card>
-        <div className="border-b border-border p-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-text-primary">
-                Published Assignments
-              </h2>
-
-              <p className="mt-1 text-sm text-text-secondary">
-                Assignments currently available to students.
+          <div className="p-5">
+            {draftAssignments.length === 0 ? (
+              <p className="py-6 text-center text-text-muted">
+                No draft assignments.
               </p>
-            </div>
+            ) : (
+              <div className="space-y-3">
+                {draftAssignments.slice(0, 5).map((assignment) => (
+                  <div
+                    key={assignment.id}
+                    className="rounded-xl border border-border p-4"
+                  >
+                    <h3 className="font-medium text-text-primary">
+                      {assignment.title}
+                    </h3>
 
-            <span className="rounded-full bg-success/10 px-3 py-1 text-sm font-semibold text-success">
-              {publishedAssignments.length}
-            </span>
+                    <p className="mt-1 text-sm text-text-secondary">
+                      Deadline:{" "}
+                      {new Date(assignment.deadline).toLocaleDateString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
+        </Card>
 
-        <div className="p-5">
-          {publishedAssignments.length === 0 ? (
-            <p className="py-6 text-center text-text-muted">
-              No published assignments.
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {publishedAssignments.slice(0, 5).map((assignment) => (
-                <div
-                  key={assignment.id}
-                  className="rounded-xl border border-border p-4"
-                >
-                  <h3 className="font-medium text-text-primary">
-                    {assignment.title}
-                  </h3>
+        <Card>
+          <div className="border-b border-border p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-text-primary">
+                  Published Assignments
+                </h2>
 
-                  <p className="mt-1 text-sm text-text-secondary">
-                    Deadline:{" "}
-                    {new Date(assignment.deadline).toLocaleDateString()}
-                  </p>
-                </div>
-              ))}
+                <p className="mt-1 text-sm text-text-secondary">
+                  Assignments currently available to students.
+                </p>
+              </div>
+
+              <span className="rounded-full bg-success/10 px-3 py-1 text-sm font-semibold text-success">
+                {publishedAssignments.length}
+              </span>
             </div>
-          )}
-        </div>
-      </Card>
+          </div>
+
+          <div className="p-5">
+            {publishedAssignments.length === 0 ? (
+              <p className="py-6 text-center text-text-muted">
+                No published assignments.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {publishedAssignments.slice(0, 5).map((assignment) => (
+                  <div
+                    key={assignment.id}
+                    className="rounded-xl border border-border p-4"
+                  >
+                    <h3 className="font-medium text-text-primary">
+                      {assignment.title}
+                    </h3>
+
+                    <p className="mt-1 text-sm text-text-secondary">
+                      Deadline:{" "}
+                      {new Date(assignment.deadline).toLocaleDateString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }
