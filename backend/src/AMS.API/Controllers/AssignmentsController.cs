@@ -23,7 +23,7 @@ public class AssignmentsController : ControllerBase
         _mediator = mediator;
     }
 
-    [Authorize(Roles = "Teacher,Admin")]
+    [Authorize(Roles = "Teacher")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateAssignmentRequest request)
     {
@@ -32,13 +32,14 @@ public class AssignmentsController : ControllerBase
         return Ok(result);
     }
     [HttpGet]
-    [Authorize(Roles = "Teacher,Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAll()
     {
         var result = await _mediator.Send(new GetAllAssignmentsQuery());
 
         return Ok(result);
     }
+    [Authorize]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -49,7 +50,7 @@ public class AssignmentsController : ControllerBase
 
         return Ok(result);
     }
-    [Authorize(Roles = "Teacher,Admin")]
+    [Authorize(Roles = "Teacher")]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(
         Guid id,
