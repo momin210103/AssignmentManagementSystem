@@ -104,12 +104,15 @@ export default function CreateAssignmentForm({
     setValue("subjectId", "");
   }, [selectedClassId, setValue]);
 
+
   const onSubmit = async (data: CreateAssignmentFormData) => {
+    
     try {
+      const deadline = new Date(data.deadline).toISOString();
       await createAssignmentMutation.mutateAsync({
         title: data.title,
         description: data.description,
-        deadline: data.deadline,
+        deadline,
         maximumMarks: data.maximumMarks,
         classId: data.classId,
         subjectId: data.subjectId,
