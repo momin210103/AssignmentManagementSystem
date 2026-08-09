@@ -1,5 +1,4 @@
 import {
-  BookOpen,
   ClipboardList,
   GraduationCap,
   LayoutDashboard,
@@ -16,16 +15,6 @@ const menus = [
     title: "Dashboard",
     path: "/teacher/dashboard",
     icon: LayoutDashboard,
-  },
-  {
-    title: "My Classes",
-    path: "/teacher/classes",
-    icon: GraduationCap,
-  },
-  {
-    title: "My Subjects",
-    path: "/teacher/subjects",
-    icon: BookOpen,
   },
   {
     title: "Assignments",

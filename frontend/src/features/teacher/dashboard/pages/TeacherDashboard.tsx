@@ -1,31 +1,69 @@
 import { BookOpen, ClipboardList, GraduationCap, Users } from "lucide-react";
+import { useMemo } from "react";
 
 import Card from "@/components/ui/Card";
 
-const stats = [
-  {
-    title: "My Classes",
-    value: "-",
-    icon: GraduationCap,
-  },
-  {
-    title: "My Subjects",
-    value: "-",
-    icon: BookOpen,
-  },
-  {
-    title: "My Assignments",
-    value: "-",
-    icon: ClipboardList,
-  },
-  {
-    title: "Submissions",
-    value: "-",
-    icon: Users,
-  },
-];
+import { useTeacherAssignmentOptions } from "@/features/teacher/assignments/hooks/useTeacherAssignmentOptions";
+import { useTeacherAssignments } from "@/features/teacher/assignments/hooks/useTeacherAssignment";
 
 export default function TeacherDashboard() {
+  const {
+    data: assignmentOptions = [],
+    isLoading: isOptionsLoading,
+    isError: isOptionsError,
+  } = useTeacherAssignmentOptions();
+
+  const { data: assignments = [], isLoading: isAssignmentsLoading } =
+    useTeacherAssignments();
+
+  // Draft and Published assignments
+  const draftAssignments = useMemo(
+    () => assignments.filter((assignment) => assignment.status === "Draft"),
+    [assignments],
+  );
+
+  const publishedAssignments = useMemo(
+    () => assignments.filter((assignment) => assignment.status === "Published"),
+    [assignments],
+  );
+
+  /*
+   * Unique classes
+   */
+  const classCount = useMemo(() => {
+    return new Set(assignmentOptions.map((item) => item.classId)).size;
+  }, [assignmentOptions]);
+
+  /*
+   * Unique subjects
+   */
+  const subjectCount = useMemo(() => {
+    return new Set(assignmentOptions.map((item) => item.subjectId)).size;
+  }, [assignmentOptions]);
+
+  const stats = [
+    {
+      title: "My Classes",
+      value: isOptionsLoading ? "..." : classCount,
+      icon: GraduationCap,
+    },
+    {
+      title: "My Subjects",
+      value: isOptionsLoading ? "..." : subjectCount,
+      icon: BookOpen,
+    },
+    {
+      title: "My Assignments",
+      value: isAssignmentsLoading ? "..." : assignments.length,
+      icon: ClipboardList,
+    },
+    {
+      title: "Submissions",
+      value: "-",
+      icon: Users,
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -77,46 +115,182 @@ export default function TeacherDashboard() {
         })}
       </div>
 
-      {/* Dashboard Content */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Recent Assignments */}
-        <Card>
-          <div className="border-b border-border p-5">
-            <h2 className="text-lg font-semibold text-text-primary">
-              Recent Assignments
-            </h2>
+      {/* Assigned Classes & Subjects */}
+      <Card>
+        <div className="border-b border-border p-5">
+          <h2 className="text-lg font-semibold text-text-primary">
+            My Assigned Classes & Subjects
+          </h2>
 
-            <p className="mt-1 text-sm text-text-secondary">
-              Your recently created assignments.
-            </p>
-          </div>
+          <p className="mt-1 text-sm text-text-secondary">
+            Classes and subjects assigned to you by the administrator.
+          </p>
+        </div>
 
-          <div className="p-5">
+        <div className="p-5">
+          {isOptionsLoading && (
             <p className="py-8 text-center text-text-muted">
-              No recent assignments.
+              Loading assigned classes and subjects...
             </p>
-          </div>
-        </Card>
+          )}
 
-        {/* Upcoming Deadlines */}
-        <Card>
-          <div className="border-b border-border p-5">
-            <h2 className="text-lg font-semibold text-text-primary">
-              Upcoming Deadlines
-            </h2>
-
-            <p className="mt-1 text-sm text-text-secondary">
-              Assignments with upcoming deadlines.
+          {isOptionsError && (
+            <p className="py-8 text-center text-danger">
+              Failed to load assigned classes and subjects.
             </p>
-          </div>
+          )}
 
-          <div className="p-5">
-            <p className="py-8 text-center text-text-muted">
-              No upcoming deadlines.
-            </p>
+          {!isOptionsLoading &&
+            !isOptionsError &&
+            assignmentOptions.length === 0 && (
+              <p className="py-8 text-center text-text-muted">
+                No classes or subjects assigned yet.
+              </p>
+            )}
+
+          {!isOptionsLoading &&
+            !isOptionsError &&
+            assignmentOptions.length > 0 && (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-text-secondary">
+                        #
+                      </th>
+
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-text-secondary">
+                        Class
+                      </th>
+
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-text-secondary">
+                        Subject
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {assignmentOptions.map((item, index) => (
+                      <tr
+                        key={`${item.classId}-${item.subjectId}`}
+                        className="
+                            border-b
+                            border-border
+                            last:border-0
+                            hover:bg-background
+                          "
+                      >
+                        <td className="px-4 py-3 text-sm text-text-muted">
+                          {index + 1}
+                        </td>
+
+                        <td className="px-4 py-3 text-sm font-medium text-text-primary">
+                          {item.className}
+                        </td>
+
+                        <td className="px-4 py-3 text-sm text-text-secondary">
+                          {item.subjectName}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+        </div>
+      </Card>
+
+      <Card>
+        <div className="border-b border-border p-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-text-primary">
+                Draft Assignments
+              </h2>
+
+              <p className="mt-1 text-sm text-text-secondary">
+                Assignments waiting to be published.
+              </p>
+            </div>
+
+            <span className="rounded-full bg-warning/10 px-3 py-1 text-sm font-semibold text-warning">
+              {draftAssignments.length}
+            </span>
           </div>
-        </Card>
-      </div>
+        </div>
+
+        <div className="p-5">
+          {draftAssignments.length === 0 ? (
+            <p className="py-6 text-center text-text-muted">
+              No draft assignments.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {draftAssignments.slice(0, 5).map((assignment) => (
+                <div
+                  key={assignment.id}
+                  className="rounded-xl border border-border p-4"
+                >
+                  <h3 className="font-medium text-text-primary">
+                    {assignment.title}
+                  </h3>
+
+                  <p className="mt-1 text-sm text-text-secondary">
+                    Deadline:{" "}
+                    {new Date(assignment.deadline).toLocaleDateString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </Card>
+
+      <Card>
+        <div className="border-b border-border p-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-text-primary">
+                Published Assignments
+              </h2>
+
+              <p className="mt-1 text-sm text-text-secondary">
+                Assignments currently available to students.
+              </p>
+            </div>
+
+            <span className="rounded-full bg-success/10 px-3 py-1 text-sm font-semibold text-success">
+              {publishedAssignments.length}
+            </span>
+          </div>
+        </div>
+
+        <div className="p-5">
+          {publishedAssignments.length === 0 ? (
+            <p className="py-6 text-center text-text-muted">
+              No published assignments.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {publishedAssignments.slice(0, 5).map((assignment) => (
+                <div
+                  key={assignment.id}
+                  className="rounded-xl border border-border p-4"
+                >
+                  <h3 className="font-medium text-text-primary">
+                    {assignment.title}
+                  </h3>
+
+                  <p className="mt-1 text-sm text-text-secondary">
+                    Deadline:{" "}
+                    {new Date(assignment.deadline).toLocaleDateString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </Card>
     </div>
   );
 }
