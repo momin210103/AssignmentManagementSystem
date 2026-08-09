@@ -46,3 +46,21 @@ export async function getAssignmentById(id: string) {
 
   return response.data;
 }
+
+
+// publish
+export async function publishAssignment(id: string) {
+  const response = await api.patch(
+    `/assignments/${id}/publish`,
+  );
+
+  return response.data;
+}
+
+export async function unpublishAssignment(id: string) {
+  const response = await api.patch(
+    `/assignments/${id}/unpublish`,
+  );
+
+  return response.data;
+}

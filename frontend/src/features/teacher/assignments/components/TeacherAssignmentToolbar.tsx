@@ -15,7 +15,7 @@ export default function AssignmentToolbar({
   onStatusChange,
 }: AssignmentToolbarProps) {
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="flex flex-wrap gap-3">
       {/* Search */}
       <div className="relative w-full max-w-md">
         <Search
@@ -46,6 +46,7 @@ export default function AssignmentToolbar({
             text-sm
             text-text-primary
             outline-none
+            transition
             focus:border-primary
           "
         />
@@ -66,13 +67,13 @@ export default function AssignmentToolbar({
           text-sm
           text-text-primary
           outline-none
+          transition
           focus:border-primary
         "
       >
         <option value="">All Status</option>
         <option value="Draft">Draft</option>
         <option value="Published">Published</option>
-        <option value="Closed">Closed</option>
       </select>
     </div>
   );

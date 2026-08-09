@@ -1,21 +1,44 @@
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Button from "@/components/ui/Button";
 
 import AssignmentTable from "../components/TeacherAssignmentTable";
 import AssignmentToolbar from "../components/TeacherAssignmentToolbar";
-import { useNavigate } from "react-router-dom";
+import { useTeacherAssignments } from "../hooks/useTeacherAssignment";
 
-export default function AssignmentListPage() {
+export default function TeacherAssignmentListPage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
+
   const navigate = useNavigate();
+
+  const {
+    data: assignments = [],
+    isLoading,
+    isError,
+  } = useTeacherAssignments();
+
+  const filteredAssignments = useMemo(() => {
+    const searchValue = search.trim().toLowerCase();
+
+    return assignments.filter((assignment) => {
+      const matchesSearch =
+        !searchValue ||
+        assignment.title.toLowerCase().includes(searchValue) ||
+        assignment.description.toLowerCase().includes(searchValue);
+
+      const matchesStatus = !status || assignment.status === status;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [assignments, search, status]);
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex items-start justify-between gap-6">
         <div>
           <h1 className="text-3xl font-bold text-text-primary">
             My Assignments
@@ -44,7 +67,11 @@ export default function AssignmentListPage() {
       />
 
       {/* Table */}
-      <AssignmentTable search={search} status={status} />
+      <AssignmentTable
+        assignments={filteredAssignments}
+        isLoading={isLoading}
+        isError={isError}
+      />
     </div>
   );
 }
