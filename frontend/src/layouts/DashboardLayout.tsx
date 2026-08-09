@@ -4,6 +4,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
 import { useAuth } from "@/hooks/useAuth";
 import TeacherSidebar from "@/components/layout/TeacherSidebar";
+import StudentSidebar from "@/components/layout/StudentSidebar";
 
 export default function DashboardLayout() {
 
@@ -14,6 +15,8 @@ export default function DashboardLayout() {
         return <Sidebar />;
       case "Teacher":
         return <TeacherSidebar />;
+      case "Student":
+        return <StudentSidebar />;
       default:
         return null;  
     }
