@@ -7,6 +7,7 @@ using AMS.Application.Features.Admin.Users.Queries.GetTeachers;
 using AMS.Application.Features.Authentication.Commands.Login;
 using AMS.Domain.Constants;
 using AMS.Infrastructure.Persistence.Context;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,14 +20,17 @@ public class IdentityService : IIdentityService
 
     private readonly ApplicationDbContext _context;
 
+
     public IdentityService(
         UserManager<ApplicationUser> userManager,
         IJwtTokenGenerator jwtTokenGenerator,
-        ApplicationDbContext context)
+        ApplicationDbContext context
+        )
     {
         _userManager = userManager;
         _jwtTokenGenerator = jwtTokenGenerator;
         _context = context;
+
     }
 
     public async Task<(bool Succeeded, Guid? UserId, IEnumerable<string> Errors)> RegisterAsync(
@@ -108,28 +112,28 @@ public class IdentityService : IIdentityService
 
     }
     public async Task<List<StudentDto>> GetStudentsAsync()
-{
-    var students = await (
-        from user in _context.Users
-        join studentClass in _context.StudentClasses
-            on user.Id equals studentClass.StudentId
-        join classRoom in _context.ClassRooms
-            on studentClass.ClassId equals classRoom.Id
-        select new StudentDto
-        {
-            Id = user.Id,
-            FullName = user.FullName,
-            Email = user.Email!,
-            PhoneNumber = user.PhoneNumber,
+    {
+        var students = await (
+            from user in _context.Users
+            join studentClass in _context.StudentClasses
+                on user.Id equals studentClass.StudentId
+            join classRoom in _context.ClassRooms
+                on studentClass.ClassId equals classRoom.Id
+            select new StudentDto
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email!,
+                PhoneNumber = user.PhoneNumber,
 
-            ClassId = classRoom.Id,
-            ClassName = classRoom.Name,
-            Section = classRoom.Section
-        })
-        .ToListAsync();
+                ClassId = classRoom.Id,
+                ClassName = classRoom.Name,
+                Section = classRoom.Section
+            })
+            .ToListAsync();
 
-    return students;
-}
+        return students;
+    }
     public async Task<Dictionary<Guid, string>> GetTeacherNamesAsync()
     {
         var teachers = await _userManager.GetUsersInRoleAsync("Teacher");
@@ -257,4 +261,6 @@ public class IdentityService : IIdentityService
                 string.Join(", ", result.Errors.Select(x => x.Description)));
         }
     }
+
+
 }
