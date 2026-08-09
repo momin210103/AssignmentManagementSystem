@@ -38,7 +38,7 @@ export default function TeacherAssignmentListPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between gap-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
         <div>
           <h1 className="text-3xl font-bold text-text-primary">
             My Assignments
@@ -53,6 +53,7 @@ export default function TeacherAssignmentListPage() {
           type="button"
           leftIcon={<Plus size={18} />}
           onClick={() => navigate("/teacher/assignments/create")}
+          className="sm:w-auto"
         >
           Create Assignment
         </Button>
