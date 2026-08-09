@@ -2,8 +2,16 @@ import LoginHero from "@/features/auth/components/LoginHero";
 import LoginForm from "@/features/auth/components/LoginForm";
 import DemoAccounts from "@/features/auth/components/DemoAccounts";
 import { theme } from "@/constants/theme";
+import { useLoginForm } from "@/features/auth/hooks/useLoginForm";
 
 export default function LoginPage() {
+  const form = useLoginForm();
+
+  const handleDemoSelect = (email: string, password: string) => {
+    form.setValue("email", email, { shouldValidate: true });
+    form.setValue("password", password, { shouldValidate: true });
+  };
+
   return (
     <div
       className="min-h-screen"
@@ -20,13 +28,9 @@ export default function LoginPage() {
           <LoginHero />
 
           <div className="mx-auto w-full max-w-md">
-            <LoginForm />
+            <LoginForm form={form} />
 
-            <DemoAccounts
-              onSelect={(email, password) => {
-                console.log(email, password);
-              }}
-            />
+            <DemoAccounts onSelect={handleDemoSelect} />
           </div>
         </div>
       </div>

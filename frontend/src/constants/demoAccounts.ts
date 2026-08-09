@@ -1,17 +1,17 @@
 export const DEMO_ACCOUNTS = [
   {
     role: "Admin",
-    email: "admin@school.edu.bd",
-    password: "demo1234",
+    email: "admin@gmail.com",
+    password: "Admin@123",
   },
   {
     role: "Teacher",
-    email: "kamrul.hasan@school.edu.bd",
-    password: "demo1234",
+    email: "teacher1@gmail.com",
+    password: "Teacher@123",
   },
   {
     role: "Student",
-    email: "ariful.islam@school.edu.bd",
-    password: "demo1234",
+    email: "student1@gmail.com",
+    password: "Student@123",
   },
 ];
