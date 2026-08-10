@@ -165,7 +165,7 @@ export default function StudentAssignmentListPage() {
                   type="button"
                   className="w-full"
                   onClick={() =>
-                    navigate(`/student/assignments/${assignment.id}`)
+                    navigate(`/student/assignments/${assignment.id}/details`)
                   }
                 >
                   View Assignment

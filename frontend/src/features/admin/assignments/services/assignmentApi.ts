@@ -1,20 +1,18 @@
 import { api } from "@/api/axios";
+import type { Assignment, AssignmentDetails } from "../types/assignment";
 
-export interface Assignment {
-  id: string;
-  title: string;
-  teacherName: string;
-  teacherId: string;
-  classId: string;
-  className: string;
-  subjectId: string;
-  subjectName: string;
-  status: number;
-  deadline: string;
-}
-
+// GET Assignments
 export const getAssignments = async (): Promise<Assignment[]> => {
   const response = await api.get("/admin/assignments");
+
+  return response.data;
+};
+
+// Get Assignment by ID
+export const getAssignmentById = async (
+  id: string,
+): Promise<AssignmentDetails> => {
+  const response = await api.get(`/assignments/${id}`);
 
   return response.data;
 };
