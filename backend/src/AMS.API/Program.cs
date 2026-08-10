@@ -110,7 +110,8 @@ builder.Host.UseSerilog((context, configuration) =>
 {
     configuration.ReadFrom.Configuration(context.Configuration);
 });
-
+// Set the web root path to "wwwroot"
+builder.WebHost.UseWebRoot("wwwroot");
 
 var app = builder.Build();
 
@@ -129,7 +130,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 app.UseCors("Frontend");
+
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 

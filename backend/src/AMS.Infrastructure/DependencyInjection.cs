@@ -3,6 +3,7 @@ using AMS.Application.Common.Interfaces;
 using AMS.Infrastructure.Identity;
 using AMS.Infrastructure.Persistence.Context;
 using AMS.Infrastructure.Services;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -39,8 +40,18 @@ public static class DependencyInjection
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+
+        services.AddScoped<IFileStorageService>(sp =>
+            {
+                var environment = sp.GetRequiredService<IWebHostEnvironment>();
+
+                return new FileStorageService(
+                    environment.WebRootPath);
+            });
+
         return services;
 
     }
-    
+
 }
