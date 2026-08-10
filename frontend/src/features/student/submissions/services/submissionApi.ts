@@ -1,5 +1,8 @@
 import { api } from "@/api/axios";
-import type { CreateSubmissionRequest } from "../types/submissions";
+import type {
+  CreateSubmissionRequest,
+  ResubmitSubmissionRequest,
+} from "../types/submissions";
 import type { AssignmentSubmission } from "@/features/teacher/assignments/types/submission";
 
 export async function createSubmission(data: CreateSubmissionRequest) {
@@ -22,10 +25,19 @@ export async function uploadSubmissionFile(file: File) {
   return response.data;
 }
 
-
-
 export async function getMySubmissions() {
   const response = await api.get<AssignmentSubmission[]>("/submissions/my");
+
+  return response.data;
+}
+
+// Resubmission API
+
+export async function resubmitSubmission(
+  submissionId: string,
+  data: ResubmitSubmissionRequest,
+) {
+  const response = await api.put(`/submissions/${submissionId}/resubmit`, data);
 
   return response.data;
 }

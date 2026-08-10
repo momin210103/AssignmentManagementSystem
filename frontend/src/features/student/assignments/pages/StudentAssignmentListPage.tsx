@@ -6,6 +6,7 @@ import Card from "@/components/ui/Card";
 
 import { useStudentAssignments } from "@/features/student/assignments/hooks/useStudentAssignment";
 import { useMySubmissions } from "@/features/student/submissions/hooks/useMySubmissions";
+import { useState } from "react";
 
 export default function StudentAssignmentListPage() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function StudentAssignmentListPage() {
   } = useStudentAssignments();
 
   const { data: submissions = [] } = useMySubmissions();
+  const [currentTime] = useState(() => Date.now());
 
   if (isLoading) {
     return (
@@ -104,6 +106,13 @@ export default function StudentAssignmentListPage() {
             );
 
             const isSubmitted = !!submission;
+
+            const isReviewed = submission?.status === "Reviewed";
+
+            const isDeadlinePassed =
+              new Date(assignment.deadline).getTime() < currentTime;
+
+            const canResubmit = isSubmitted && !isReviewed && !isDeadlinePassed;
 
             return (
               <Card key={assignment.id} className="flex flex-col p-5">

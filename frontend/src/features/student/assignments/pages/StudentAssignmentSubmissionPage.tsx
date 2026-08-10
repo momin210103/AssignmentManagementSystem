@@ -1,11 +1,20 @@
-import { ArrowLeft, CheckCircle2, FileText, Upload } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  ExternalLink,
+  FileText,
+  Upload,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
 
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+
 import { useCreateSubmission } from "../../submissions/hooks/useCreateSubmission";
-import { useUploadSubmissionFile } from "@/features/student/submissions/hooks/useUploadSubmissionFile";
+import { useMySubmissions } from "../../submissions/hooks/useMySubmissions";
+import { useResubmitSubmission } from "../../submissions/hooks/useResubmitSubmission";
+import { useUploadSubmissionFile } from "../../submissions/hooks/useUploadSubmissionFile";
 
 export default function StudentAssignmentSubmitPage() {
   const navigate = useNavigate();
@@ -13,9 +22,24 @@ export default function StudentAssignmentSubmitPage() {
 
   const [answer, setAnswer] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const { data: submissions = [] } = useMySubmissions();
+
+  const submission = submissions.find((item) => item.assignmentId === id);
 
   const createSubmissionMutation = useCreateSubmission();
+  const resubmitMutation = useResubmitSubmission();
   const uploadFileMutation = useUploadSubmissionFile();
+
+  useEffect(() => {
+    if (submission) {
+      setAnswer(submission.answer);
+    }
+  }, [submission]);
+
+  const isSubmitted = !!submission;
+  const isReadOnly = isSubmitted && !isEditing;
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] ?? null;
@@ -29,31 +53,52 @@ export default function StudentAssignmentSubmitPage() {
     }
 
     try {
-      let fileUrl: string | null = null;
+      let fileUrl: string | null = submission?.fileUrl ?? null;
 
-      // Upload file only if selected
+      // Upload new file if selected
       if (file) {
         const uploadResult = await uploadFileMutation.mutateAsync(file);
 
         fileUrl = uploadResult.fileUrl;
       }
 
-      // Create submission
-      await createSubmissionMutation.mutateAsync({
-        assignmentId: id,
-        answer: answer.trim(),
-        fileUrl,
-      });
+      // Resubmit existing submission
+      if (submission && isEditing) {
+        await resubmitMutation.mutateAsync({
+          submissionId: submission.id,
+          answer: answer.trim(),
+          fileUrl,
+        });
 
-      window.alert("Assignment submitted successfully.");
+        window.alert("Assignment resubmitted successfully.");
+      }
+      // Create new submission
+      else {
+        await createSubmissionMutation.mutateAsync({
+          assignmentId: id,
+          answer: answer.trim(),
+          fileUrl,
+        });
 
-      navigate(`/student/assignments/${id}`);
+        window.alert("Assignment submitted successfully.");
+      }
+
+      navigate(`/student/assignments/${id}/details`);
     } catch (error) {
       console.error("SUBMISSION ERROR:", error);
 
-      window.alert("Failed to submit assignment.");
+      window.alert(
+        isEditing
+          ? "Failed to resubmit assignment."
+          : "Failed to submit assignment.",
+      );
     }
   };
+
+  const isSaving =
+    createSubmissionMutation.isPending ||
+    resubmitMutation.isPending ||
+    uploadFileMutation.isPending;
 
   return (
     <div className="mx-auto max-w-8xl space-y-4 sm:space-y-6">
@@ -75,17 +120,19 @@ export default function StudentAssignmentSubmitPage() {
 
         <div className="min-w-0">
           <h1 className="text-xl font-bold text-text-primary sm:text-2xl lg:text-3xl">
-            Submit Assignment
+            {isSubmitted ? "Assignment Submission" : "Submit Assignment"}
           </h1>
 
           <p className="mt-0.5 text-xs text-text-secondary sm:text-sm">
-            Submit your answer and file for this assignment.
+            {isSubmitted
+              ? "View your submitted assignment."
+              : "Submit your answer and file for this assignment."}
           </p>
         </div>
       </div>
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-3 lg:items-start">
-        {/* Left — the actual work */}
+        {/* Main Content */}
         <div className="space-y-4 sm:space-y-6 lg:col-span-2">
           {/* Answer */}
           <Card>
@@ -95,7 +142,9 @@ export default function StudentAssignmentSubmitPage() {
               </h2>
 
               <p className="mt-1 text-sm text-text-secondary">
-                Write your answer below.
+                {isReadOnly
+                  ? "Your submitted answer."
+                  : "Write your answer below."}
               </p>
             </div>
 
@@ -103,6 +152,7 @@ export default function StudentAssignmentSubmitPage() {
               <textarea
                 value={answer}
                 onChange={(event) => setAnswer(event.target.value)}
+                disabled={isReadOnly || isSaving}
                 rows={14}
                 placeholder="Write your answer here..."
                 className="
@@ -119,127 +169,200 @@ export default function StudentAssignmentSubmitPage() {
                   outline-none
                   transition
                   focus:border-primary
+                  disabled:cursor-not-allowed
+                  disabled:bg-background
+                  disabled:opacity-80
                 "
               />
             </div>
           </Card>
 
-          {/* File Upload */}
+          {/* File */}
           <Card>
             <div className="border-b border-border p-4 sm:p-5">
               <h2 className="text-base font-semibold text-text-primary sm:text-lg">
-                Submit File
+                Submitted File
               </h2>
 
               <p className="mt-1 text-sm text-text-secondary">
-                Upload your assignment file if required.
+                {isReadOnly
+                  ? "Your submitted file."
+                  : "Upload your assignment file if required."}
               </p>
             </div>
 
             <div className="p-4 sm:p-5">
-              <label
-                htmlFor="assignment-file"
-                className="
-                  flex
-                  cursor-pointer
-                  flex-col
-                  items-center
-                  justify-center
-                  rounded-xl
-                  border-2
-                  border-dashed
-                  border-border
-                  bg-background
-                  px-6
-                  py-8
-                  text-center
-                  transition
-                  hover:border-primary
-                  hover:bg-primary/5
-                  sm:py-10
-                "
-              >
-                <div
+              {/* Existing File - View Mode */}
+              {isReadOnly && submission?.fileUrl && (
+                <a
+                  href={submission.fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="
                     flex
-                    h-11
-                    w-11
                     items-center
-                    justify-center
-                    rounded-xl
-                    bg-primary/10
-                    text-primary
-                    sm:h-12
-                    sm:w-12
-                  "
-                >
-                  <Upload size={22} className="sm:hidden" />
-                  <Upload size={24} className="hidden sm:block" />
-                </div>
-
-                <p className="mt-4 text-sm font-medium text-text-primary">
-                  Click to upload a file
-                </p>
-
-                <p className="mt-1 text-xs text-text-secondary">
-                  Select your assignment file from your device.
-                </p>
-
-                <input
-                  id="assignment-file"
-                  type="file"
-                  className="hidden"
-                  onChange={handleFileChange}
-                />
-              </label>
-
-              {/* Selected File */}
-              {file && (
-                <div
-                  className="
-                    mt-4
-                    flex
-                    items-center
+                    justify-between
                     gap-3
                     rounded-xl
                     border
                     border-border
                     bg-surface
                     p-4
+                    transition
+                    hover:border-primary
+                    hover:bg-primary/5
                   "
                 >
-                  <div
-                    className="
-                      flex
-                      h-10
-                      w-10
-                      shrink-0
-                      items-center
-                      justify-center
-                      rounded-lg
-                      bg-primary/10
-                      text-primary
-                    "
-                  >
-                    <FileText size={20} />
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div
+                      className="
+                        flex
+                        h-10
+                        w-10
+                        shrink-0
+                        items-center
+                        justify-center
+                        rounded-lg
+                        bg-primary/10
+                        text-primary
+                      "
+                    >
+                      <FileText size={20} />
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-text-primary">
+                        Submitted File
+                      </p>
+
+                      <p className="truncate text-xs text-text-secondary">
+                        View submitted file
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-text-primary">
-                      {file.name}
+                  <ExternalLink
+                    size={17}
+                    className="shrink-0 text-text-muted"
+                  />
+                </a>
+              )}
+
+              {/* No Existing File */}
+              {isReadOnly && !submission?.fileUrl && (
+                <p className="text-sm text-text-muted">
+                  No file was submitted.
+                </p>
+              )}
+
+              {/* Upload New File */}
+              {!isReadOnly && (
+                <>
+                  <label
+                    htmlFor="assignment-file"
+                    className="
+                      flex
+                      cursor-pointer
+                      flex-col
+                      items-center
+                      justify-center
+                      rounded-xl
+                      border-2
+                      border-dashed
+                      border-border
+                      bg-background
+                      px-6
+                      py-8
+                      text-center
+                      transition
+                      hover:border-primary
+                      hover:bg-primary/5
+                      sm:py-10
+                    "
+                  >
+                    <div
+                      className="
+                        flex
+                        h-11
+                        w-11
+                        items-center
+                        justify-center
+                        rounded-xl
+                        bg-primary/10
+                        text-primary
+                        sm:h-12
+                        sm:w-12
+                      "
+                    >
+                      <Upload size={22} />
+                    </div>
+
+                    <p className="mt-4 text-sm font-medium text-text-primary">
+                      Click to upload a file
                     </p>
 
                     <p className="mt-1 text-xs text-text-secondary">
-                      {(file.size / 1024 / 1024).toFixed(2)} MB
+                      Select your assignment file from your device.
                     </p>
-                  </div>
-                </div>
+
+                    <input
+                      id="assignment-file"
+                      type="file"
+                      className="hidden"
+                      onChange={handleFileChange}
+                      disabled={isSaving}
+                    />
+                  </label>
+
+                  {/* Selected File */}
+                  {file && (
+                    <div
+                      className="
+                        mt-4
+                        flex
+                        items-center
+                        gap-3
+                        rounded-xl
+                        border
+                        border-border
+                        bg-surface
+                        p-4
+                      "
+                    >
+                      <div
+                        className="
+                          flex
+                          h-10
+                          w-10
+                          shrink-0
+                          items-center
+                          justify-center
+                          rounded-lg
+                          bg-primary/10
+                          text-primary
+                        "
+                      >
+                        <FileText size={20} />
+                      </div>
+
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium text-text-primary">
+                          {file.name}
+                        </p>
+
+                        <p className="mt-1 text-xs text-text-secondary">
+                          {(file.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </Card>
         </div>
 
-        {/* Right — sticky submission summary + actions */}
+        {/* Summary */}
         <div className="lg:sticky lg:top-6">
           <Card>
             <div className="border-b border-border p-4 sm:p-5">
@@ -248,25 +371,19 @@ export default function StudentAssignmentSubmitPage() {
               </h2>
 
               <p className="mt-1 text-sm text-text-secondary">
-                Review before you submit.
+                {isReadOnly
+                  ? "Your current submission."
+                  : "Review before submitting."}
               </p>
             </div>
 
             <div className="space-y-4 p-4 sm:p-5">
+              {/* Answer Status */}
               <div className="flex items-center gap-3 rounded-xl border border-border p-3">
-                <div
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
-                  style={{
-                    color: answer.trim() ? undefined : undefined,
-                  }}
-                >
-                  <CheckCircle2
-                    size={20}
-                    className={
-                      answer.trim() ? "text-success" : "text-text-muted"
-                    }
-                  />
-                </div>
+                <CheckCircle2
+                  size={20}
+                  className={answer.trim() ? "text-success" : "text-text-muted"}
+                />
 
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-text-primary">
@@ -279,45 +396,85 @@ export default function StudentAssignmentSubmitPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 rounded-xl border border-border p-3">
-                <CheckCircle2
-                  size={20}
-                  className={file ? "text-success" : "text-text-muted"}
-                />
+              {/* Submission Status */}
+              {isSubmitted && (
+                <div className="flex items-center gap-3 rounded-xl border border-border p-3">
+                  <CheckCircle2 size={20} className="text-success" />
 
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-text-primary">File</p>
+                  <div>
+                    <p className="text-sm font-medium text-text-primary">
+                      Status
+                    </p>
 
-                  <p className="truncate text-xs text-text-secondary">
-                    {file ? file.name : "No file attached"}
-                  </p>
+                    <p className="text-xs text-success">{submission.status}</p>
+                  </div>
                 </div>
-              </div>
+              )}
 
+              {/* Actions */}
               <div className="flex flex-col gap-3 pt-1">
-                <Button
-                  type="button"
-                  disabled={
-                    !answer.trim() ||
-                    createSubmissionMutation.isPending ||
-                    uploadFileMutation.isPending
-                  }
-                  onClick={handleSubmit}
-                >
-                  {uploadFileMutation.isPending
-                    ? "Uploading file..."
-                    : createSubmissionMutation.isPending
-                      ? "Submitting..."
-                      : "Submit Assignment"}
-                </Button>
+                {/* New Submission */}
+                {!isSubmitted && (
+                  <Button
+                    type="button"
+                    disabled={!answer.trim() || isSaving}
+                    onClick={handleSubmit}
+                  >
+                    {uploadFileMutation.isPending
+                      ? "Uploading file..."
+                      : createSubmissionMutation.isPending
+                        ? "Submitting..."
+                        : "Submit Assignment"}
+                  </Button>
+                )}
 
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => navigate(-1)}
-                >
-                  Cancel
-                </Button>
+                {/* Existing Submission */}
+                {isSubmitted && !isEditing && (
+                  <Button type="button" onClick={() => setIsEditing(true)}>
+                    Resubmit Assignment
+                  </Button>
+                )}
+
+                {/* Editing / Resubmitting */}
+                {isSubmitted && isEditing && (
+                  <>
+                    <Button
+                      type="button"
+                      disabled={!answer.trim() || isSaving}
+                      onClick={handleSubmit}
+                    >
+                      {uploadFileMutation.isPending
+                        ? "Uploading file..."
+                        : resubmitMutation.isPending
+                          ? "Saving..."
+                          : "Save Resubmission"}
+                    </Button>
+
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      disabled={isSaving}
+                      onClick={() => {
+                        setIsEditing(false);
+                        setAnswer(submission.answer);
+                        setFile(null);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                )}
+
+                {/* Back */}
+                {!isEditing && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => navigate(-1)}
+                  >
+                    Back
+                  </Button>
+                )}
               </div>
             </div>
           </Card>
