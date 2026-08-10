@@ -3,7 +3,7 @@ import {
   GraduationCap,
   LayoutDashboard,
   LogOut,
-  Upload,
+  X,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -28,7 +28,12 @@ const menus = [
   // },
 ];
 
-export default function TeacherSidebar() {
+type Props = {
+  isOpen: boolean;
+  onClose: () => void;
+};
+
+export default function TeacherSidebar({ isOpen, onClose }: Props) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -38,136 +43,159 @@ export default function TeacherSidebar() {
   };
 
   return (
-    <aside
-      className="flex h-screen w-72 flex-col"
-      style={{
-        background: theme.colors.surface,
-        borderRight: `1px solid ${theme.colors.border}`,
-      }}
-    >
-      {/* Logo */}
-      <div
-        className="px-6 py-7"
+    <>
+      {/* Overlay — mobile only */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[85vw] flex-col transition-transform duration-200 lg:static lg:max-w-none lg:translate-x-0 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
         style={{
-          borderBottom: `1px solid ${theme.colors.border}`,
+          background: theme.colors.surface,
+          borderRight: `1px solid ${theme.colors.border}`,
         }}
       >
-        <div className="flex items-center gap-3">
-          <div
-            className="flex h-11 w-11 items-center justify-center rounded-full"
-            style={{
-              background: theme.colors.primary,
-            }}
-          >
-            <GraduationCap size={22} color={theme.colors.textWhite} />
-          </div>
-
-          <div>
-            <h1
-              className="text-lg font-extrabold"
-              style={{
-                color: theme.colors.textPrimary,
-                fontFamily: theme.font.heading,
-              }}
-            >
-              AMS
-            </h1>
-
-            <p
-              className="text-xs"
-              style={{
-                color: theme.colors.textMuted,
-              }}
-            >
-              Teacher Portal
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Menu */}
-      <nav className="flex-1 space-y-2 p-4">
-        {menus.map((menu) => {
-          const Icon = menu.icon;
-
-          return (
-            <NavLink
-              key={menu.path}
-              to={menu.path}
-              className={({ isActive }) =>
-                `flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200 ${
-                  isActive ? "text-white" : "hover:bg-[#EAF1FC]"
-                }`
-              }
-              style={({ isActive }) => ({
-                backgroundColor: isActive
-                  ? theme.colors.primary
-                  : "transparent",
-                color: isActive
-                  ? theme.colors.textWhite
-                  : theme.colors.textSecondary,
-              })}
-            >
-              <Icon size={20} />
-
-              <span className="font-medium">{menu.title}</span>
-            </NavLink>
-          );
-        })}
-      </nav>
-
-      {/* Footer */}
-      <div
-        className="p-4"
-        style={{
-          borderTop: `1px solid ${theme.colors.border}`,
-        }}
-      >
-        <div className="mb-4 flex items-center gap-3">
-          <div
-            className="flex h-11 w-11 items-center justify-center rounded-full font-bold text-white"
-            style={{
-              background: theme.colors.primary,
-            }}
-          >
-            {user?.fullName?.charAt(0).toUpperCase() ?? "U"}
-          </div>
-
-          <div className="min-w-0">
-            <h4
-              className="truncate text-sm font-semibold"
-              style={{
-                color: theme.colors.textPrimary,
-              }}
-            >
-              {user?.fullName ?? "Teacher"}
-            </h4>
-
-            <p
-              className="text-xs"
-              style={{
-                color: theme.colors.textMuted,
-              }}
-            >
-              {user?.role ?? "Teacher"}
-            </p>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 transition"
+        {/* Logo */}
+        <div
+          className="flex items-center justify-between px-6 py-7"
           style={{
-            background: "#FCEAEA",
-            color: theme.colors.danger,
+            borderBottom: `1px solid ${theme.colors.border}`,
           }}
         >
-          <LogOut size={20} />
+          <div className="flex items-center gap-3">
+            <div
+              className="flex h-11 w-11 items-center justify-center rounded-full"
+              style={{
+                background: theme.colors.primary,
+              }}
+            >
+              <GraduationCap size={22} color={theme.colors.textWhite} />
+            </div>
 
-          <span className="font-medium">Logout</span>
-        </button>
-      </div>
-    </aside>
+            <div>
+              <h1
+                className="text-lg font-extrabold"
+                style={{
+                  color: theme.colors.textPrimary,
+                  fontFamily: theme.font.heading,
+                }}
+              >
+                AMS
+              </h1>
+
+              <p
+                className="text-xs"
+                style={{
+                  color: theme.colors.textMuted,
+                }}
+              >
+                Teacher Portal
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close menu"
+            className="flex h-8 w-8 items-center justify-center rounded-lg lg:hidden"
+            style={{ color: theme.colors.textSecondary }}
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Menu */}
+        <nav className="flex-1 space-y-2 overflow-y-auto p-4">
+          {menus.map((menu) => {
+            const Icon = menu.icon;
+
+            return (
+              <NavLink
+                key={menu.path}
+                to={menu.path}
+                onClick={onClose}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200 ${
+                    isActive ? "text-white" : "hover:bg-[#EAF1FC]"
+                  }`
+                }
+                style={({ isActive }) => ({
+                  backgroundColor: isActive
+                    ? theme.colors.primary
+                    : "transparent",
+                  color: isActive
+                    ? theme.colors.textWhite
+                    : theme.colors.textSecondary,
+                })}
+              >
+                <Icon size={20} />
+
+                <span className="font-medium">{menu.title}</span>
+              </NavLink>
+            );
+          })}
+        </nav>
+
+        {/* Footer */}
+        <div
+          className="p-4"
+          style={{
+            borderTop: `1px solid ${theme.colors.border}`,
+          }}
+        >
+          <div className="mb-4 flex items-center gap-3">
+            <div
+              className="flex h-11 w-11 items-center justify-center rounded-full font-bold text-white"
+              style={{
+                background: theme.colors.primary,
+              }}
+            >
+              {user?.fullName?.charAt(0).toUpperCase() ?? "U"}
+            </div>
+
+            <div className="min-w-0">
+              <h4
+                className="truncate text-sm font-semibold"
+                style={{
+                  color: theme.colors.textPrimary,
+                }}
+              >
+                {user?.fullName ?? "Teacher"}
+              </h4>
+
+              <p
+                className="text-xs"
+                style={{
+                  color: theme.colors.textMuted,
+                }}
+              >
+                {user?.role ?? "Teacher"}
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 transition"
+            style={{
+              background: "#FCEAEA",
+              color: theme.colors.danger,
+            }}
+          >
+            <LogOut size={20} />
+
+            <span className="font-medium">Logout</span>
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }

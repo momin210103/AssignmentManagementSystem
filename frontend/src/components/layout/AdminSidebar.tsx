@@ -4,6 +4,7 @@ import {
   GraduationCap,
   LayoutDashboard,
   LogOut,
+  Users,
   X,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -14,22 +15,32 @@ import { theme } from "@/constants/theme";
 const menus = [
   {
     title: "Dashboard",
-    path: "/student/dashboard",
+    path: "/admin/dashboard",
     icon: LayoutDashboard,
   },
   {
-    title: "My Classes",
-    path: "/student/classes",
+    title: "Students",
+    path: "/admin/students",
+    icon: Users,
+  },
+  {
+    title: "Teachers",
+    path: "/admin/teachers",
     icon: GraduationCap,
   },
   {
-    title: "My Subjects",
-    path: "/student/subjects",
+    title: "Teacher Assign",
+    path: "/admin/teacher-assign",
+    icon: ClipboardList,
+  },
+  {
+    title: "Subjects",
+    path: "/admin/subjects",
     icon: BookOpen,
   },
   {
     title: "Assignments",
-    path: "/student/assignments",
+    path: "/admin/assignments",
     icon: ClipboardList,
   },
 ];
@@ -39,7 +50,7 @@ type Props = {
   onClose: () => void;
 };
 
-export default function StudentSidebar({ isOpen, onClose }: Props) {
+export default function AdminSidebar({ isOpen, onClose }: Props) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -81,7 +92,7 @@ export default function StudentSidebar({ isOpen, onClose }: Props) {
                 background: theme.colors.primary,
               }}
             >
-              <GraduationCap size={22} color={theme.colors.textWhite} />
+              <GraduationCap color="white" size={20} />
             </div>
 
             <div>
@@ -101,7 +112,7 @@ export default function StudentSidebar({ isOpen, onClose }: Props) {
                   color: theme.colors.textMuted,
                 }}
               >
-                Student Portal
+                Assignment Management
               </p>
             </div>
           </div>
@@ -163,17 +174,17 @@ export default function StudentSidebar({ isOpen, onClose }: Props) {
                 background: theme.colors.primary,
               }}
             >
-              {user?.fullName?.charAt(0).toUpperCase() ?? "U"}
+              {user?.fullName?.charAt(0) ?? "U"}
             </div>
 
-            <div className="min-w-0">
+            <div>
               <h4
-                className="truncate text-sm font-semibold"
+                className="text-sm font-semibold"
                 style={{
                   color: theme.colors.textPrimary,
                 }}
               >
-                {user?.fullName ?? "Student"}
+                {user?.fullName}
               </h4>
 
               <p
@@ -182,13 +193,12 @@ export default function StudentSidebar({ isOpen, onClose }: Props) {
                   color: theme.colors.textMuted,
                 }}
               >
-                {user?.role ?? "Student"}
+                {user?.role}
               </p>
             </div>
           </div>
 
           <button
-            type="button"
             onClick={handleLogout}
             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 transition"
             style={{

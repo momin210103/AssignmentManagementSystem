@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
-import Sidebar from "@/components/layout/Sidebar";
+import AdminSidebar from "@/components/layout/AdminSidebar";
 import Topbar from "@/components/layout/Topbar";
 import { useAuth } from "@/hooks/useAuth";
 import TeacherSidebar from "@/components/layout/TeacherSidebar";
@@ -8,15 +9,28 @@ import StudentSidebar from "@/components/layout/StudentSidebar";
 
 export default function DashboardLayout() {
   const { user } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
 
   const renderSidebar = () => {
+    const sidebarProps = {
+      isOpen: isSidebarOpen,
+      onClose: closeSidebar,
+    };
+
     switch (user?.role) {
       case "Admin":
-        return <Sidebar />;
+        return <AdminSidebar {...sidebarProps} />;
       case "Teacher":
-        return <TeacherSidebar />;
+        return <TeacherSidebar {...sidebarProps} />;
       case "Student":
-        return <StudentSidebar />;
+        return <StudentSidebar {...sidebarProps} />;
       default:
         return null;
     }
@@ -28,7 +42,7 @@ export default function DashboardLayout() {
 
       <div className="flex min-h-screen flex-1 flex-col">
         <div className="sticky top-0 z-10">
-          <Topbar />
+          <Topbar isSidebarOpen={isSidebarOpen} onMenuClick={toggleSidebar} />
         </div>
 
         <main className="flex-1 overflow-y-auto p-6">
