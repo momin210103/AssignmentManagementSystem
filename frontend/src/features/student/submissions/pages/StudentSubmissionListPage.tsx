@@ -138,6 +138,9 @@ export default function StudentSubmissionListPage() {
               <h2 className="mt-4 text-sm font-semibold text-text-primary">
                 Submission
               </h2>
+              <h2 className="mt-4 line-clamp-2 text-lg font-semibold text-text-primary">
+                {submission.assignmentTitle}
+              </h2>
 
               {/* Information */}
               <div className="mt-5 space-y-3 border-t border-border pt-4">
