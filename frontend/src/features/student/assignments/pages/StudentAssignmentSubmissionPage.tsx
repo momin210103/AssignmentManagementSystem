@@ -32,6 +32,12 @@ export default function StudentAssignmentSubmitPage() {
   const resubmitMutation = useResubmitSubmission();
   const uploadFileMutation = useUploadSubmissionFile();
 
+  const apiOrigin = import.meta.env.VITE_API_BASE_URL.replace(/\/api$/, "");
+
+  const submittedFileUrl = submission?.fileUrl
+    ? `${apiOrigin}${submission.fileUrl}`
+    : null;
+
   useEffect(() => {
     if (submission) {
       setAnswer(submission.answer);
@@ -195,7 +201,7 @@ export default function StudentAssignmentSubmitPage() {
               {/* Existing File - View Mode */}
               {isReadOnly && submission?.fileUrl && (
                 <a
-                  href={submission.fileUrl}
+                  href={submittedFileUrl ?? '#'}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="
