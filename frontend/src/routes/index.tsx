@@ -20,6 +20,8 @@ import SubmissionReviewPage from "@/features/teacher/assignments/pages/Submissio
 import StudentAssignmentListPage from "@/features/student/assignments/pages/StudentAssignmentListPage";
 import StudentAssignmentDetailsPage from "@/features/student/assignments/pages/StudentAssignmentDetailsPage";
 import StudentAssignmentSubmissionPage from "@/features/student/assignments/pages/StudentAssignmentSubmissionPage";
+import StudentSubmissionListPage from "@/features/student/submissions/pages/StudentSubmissionListPage";
+import StudentSubmissionDetailsPage from "@/features/student/submissions/pages/StudentSubmissionDetailsPage";
 
 export const router = createBrowserRouter([
   {
@@ -111,8 +113,16 @@ export const router = createBrowserRouter([
         element: <StudentAssignmentDetailsPage />,
       },
       {
-        path:"assignments/:id/submit",
+        path: "assignments/:id/submit",
         element: <StudentAssignmentSubmissionPage />,
+      },
+      {
+        path: "submissions",
+        element: <StudentSubmissionListPage />,
+      },
+      {
+        path: "submissions/:id/details",
+        element: <StudentSubmissionDetailsPage />,
       }
     ],
   },

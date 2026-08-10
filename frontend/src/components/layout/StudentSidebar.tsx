@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  ClipboardCheck,
   ClipboardList,
   GraduationCap,
   LayoutDashboard,
@@ -18,19 +19,14 @@ const menus = [
     icon: LayoutDashboard,
   },
   {
-    title: "My Classes",
-    path: "/student/classes",
-    icon: GraduationCap,
-  },
-  {
-    title: "My Subjects",
-    path: "/student/subjects",
-    icon: BookOpen,
-  },
-  {
     title: "Assignments",
     path: "/student/assignments",
     icon: ClipboardList,
+  },
+  {
+    title: "My Submissions",
+    path: "/student/submissions",
+    icon: ClipboardCheck,
   },
 ];
 

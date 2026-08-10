@@ -35,9 +35,16 @@ export async function getMySubmissions() {
 
 export async function resubmitSubmission(
   submissionId: string,
-  data: ResubmitSubmissionRequest,
-) {
+  data: ResubmitSubmissionRequest) {
   const response = await api.put(`/submissions/${submissionId}/resubmit`, data);
+
+  return response.data;
+}
+
+
+// Get submission by ID
+export async function getMySubmissionById(submissionId: string) {
+  const response = await api.get(`/submissions/${submissionId}`);
 
   return response.data;
 }
