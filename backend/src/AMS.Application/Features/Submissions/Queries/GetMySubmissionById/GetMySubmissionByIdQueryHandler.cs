@@ -12,7 +12,7 @@ public class GetMySubmissionByIdQueryHandler : IRequestHandler<GetMySubmissionBy
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserService _currentUserService;
     private readonly IMapper _mapper;
-    
+
     public GetMySubmissionByIdQueryHandler(IApplicationDbContext context, ICurrentUserService currentUserService, IMapper mapper)
     {
         _context = context;
@@ -20,12 +20,13 @@ public class GetMySubmissionByIdQueryHandler : IRequestHandler<GetMySubmissionBy
         _mapper = mapper;
     }
 
-  
-    
+
+
     public async Task<SubmissionDto> Handle(GetMySubmissionByIdQuery request, CancellationToken cancellationToken)
     {
         var submission = await _context.Submissions
             .AsNoTracking()
+            .Include(x => x.Assignment)
             .FirstOrDefaultAsync(
                 x => x.Id == request.Id &&
                      x.StudentId == _currentUserService.UserId,

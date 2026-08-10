@@ -6,6 +6,8 @@ public class SubmissionDto
 
     public Guid AssignmentId { get; set; }
 
+    public string AssignmentTitle { get; set; } = string.Empty;
+
     public Guid StudentId { get; set; }
 
     public string Answer { get; set; } = string.Empty;

@@ -11,7 +11,7 @@ public class GetMySubmissionsQueryHandler : IRequestHandler<GetMySubmissionsQuer
     private readonly IMapper _mapper;
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserService _currentUserService;
-    
+
     public GetMySubmissionsQueryHandler(IMapper mapper, IApplicationDbContext context, ICurrentUserService currentUserService)
     {
         _mapper = mapper;
@@ -19,12 +19,13 @@ public class GetMySubmissionsQueryHandler : IRequestHandler<GetMySubmissionsQuer
         _currentUserService = currentUserService;
     }
 
-   
-    
-    public async  Task<List<SubmissionDto>> Handle(GetMySubmissionsQuery request, CancellationToken cancellationToken)
+
+
+    public async Task<List<SubmissionDto>> Handle(GetMySubmissionsQuery request, CancellationToken cancellationToken)
     {
         var submissions = await _context.Submissions
             .AsNoTracking()
+            .Include(x => x.Assignment)
             .Where(x => x.StudentId == _currentUserService.UserId)
             .OrderByDescending(x => x.SubmittedAt)
             .ToListAsync(cancellationToken);

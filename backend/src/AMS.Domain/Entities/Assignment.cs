@@ -6,6 +6,7 @@ namespace AMS.Domain.Entities;
 public class Assignment : BaseEntity
 {
     public string Title { get; set; } =  string.Empty;
+   
     
     
     public string? Description { get; set; } = string.Empty;
@@ -23,5 +24,6 @@ public class Assignment : BaseEntity
     public Guid ClassId { get; set; }
 
     public Guid SubjectId { get; set; }
+    
     
 }

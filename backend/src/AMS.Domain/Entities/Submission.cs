@@ -22,5 +22,8 @@ public class Submission : BaseEntity
     public SubmissionStatus Status { get; set; }
     
     public DateTime? ReviewedAt { get; set; }
+
+    // Navigation Properties
+     public Assignment Assignment { get; set; } = null!;
     
 }

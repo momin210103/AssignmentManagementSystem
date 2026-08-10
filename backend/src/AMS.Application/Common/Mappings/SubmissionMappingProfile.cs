@@ -10,10 +10,13 @@ public class SubmissionMappingProfile : Profile
     public SubmissionMappingProfile()
     {
         CreateMap<CreateSubmissionRequest, Submission>();
-        
+
         CreateMap<Submission, SubmissionDto>()
             .ForMember(
                 dest => dest.Status,
-                opt => opt.MapFrom(src => src.Status.ToString()));
+                opt => opt.MapFrom(src => src.Status.ToString()))
+            .ForMember(
+        dest => dest.AssignmentTitle,
+        opt => opt.MapFrom(src => src.Assignment.Title));
     }
 }

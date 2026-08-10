@@ -19,12 +19,17 @@ public class SubmissionConfiguration : IEntityTypeConfiguration<Submission>
             .HasConversion<string>();
 
         builder.Property(x => x.Marks)
-            .HasPrecision(5,2);
+            .HasPrecision(5, 2);
 
         builder.HasIndex(x => new
         {
             x.AssignmentId,
             x.StudentId
         }).IsUnique();
+
+        builder.HasOne(x => x.Assignment)
+        .WithMany()
+        .HasForeignKey(x => x.AssignmentId)
+        .OnDelete(DeleteBehavior.Restrict);
     }
 }
