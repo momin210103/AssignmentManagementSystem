@@ -47,5 +47,5 @@ public interface IIdentityService
         Guid studentId,
         string fullName,
         string email);
-    
+    Task<string?> GetUserNameAsync(Guid userId);
 }

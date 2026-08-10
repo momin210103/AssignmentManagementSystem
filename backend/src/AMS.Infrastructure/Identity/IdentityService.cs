@@ -262,5 +262,11 @@ public class IdentityService : IIdentityService
         }
     }
 
+    public async Task<string?> GetUserNameAsync(Guid userId)
+    {
+        var user = await _userManager.FindByIdAsync(
+        userId.ToString());
 
+        return user?.FullName;
+    }
 }
