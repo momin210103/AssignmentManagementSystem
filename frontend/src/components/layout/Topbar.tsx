@@ -10,7 +10,7 @@ export default function Topbar({ isSidebarOpen, onMenuClick }: Props) {
     <header
       className="
         flex
-        h-20
+        h-25
         items-center
         justify-between
         gap-3

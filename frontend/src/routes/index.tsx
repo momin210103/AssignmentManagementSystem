@@ -19,6 +19,7 @@ import TeacherAssignmentSubmissionsPage from "@/features/teacher/assignments/pag
 import SubmissionReviewPage from "@/features/teacher/assignments/pages/SubmissionReviewPage";
 import StudentAssignmentListPage from "@/features/student/assignments/pages/StudentAssignmentListPage";
 import StudentAssignmentDetailsPage from "@/features/student/assignments/pages/StudentAssignmentDetailsPage";
+import StudentAssignmentSubmissionPage from "@/features/student/assignments/pages/StudentAssignmentSubmissionPage";
 
 export const router = createBrowserRouter([
   {
@@ -108,6 +109,10 @@ export const router = createBrowserRouter([
       {
         path: "assignments/:id/details",
         element: <StudentAssignmentDetailsPage />,
+      },
+      {
+        path:"assignments/:id/submit",
+        element: <StudentAssignmentSubmissionPage />,
       }
     ],
   },

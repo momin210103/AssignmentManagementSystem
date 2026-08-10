@@ -7,4 +7,3 @@ export interface StudentAssignment {
   status: string;
   classId: string;
 }
-
