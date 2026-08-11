@@ -1,11 +1,6 @@
-import { Edit, Eye, EyeOff, Trash2, ClipboardList } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import Card from "@/components/ui/Card";
-
-import { usePublishAssignment } from "@/features/teacher/assignments/hooks/usePublishAssignment";
-import { useUnpublishAssignment } from "@/features/teacher/assignments/hooks/useUnpublishAssignment";
-import { useDeleteAssignment } from "@/features/teacher/assignments/hooks/useDeleteAssignment";
 
 import type { TeacherAssignment } from "../types/assignment";
 
@@ -21,10 +16,6 @@ export default function TeacherAssignmentTable({
   isError,
 }: TeacherAssignmentTableProps) {
   const navigate = useNavigate();
-
-  const publishMutation = usePublishAssignment();
-  const unpublishMutation = useUnpublishAssignment();
-  const deleteMutation = useDeleteAssignment();
 
   if (isLoading) {
     return (
@@ -46,59 +37,107 @@ export default function TeacherAssignmentTable({
     );
   }
 
+  if (assignments.length === 0) {
+    return (
+      <Card>
+        <div className="py-12 text-center text-text-muted">
+          No assignments found.
+        </div>
+      </Card>
+    );
+  }
+
   return (
-    <Card>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[900px]">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">
-                #
-              </th>
+    <>
+      {/* Mobile / tablet — card list */}
+      <div className="space-y-3 md:hidden">
+        {assignments.map((assignment) => (
+          <Card
+            key={assignment.id}
+            onClick={() =>
+              navigate(`/teacher/assignments/${assignment.id}/details`)
+            }
+            className="cursor-pointer p-4 transition hover:border-primary"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <h3 className="min-w-0 truncate font-medium text-text-primary">
+                {assignment.title}
+              </h3>
 
-              <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">
-                Title
-              </th>
+              <span
+                className="
+                  inline-flex shrink-0 rounded-full bg-primary/10
+                  px-3 py-1 text-xs font-semibold text-primary
+                "
+              >
+                {assignment.status}
+              </span>
+            </div>
 
-              <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">
-                Description
-              </th>
+            <p className="mt-1 line-clamp-2 text-sm text-text-secondary">
+              {assignment.description}
+            </p>
 
-              <th className="px-6 py-4 text-center text-sm font-semibold text-text-secondary">
-                Marks
-              </th>
+            <div className="mt-3 flex items-center justify-between border-t border-border pt-3 text-xs text-text-secondary">
+              <span>
+                Deadline:{" "}
+                <span className="font-medium text-text-primary">
+                  {new Date(assignment.deadline).toLocaleDateString()}
+                </span>
+              </span>
 
-              <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">
-                Deadline
-              </th>
+              <span>
+                Marks:{" "}
+                <span className="font-medium text-text-primary">
+                  {assignment.maximumMarks}
+                </span>
+              </span>
+            </div>
+          </Card>
+        ))}
+      </div>
 
-              <th className="px-6 py-4 text-center text-sm font-semibold text-text-secondary">
-                Status
-              </th>
+      {/* Desktop — table */}
+      <Card className="hidden md:block">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[720px]">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">
+                  #
+                </th>
 
-              <th className="px-6 py-4 text-center text-sm font-semibold text-text-secondary">
-                Actions
-              </th>
-            </tr>
-          </thead>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">
+                  Title
+                </th>
 
-          <tbody>
-            {assignments.map((assignment, index) => {
-              const isDraft = assignment.status === "Draft";
-              const isPublished = assignment.status === "Published";
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">
+                  Description
+                </th>
 
-              const isPublishing =
-                publishMutation.isPending &&
-                publishMutation.variables === assignment.id;
+                <th className="px-6 py-4 text-center text-sm font-semibold text-text-secondary">
+                  Marks
+                </th>
 
-              const isUnpublishing =
-                unpublishMutation.isPending &&
-                unpublishMutation.variables === assignment.id;
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">
+                  Deadline
+                </th>
 
-              return (
+                <th className="px-6 py-4 text-center text-sm font-semibold text-text-secondary">
+                  Status
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {assignments.map((assignment, index) => (
                 <tr
                   key={assignment.id}
+                  onClick={() =>
+                    navigate(`/teacher/assignments/${assignment.id}/details`)
+                  }
                   className="
+                    cursor-pointer
                     border-b
                     border-border
                     transition-colors
@@ -145,168 +184,12 @@ export default function TeacherAssignmentTable({
                       {assignment.status}
                     </span>
                   </td>
-
-                  {/* Actions */}
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-center gap-2">
-                      {/* Edit */}
-                      <button
-                        type="button"
-                        title="Edit assignment"
-                        onClick={() =>
-                          navigate(`/teacher/assignments/${assignment.id}/edit`)
-                        }
-                        className="
-                          inline-flex
-                          h-9
-                          w-9
-                          items-center
-                          justify-center
-                          rounded-lg
-                          text-text-secondary
-                          transition
-                          hover:bg-primary/10
-                          hover:text-primary
-                        "
-                      >
-                        <Edit size={17} />
-                      </button>
-
-                      {/* Publish */}
-                      {isDraft && (
-                        <button
-                          type="button"
-                          title="Publish assignment"
-                          disabled={isPublishing}
-                          onClick={() => {
-                            const confirmed = window.confirm(
-                              "Are you sure you want to publish this assignment?",
-                            );
-
-                            if (!confirmed) return;
-
-                            publishMutation.mutate(assignment.id);
-                          }}
-                          className="
-                            inline-flex
-                            h-9
-                            w-9
-                            items-center
-                            justify-center
-                            rounded-lg
-                            text-success
-                            transition
-                            hover:bg-success/10
-                            disabled:cursor-not-allowed
-                            disabled:opacity-50
-                          "
-                        >
-                          <Eye size={17} />
-                        </button>
-                      )}
-
-                      {/* Unpublish */}
-                      {isPublished && (
-                        <button
-                          type="button"
-                          title="Unpublish assignment"
-                          disabled={isUnpublishing}
-                          onClick={() => {
-                            const confirmed = window.confirm(
-                              "Are you sure you want to unpublish this assignment?",
-                            );
-
-                            if (!confirmed) return;
-
-                            unpublishMutation.mutate(assignment.id);
-                          }}
-                          className="
-                              inline-flex
-                              h-9
-                              w-9
-                              items-center
-                              justify-center
-                              rounded-lg
-                              text-warning
-                              transition
-                              hover:bg-warning/10
-                              disabled:cursor-not-allowed
-                              disabled:opacity-50
-                            "
-                        >
-                          <EyeOff size={17} />
-                        </button>
-                      )}
-
-                      {/* Submissions */}
-                      <button
-                        type="button"
-                        title="View submissions"
-                        onClick={() =>
-                          navigate(
-                            `/teacher/assignments/${assignment.id}/submissions`,
-                          )
-                        }
-                        className="
-        inline-flex
-        h-9
-        w-9
-        items-center
-        justify-center
-        rounded-lg
-        text-primary
-        transition
-        hover:bg-primary/10
-      "
-                      >
-                        <ClipboardList size={17} />
-                      </button>
-
-                      <button
-                        type="button"
-                        title="Delete assignment"
-                        disabled={deleteMutation.isPending}
-                        onClick={() => {
-                          const confirmed = window.confirm(
-                            `Are you sure you want to delete "${assignment.title}"?`,
-                          );
-
-                          if (!confirmed) return;
-
-                          deleteMutation.mutate(assignment.id);
-                        }}
-                        className="
-    inline-flex
-    h-9
-    w-9
-    items-center
-    justify-center
-    rounded-lg
-    text-danger
-    transition
-    hover:bg-danger/10
-    disabled:cursor-not-allowed
-    disabled:opacity-50
-  "
-                      >
-                        <Trash2 size={17} />
-                      </button>
-                    </div>
-                  </td>
                 </tr>
-              );
-            })}
-
-            {assignments.length === 0 && (
-              <tr>
-                <td colSpan={7} className="py-12 text-center text-text-muted">
-                  No assignments found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </Card>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </>
   );
 }

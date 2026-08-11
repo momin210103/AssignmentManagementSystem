@@ -9,6 +9,9 @@ export interface TeacherAssignment {
   classId: string;
   subjectId: string;
   createdAt: string;
+  subjectName: string;
+  className: string;
+  section: string;
 }
 
 export interface CreateAssignmentRequest {
