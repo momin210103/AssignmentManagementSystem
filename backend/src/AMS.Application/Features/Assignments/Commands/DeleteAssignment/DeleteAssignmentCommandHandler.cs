@@ -1,5 +1,6 @@
 using AMS.Application.Common.Exceptions;
 using AMS.Application.Common.Interfaces;
+using AMS.Domain.Constants;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,7 +34,9 @@ public class DeleteAssignmentCommandHandler
             throw new NotFoundException("Assignment not found.");
         }
 
-        if (assignment.TeacherId != _currentUserService.UserId)
+        var isAdmin = _currentUserService.IsInRole(Roles.Admin);
+
+        if (!isAdmin && assignment.TeacherId != _currentUserService.UserId)
         {
             throw new ForbiddenException(
                 "You are not allowed to delete this assignment.");
