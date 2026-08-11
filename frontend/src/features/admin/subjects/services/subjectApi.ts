@@ -19,3 +19,9 @@ export const createSubject = async (data: createSubject): Promise<Subject> => {
   const response = await api.post("/admin/subjects/createsubject", data);
   return response.data;
 }
+//Delete a subject
+export const deleteSubject = async (id: string): Promise<void> => {
+  await api.delete("/admin/subjects/delete",{
+    params: { id }
+  });
+};

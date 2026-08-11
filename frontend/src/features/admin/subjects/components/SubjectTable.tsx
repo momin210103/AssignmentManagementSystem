@@ -1,8 +1,9 @@
-import { Pencil, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 import Card from "@/components/ui/Card";
 
 import { useSubjects } from "../hooks/useSubjects";
+import { useDeleteSubject } from "../hooks/useDeleteSubject";
 
 type SubjectTableProps = {
   search: string;
@@ -14,6 +15,7 @@ export default function SubjectTable({ search }: SubjectTableProps) {
   const filteredSubjects = subjects.filter((subject) =>
     subject.name.toLowerCase().includes(search.toLowerCase()),
   );
+  const deleteSubjectMutation = useDeleteSubject();
 
   if (isLoading) {
     return (
@@ -62,24 +64,37 @@ export default function SubjectTable({ search }: SubjectTableProps) {
                 {subject.name}
               </td>
 
-              <td className="px-6 py-4">
-                <div className="flex justify-center gap-3">
-                  <button
-                    type="button"
-                    className="text-warning transition hover:opacity-70"
-                    title="Edit"
-                  >
-                    <Pencil size={18} />
-                  </button>
+              <td className="px-5 py-4 text-right">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const confirmed = window.confirm(
+                      `Are you sure you want to delete ${subject.name}?`,
+                    );
 
-                  <button
-                    type="button"
-                    className="text-danger transition hover:opacity-70"
-                    title="Delete"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
+                    if (confirmed) {
+                      deleteSubjectMutation.mutate(subject.id);
+                    }
+                  }}
+                  disabled={deleteSubjectMutation.isPending}
+                  className="
+          flex
+          h-9
+          w-9
+          items-center
+          justify-center
+          rounded-lg
+          text-danger
+          transition
+          hover:bg-danger/10
+          disabled:cursor-not-allowed
+          disabled:opacity-50
+        "
+                  title="Delete"
+                  aria-label={`Delete ${subject.name}`}
+                >
+                  <Trash2 size={18} />
+                </button>
               </td>
             </tr>
           ))}
