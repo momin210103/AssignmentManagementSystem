@@ -31,7 +31,7 @@ export default function AssignmentToolbar({
   subjectId,
   onSubjectChange,
   status,
-  onStatusChange
+  onStatusChange,
 }: AssignmentToolbarProps) {
   const { data: teachers = [], isLoading: teachersLoading } = useTeachers();
 
@@ -40,18 +40,22 @@ export default function AssignmentToolbar({
   const { data: subjects = [], isLoading: subjectsLoading } = useSubjects();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
+      {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-text-primary">Assignments</h1>
+        <h1 className="text-2xl font-bold text-text-primary sm:text-3xl">
+          Assignments
+        </h1>
 
-        <p className="mt-1 text-text-secondary">
+        <p className="mt-1 text-sm text-text-secondary sm:text-base">
           View assignments given by teachers.
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      {/* Filters */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap">
         {/* Search */}
-        <div className="relative w-full max-w-md">
+        <div className="relative sm:col-span-2 lg:w-72">
           <Search
             size={18}
             className="
@@ -80,18 +84,19 @@ export default function AssignmentToolbar({
               text-sm
               text-text-primary
               outline-none
+              transition
               focus:border-primary
             "
           />
         </div>
 
-        {/* Teacher Filter */}
+        {/* Teacher */}
         <select
           value={teacherId}
           onChange={(e) => onTeacherChange(e.target.value)}
           className="
             h-11
-            min-w-48
+            w-full
             rounded-xl
             border
             border-input-border
@@ -100,7 +105,9 @@ export default function AssignmentToolbar({
             text-sm
             text-text-primary
             outline-none
+            transition
             focus:border-primary
+            lg:w-48
           "
         >
           <option value="">
@@ -114,13 +121,13 @@ export default function AssignmentToolbar({
           ))}
         </select>
 
-        {/* Class Filter */}
+        {/* Class */}
         <select
           value={classId}
           onChange={(e) => onClassChange(e.target.value)}
           className="
             h-11
-            min-w-48
+            w-full
             rounded-xl
             border
             border-input-border
@@ -129,7 +136,9 @@ export default function AssignmentToolbar({
             text-sm
             text-text-primary
             outline-none
+            transition
             focus:border-primary
+            lg:w-48
           "
         >
           <option value="">
@@ -143,13 +152,13 @@ export default function AssignmentToolbar({
           ))}
         </select>
 
-        {/* Subject Filter */}
+        {/* Subject */}
         <select
           value={subjectId}
           onChange={(e) => onSubjectChange(e.target.value)}
           className="
             h-11
-            min-w-48
+            w-full
             rounded-xl
             border
             border-input-border
@@ -158,7 +167,9 @@ export default function AssignmentToolbar({
             text-sm
             text-text-primary
             outline-none
+            transition
             focus:border-primary
+            lg:w-48
           "
         >
           <option value="">
@@ -172,13 +183,13 @@ export default function AssignmentToolbar({
           ))}
         </select>
 
-        {/* Status Filter */}
+        {/* Status */}
         <select
           value={status}
           onChange={(e) => onStatusChange(e.target.value)}
           className="
             h-11
-            min-w-48
+            w-full
             rounded-xl
             border
             border-input-border
@@ -187,7 +198,9 @@ export default function AssignmentToolbar({
             text-sm
             text-text-primary
             outline-none
+            transition
             focus:border-primary
+            lg:w-48
           "
         >
           <option value="">All Statuses</option>
@@ -197,4 +210,4 @@ export default function AssignmentToolbar({
       </div>
     </div>
   );
-}   
+}
