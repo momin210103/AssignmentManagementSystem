@@ -4,12 +4,20 @@ import SubjectTable from "../components/SubjectTable";
 import SubjectToolbar from "../components/SubjectToolbar";
 import Modal from "@/components/ui/Modal";
 import SubjectForm from "../components/SubjectForm";
+import Toast from "@/components/ui/Toast";
 
 export default function SubjectListPage() {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleSuccess = () => {
+    setOpen(false);
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 3000);
   };
 
   return (
@@ -22,8 +30,11 @@ export default function SubjectListPage() {
 
       <SubjectTable search={search} />
       <Modal isOpen={open} title="Add Subject" onClose={handleClose}>
-        <SubjectForm onSuccess={handleClose} onCancel={handleClose} />
+        <SubjectForm onSuccess={handleSuccess} onCancel={handleClose} />
       </Modal>
+      {showSuccess && (
+        <Toast message="Subject added successfully!" />
+      )}
     </div>
   );
 }

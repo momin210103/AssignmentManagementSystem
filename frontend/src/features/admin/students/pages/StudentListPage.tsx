@@ -12,10 +12,10 @@ export default function StudentListPage() {
   const [open, setOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | undefined>();
 
-  const handleEditStudent = (student : Student) =>{
-    setSelectedStudent(student);
-    setOpen(true);
-  }
+  // const handleEditStudent = (student : Student) =>{
+  //   setSelectedStudent(student);
+  //   setOpen(true);
+  // }
   const handleClose = () => {
     setOpen(false);
     setSelectedStudent(undefined);
@@ -30,7 +30,7 @@ export default function StudentListPage() {
 
       <StudentTable 
       search={search} 
-      onEditStudent={handleEditStudent}
+      // onEditStudent={handleEditStudent}
       />
 
       <Modal 
