@@ -6,4 +6,7 @@ export interface StudentAssignment {
   maximumMarks: number;
   status: string;
   classId: string;
+  createdAt: string;
+  subjectId: string;
+  subjectName: string;
 }
