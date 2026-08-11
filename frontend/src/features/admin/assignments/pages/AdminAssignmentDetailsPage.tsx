@@ -3,6 +3,7 @@ import {
   BookOpen,
   CalendarDays,
   GraduationCap,
+  Trash2,
   User,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,9 +12,11 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 
 import { useGetAssignmentById } from "@/features/teacher/assignments/hooks/useGetAssignmentById";
+import { useDeleteAssignment } from "@/features/teacher/assignments/hooks/useDeleteAssignment";
 
 export default function AdminAssignmentDetailsPage() {
   const navigate = useNavigate();
+  const deleteMutation = useDeleteAssignment();
 
   const { assignmentId } = useParams<{
     assignmentId: string;
@@ -86,6 +89,17 @@ export default function AdminAssignmentDetailsPage() {
       </Card>
     );
   }
+  const handleDelete = () => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${assignment.title}"?`,
+    );
+
+    if (!confirmed) return;
+
+    deleteMutation.mutate(assignment.id, {
+      onSuccess: () => navigate("/admin/assignments"),
+    });
+  };
 
   return (
     <div className="space-y-5 sm:space-y-6">
@@ -125,6 +139,18 @@ export default function AdminAssignmentDetailsPage() {
             View assignment information.
           </p>
         </div>
+        <div className="ml-auto flex items-center gap-2">
+          <Button
+            type="button"
+            variant="secondary"
+            leftIcon={<Trash2 size={16} />}
+            disabled={deleteMutation.isPending}
+            onClick={handleDelete}
+            className="text-danger"
+          >
+            Delete
+          </Button>
+        </div>
       </div>
 
       {/* Assignment Header */}
@@ -154,7 +180,9 @@ export default function AdminAssignmentDetailsPage() {
           >
             {assignment.status}
           </span>
+          
         </div>
+        
       </Card>
 
       {/* Assignment Information */}
