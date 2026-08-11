@@ -10,3 +10,12 @@ export const getSubjects = async (): Promise<Subject[]> => {
 
   return response.data;
 };
+
+//Create a new subject
+export interface createSubject {
+  name: string;
+}
+export const createSubject = async (data: createSubject): Promise<Subject> => {
+  const response = await api.post("/admin/subjects/createsubject", data);
+  return response.data;
+}

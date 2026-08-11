@@ -2,12 +2,14 @@ import { useState } from "react";
 
 import SubjectTable from "../components/SubjectTable";
 import SubjectToolbar from "../components/SubjectToolbar";
+import Modal from "@/components/ui/Modal";
+import SubjectForm from "../components/SubjectForm";
 
 export default function SubjectListPage() {
   const [search, setSearch] = useState("");
-
-  const handleAddSubject = () => {
-    console.log("Open Add Subject Modal");
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -15,10 +17,13 @@ export default function SubjectListPage() {
       <SubjectToolbar
         search={search}
         onSearchChange={setSearch}
-        onAddSubject={handleAddSubject}
+        onAddSubject={() => setOpen(true)}
       />
 
       <SubjectTable search={search} />
+      <Modal isOpen={open} title="Add Subject" onClose={handleClose}>
+        <SubjectForm onSuccess={handleClose} onCancel={handleClose} />
+      </Modal>
     </div>
   );
 }
