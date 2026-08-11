@@ -15,7 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 
-import { useAssignment } from "../hooks/useAssignment";
+import { useGetAssignmentById } from "../hooks/useGetAssignmentById";
 import { usePublishAssignment } from "@/features/teacher/assignments/hooks/usePublishAssignment";
 import { useUnpublishAssignment } from "@/features/teacher/assignments/hooks/useUnpublishAssignment";
 import { useDeleteAssignment } from "@/features/teacher/assignments/hooks/useDeleteAssignment";
@@ -24,7 +24,7 @@ export default function TeacherAssignmentDetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
-  const { data: assignment, isLoading, isError } = useAssignment(id ?? "");
+  const { data: assignment, isLoading, isError } = useGetAssignmentById(id ?? "");
 
   const publishMutation = usePublishAssignment();
   const unpublishMutation = useUnpublishAssignment();

@@ -3,14 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import Card from "@/components/ui/Card";
 
-import { useAssignment } from "../hooks/useAssignment";
+import { useGetAssignmentById } from "../hooks/useGetAssignmentById";
 import EditAssignmentForm from "../components/EditAssignmentForm";
 
 export default function EditAssignmentPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: assignment, isLoading, isError } = useAssignment(id!);
+  const { data: assignment, isLoading, isError } = useGetAssignmentById(id!);
 
   if (isLoading) {
     return (
