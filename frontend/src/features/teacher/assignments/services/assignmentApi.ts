@@ -6,6 +6,7 @@ import type {
   TeacherAssignmentOption,
   UpdateAssignmentRequest,
 } from "../types/assignment";
+import type { AssignmentSubmission } from "../types/submission";
 
 export async function getTeacherAssignments() {
   const response = await api.get<TeacherAssignment[]>("assignments/teacher");
@@ -68,7 +69,6 @@ export async function deleteAssignment(id: string) {
 }
 
 // Submitted Assignments
-import type { AssignmentSubmission } from "../types/submission";
 
 export async function getAssignmentSubmissions(assignmentId: string) {
   const response = await api.get<AssignmentSubmission[]>(
@@ -91,6 +91,14 @@ export async function gradeSubmission(
   const response = await api.patch<AssignmentSubmission>(
     `/submissions/${submissionId}/grade`,
     data,
+  );
+
+  return response.data;
+}
+// Get All Submitted Assignments for Teacher
+export async function getTeacherSubmissions() {
+  const response = await api.get<AssignmentSubmission[]>(
+    "/submissions/teacher",
   );
 
   return response.data;

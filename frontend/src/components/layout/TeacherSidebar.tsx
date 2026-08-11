@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   LogOut,
   X,
+  Upload,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -21,11 +22,11 @@ const menus = [
     path: "/teacher/assignments",
     icon: ClipboardList,
   },
-  // {
-  //   title: "Submissions",
-  //   path: "/teacher/submissions",
-  //   icon: Upload,
-  // },
+  {
+    title: "Submissions",
+    path: "/teacher/submissions",
+    icon: Upload,
+  },
 ];
 
 type Props = {
