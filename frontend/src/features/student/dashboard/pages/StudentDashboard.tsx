@@ -41,7 +41,11 @@ export default function StudentDashboard() {
   const stats = [
     {
       title: "My Classes",
-      value: profileLoading ? "..." : profile?.class ? 1 : 0,
+      value: profileLoading
+        ? "..."
+        : profile?.class
+          ? `${profile.class.name} - ${profile.class.section}`
+          : "Not assigned",
       icon: GraduationCap,
     },
     {
@@ -87,7 +91,7 @@ export default function StudentDashboard() {
                     {stat.title}
                   </p>
 
-                  <h2 className="mt-2 text-3xl font-bold text-text-primary">
+                  <h2 className="mt-2 text-1xl  text-text-primary">
                     {stat.value}
                   </h2>
                 </div>
