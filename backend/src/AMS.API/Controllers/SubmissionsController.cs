@@ -4,6 +4,7 @@ using AMS.Application.Features.Submissions.Commands.ResubmitSubmission;
 using AMS.Application.Features.Submissions.Queries.GetAssignmentSubmissions;
 using AMS.Application.Features.Submissions.Queries.GetMySubmissions;
 using AMS.Application.Features.Submissions.Queries.GetMySubmissionsById;
+using AMS.Application.Features.Submissions.Queries.GetTeacherSubmissions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,7 +50,7 @@ public class SubmissionsController : ControllerBase
 
         return Ok(result);
     }
-    
+
     [Authorize(Roles = "Teacher")]
     [HttpPatch("{submissionId:guid}/grade")]
     public async Task<IActionResult> Grade(
@@ -76,6 +77,16 @@ public class SubmissionsController : ControllerBase
     {
         var result = await _mediator.Send(
             new ResubmitSubmissionCommand(submissionId, request));
+
+        return Ok(result);
+    }
+
+    [HttpGet("teacher")]
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> GetTeacherSubmissions()
+    {
+        var result = await _mediator.Send(
+            new GetTeacherSubmissionsQuery());
 
         return Ok(result);
     }
