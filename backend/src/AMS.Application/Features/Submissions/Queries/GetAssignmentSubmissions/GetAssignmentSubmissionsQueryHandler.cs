@@ -13,15 +13,18 @@ public class GetAssignmentSubmissionsQueryHandler
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
     private readonly ICurrentUserService _currentUserService;
+    private readonly IIdentityService _identityService;
 
     public GetAssignmentSubmissionsQueryHandler(
         IApplicationDbContext context,
         IMapper mapper,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        IIdentityService identityService)
     {
         _context = context;
         _mapper = mapper;
         _currentUserService = currentUserService;
+        _identityService = identityService;
     }
 
     public async Task<List<SubmissionDto>> Handle(
@@ -47,6 +50,20 @@ public class GetAssignmentSubmissionsQueryHandler
             .OrderByDescending(x => x.SubmittedAt)
             .ToListAsync(cancellationToken);
 
-        return _mapper.Map<List<SubmissionDto>>(submissions);
+        var studentNames = await _identityService.GetStudentNamesAsync();
+
+        var result = _mapper.Map<List<SubmissionDto>>(submissions);
+
+        foreach (var submission in result)
+        {
+            if (studentNames.TryGetValue(
+                submission.StudentId,
+                out var studentName))
+            {
+                submission.StudentName = studentName;
+            }
+        }
+
+        return result;
     }
 }

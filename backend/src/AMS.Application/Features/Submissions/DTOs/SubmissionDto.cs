@@ -10,6 +10,8 @@ public class SubmissionDto
 
     public Guid StudentId { get; set; }
 
+    public string StudentName { get; set; } = string.Empty;
+
     public string Answer { get; set; } = string.Empty;
 
     public string? FileUrl { get; set; }

@@ -25,5 +25,6 @@ public class Submission : BaseEntity
 
     // Navigation Properties
      public Assignment Assignment { get; set; } = null!;
+
     
 }
