@@ -279,4 +279,13 @@ public class IdentityService : IIdentityService
         return roles.FirstOrDefault();
 
     }
+
+    public async Task<string?> GetUserEmailAsync(Guid userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user is null)
+            return null;
+
+        return await _userManager.GetEmailAsync(user);
+    }
 }

@@ -50,4 +50,6 @@ public interface IIdentityService
     Task<string?> GetUserNameAsync(Guid userId);
 
     Task<string?> GetUserRoleAsync(Guid userId);
+
+    Task<string?> GetUserEmailAsync(Guid userId);
 }

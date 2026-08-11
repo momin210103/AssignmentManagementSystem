@@ -31,6 +31,7 @@ public class GetMyProfileQueryHandler
 
         var userName = await _identityService.GetUserNameAsync(userId);
         var role = await _identityService.GetUserRoleAsync(userId);
+        var userEmail = await _identityService.GetUserEmailAsync(userId);
 
         if (string.IsNullOrWhiteSpace(userName))
             throw new NotFoundException("User not found.");
@@ -38,11 +39,15 @@ public class GetMyProfileQueryHandler
         if (string.IsNullOrWhiteSpace(role))
             throw new NotFoundException("User role not found.");
 
+        if (string.IsNullOrWhiteSpace(userEmail))
+            throw new NotFoundException("User email not found.");
+
         var profile = new MyProfileDto
         {
             Id = userId,
             FullName = userName,
-            Role = role
+            Role = role,
+            Email = userEmail
         };
 
         // =========================
