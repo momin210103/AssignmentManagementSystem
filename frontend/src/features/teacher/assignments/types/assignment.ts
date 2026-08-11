@@ -6,6 +6,7 @@ export interface TeacherAssignment {
   maximumMarks: number;
   status: string;
   teacherId: string;
+  teacherName: string;
   classId: string;
   subjectId: string;
   createdAt: string;
