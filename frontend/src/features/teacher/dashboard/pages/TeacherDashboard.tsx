@@ -57,11 +57,7 @@ export default function TeacherDashboard() {
       value: isAssignmentsLoading ? "..." : assignments.length,
       icon: ClipboardList,
     },
-    {
-      title: "Submissions",
-      value: "-",
-      icon: Users,
-    },
+
   ];
 
   return (
