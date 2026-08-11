@@ -48,4 +48,6 @@ public interface IIdentityService
         string fullName,
         string email);
     Task<string?> GetUserNameAsync(Guid userId);
+
+    Task<string?> GetUserRoleAsync(Guid userId);
 }

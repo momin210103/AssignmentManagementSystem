@@ -269,4 +269,14 @@ public class IdentityService : IIdentityService
 
         return user?.FullName;
     }
+
+    public async Task<string?> GetUserRoleAsync(Guid userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user is null)
+            return null;
+        var roles = await _userManager.GetRolesAsync(user);
+        return roles.FirstOrDefault();
+
+    }
 }
