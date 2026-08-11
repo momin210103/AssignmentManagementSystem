@@ -4,6 +4,7 @@ export interface AssignmentSubmission {
   id: string;
   assignmentId: string;
   assignmentTitle: string;
+  studentName: string;
   studentId: string;
   answer: string;
   fileUrl: string | null;

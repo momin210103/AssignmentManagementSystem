@@ -56,7 +56,6 @@ export default function TeacherAssignmentSubmissionsPage() {
   return (
     <div className="space-y-5 sm:space-y-6">
       {/* Header */}
-      {/* Header */}
       <div className="flex items-start gap-3 sm:gap-4">
         <button
           type="button"
@@ -179,7 +178,7 @@ export default function TeacherAssignmentSubmissionsPage() {
 
                   <td className="max-w-[240px] px-5 py-4">
                     <p className="truncate text-sm font-medium text-text-primary">
-                      {submission.studentId}
+                      {submission.studentName}
                     </p>
                   </td>
 
