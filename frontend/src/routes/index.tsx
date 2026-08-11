@@ -24,6 +24,7 @@ import StudentSubmissionListPage from "@/features/student/submissions/pages/Stud
 import StudentSubmissionDetailsPage from "@/features/student/submissions/pages/StudentSubmissionDetailsPage";
 import TeacherAssignmentDetailsPage from "@/features/teacher/assignments/pages/TeacherAssignmentDetailsPage";
 import TeacherAllSubmittedListPage from "@/features/teacher/assignments/pages/TeacherAllSubmittedListPage";
+import StudentDetailsPage from "@/features/admin/students/pages/StudentDetailsPage";
 
 export const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
       {
         path: "students",
         element: <StudentListPage />,
+      },
+      {
+        path: "students/:studentId",
+        element: <StudentDetailsPage />,
       },
       {
         path: "teachers",

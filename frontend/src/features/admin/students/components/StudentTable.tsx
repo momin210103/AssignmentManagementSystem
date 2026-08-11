@@ -1,22 +1,18 @@
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import Card from "@/components/ui/Card";
 
-import { useDeleteStudent } from "../hooks/useDeleteStudent";
 import { useStudents } from "../hooks/useStudents";
 import type { Student } from "../services/studentApi";
 
 type StudentTableProps = {
   search: string;
-  onEditStudent: (student: Student) => void;
 };
 
-export default function StudentTable({
-  search,
-  onEditStudent,
-}: StudentTableProps) {
+export default function StudentTable({ search }: StudentTableProps) {
   const { data: students = [], isLoading } = useStudents();
-  const deleteStudentMutation = useDeleteStudent();
+  const navigate = useNavigate();
 
   const filteredStudents = students.filter((student) => {
     const query = search.toLowerCase();
@@ -28,14 +24,8 @@ export default function StudentTable({
     );
   });
 
-  const handleDelete = (student: Student) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete ${student.fullName}?`,
-    );
-
-    if (confirmed) {
-      deleteStudentMutation.mutate(student.id);
-    }
+  const handleStudentClick = (studentId: string) => {
+    navigate(`/admin/students/${studentId}`);
   };
 
   if (isLoading) {
@@ -68,8 +58,8 @@ export default function StudentTable({
                   Class
                 </th>
 
-                <th className="px-5 py-4 text-center text-xs font-semibold uppercase tracking-wide text-text-secondary">
-                  Actions
+                <th className="px-5 py-4 text-right text-xs font-semibold uppercase tracking-wide text-text-secondary">
+                  Details
                 </th>
               </tr>
             </thead>
@@ -78,10 +68,19 @@ export default function StudentTable({
               {filteredStudents.map((student) => (
                 <tr
                   key={student.id}
-                  className="border-b border-border last:border-b-0 transition hover:bg-background"
+                  onClick={() => handleStudentClick(student.id)}
+                  className="
+                    group
+                    cursor-pointer
+                    border-b
+                    border-border
+                    last:border-b-0
+                    transition
+                    hover:bg-primary/5
+                  "
                 >
                   <td className="px-5 py-4">
-                    <p className="font-medium text-text-primary">
+                    <p className="font-medium text-text-primary transition group-hover:text-primary">
                       {student.fullName}
                     </p>
                   </td>
@@ -97,12 +96,17 @@ export default function StudentTable({
                   </td>
 
                   <td className="px-5 py-4">
-                    <StudentActions
-                      student={student}
-                      onEdit={onEditStudent}
-                      onDelete={handleDelete}
-                      isDeleting={deleteStudentMutation.isPending}
-                    />
+                    <div className="flex justify-end">
+                      <ChevronRight
+                        size={19}
+                        className="
+                          text-text-muted
+                          transition
+                          group-hover:translate-x-1
+                          group-hover:text-primary
+                        "
+                      />
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -132,43 +136,60 @@ export default function StudentTable({
           </Card>
         ) : (
           filteredStudents.map((student) => (
-            <Card key={student.id} className="overflow-hidden">
-              {/* Student Info */}
-              <div className="p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h3 className="truncate font-semibold text-text-primary">
-                      {student.fullName}
-                    </h3>
-
-                    <p className="mt-1 truncate text-sm text-text-secondary">
-                      {student.email}
-                    </p>
-                  </div>
-
-                  <div className="shrink-0 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                    Student
-                  </div>
+            <Card
+              key={student.id}
+              onClick={() => handleStudentClick(student.id)}
+              className="
+                cursor-pointer
+                overflow-hidden
+                transition
+                hover:border-primary/30
+                hover:bg-primary/5
+              "
+            >
+              <div className="flex items-center gap-4 p-4">
+                {/* Avatar */}
+                <div
+                  className="
+                    flex
+                    h-11
+                    w-11
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-primary/10
+                    text-sm
+                    font-bold
+                    text-primary
+                  "
+                >
+                  {student.fullName.charAt(0).toUpperCase()}
                 </div>
 
-                {/* Class */}
-                <div className="mt-4">
-                  <p className="text-xs font-medium text-text-muted">Class</p>
+                {/* Student Info */}
+                <div className="min-w-0 flex-1">
+                  <h3 className="truncate font-semibold text-text-primary">
+                    {student.fullName}
+                  </h3>
 
-                  <p className="mt-1 text-sm font-medium text-text-primary">
+                  <p className="mt-0.5 truncate text-sm text-text-secondary">
+                    {student.email}
+                  </p>
+
+                  <p className="mt-1 text-xs text-text-muted">
                     {student.className} ({student.section})
                   </p>
                 </div>
-              </div>
 
-              {/* Actions */}
-              <div className="border-t border-border px-4 py-3">
-                <StudentActions
-                  student={student}
-                  onEdit={onEditStudent}
-                  onDelete={handleDelete}
-                  isDeleting={deleteStudentMutation.isPending}
-                  mobile
+                {/* Arrow */}
+                <ChevronRight
+                  size={19}
+                  className="
+                    shrink-0
+                    text-text-muted
+                    transition
+                  "
                 />
               </div>
             </Card>
@@ -176,73 +197,5 @@ export default function StudentTable({
         )}
       </div>
     </>
-  );
-}
-
-type StudentActionsProps = {
-  student: Student;
-  onEdit: (student: Student) => void;
-  onDelete: (student: Student) => void;
-  isDeleting: boolean;
-  mobile?: boolean;
-};
-
-function StudentActions({
-  student,
-  onEdit,
-  onDelete,
-  isDeleting,
-  mobile = false,
-}: StudentActionsProps) {
-  return (
-    <div
-      className={`flex items-center ${
-        mobile ? "justify-end gap-2" : "justify-center gap-3"
-      }`}
-    >
-      <button
-        type="button"
-        className="
-          flex h-9 w-9 items-center justify-center
-          rounded-lg text-primary
-          transition hover:bg-primary/10
-        "
-        title="View"
-        aria-label={`View ${student.fullName}`}
-      >
-        <Eye size={18} />
-      </button>
-
-      <button
-        type="button"
-        onClick={() => onEdit(student)}
-        className="
-          flex h-9 w-9 items-center justify-center
-          rounded-lg text-warning
-          transition hover:bg-warning/10
-        "
-        title="Edit"
-        aria-label={`Edit ${student.fullName}`}
-      >
-        <Pencil size={18} />
-      </button>
-
-      <button
-        type="button"
-        onClick={() => onDelete(student)}
-        disabled={isDeleting}
-        className="
-          flex h-9 w-9 items-center justify-center
-          rounded-lg text-danger
-          transition hover:bg-danger/10
-          disabled:cursor-not-allowed
-          disabled:opacity-50
-        "
-        title="Delete"
-        aria-label={`Delete ${student.fullName}`}
-      >
-        <Trash2 size={18} />
-      </button>
-    </div>
   );
 }
