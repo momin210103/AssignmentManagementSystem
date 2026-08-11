@@ -1,7 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 
 import { useAssignment } from "../hooks/useAssignment";
@@ -30,31 +29,36 @@ export default function EditAssignmentPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-8xl space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button
+      <div className="flex items-center gap-3">
+        <button
           type="button"
-          variant="secondary"
-          leftIcon={<ArrowLeft size={18} />}
-          onClick={() => navigate("/teacher/assignments")}
+          onClick={() => navigate(-1)}
+          aria-label="Back to assignments"
+          className="
+            flex h-9 w-9 shrink-0 items-center justify-center
+            rounded-full border border-border text-text-secondary
+            transition hover:bg-primary/10 hover:text-primary
+            sm:h-10 sm:w-10
+          "
         >
-          Back
-        </Button>
+          <ArrowLeft size={18} />
+        </button>
 
-        <div>
-          <h1 className="text-3xl font-bold text-text-primary">
+        <div className="min-w-0">
+          <h1 className="text-xl font-bold text-text-primary sm:text-2xl lg:text-3xl">
             Edit Assignment
           </h1>
 
-          <p className="mt-1 text-text-secondary">
+          <p className="mt-0.5 text-xs text-text-secondary sm:text-sm">
             Update your assignment details.
           </p>
         </div>
       </div>
 
       {/* Form */}
-      <Card className="max-w-3xl p-6">
+      <Card className="p-4 sm:p-6">
         <EditAssignmentForm
           assignment={assignment}
           onSuccess={() => navigate("/teacher/assignments")}
