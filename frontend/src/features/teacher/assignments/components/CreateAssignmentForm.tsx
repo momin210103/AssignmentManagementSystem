@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import Button from "@/components/ui/Button";
@@ -49,7 +49,10 @@ export default function CreateAssignmentForm({
 
   const selectedClassId = watch("classId");
 
-  // Unique classes
+  // --------------------------------
+  // Unique Classes
+  // --------------------------------
+
   const classes = useMemo(() => {
     const uniqueClasses = new Map<
       string,
@@ -71,7 +74,10 @@ export default function CreateAssignmentForm({
     return Array.from(uniqueClasses.values());
   }, [assignmentOptions]);
 
-  // Subjects assigned to selected class
+  // --------------------------------
+  // Subjects for Selected Class
+  // --------------------------------
+
   const subjects = useMemo(() => {
     if (!selectedClassId) {
       return [];
@@ -99,16 +105,22 @@ export default function CreateAssignmentForm({
     return Array.from(uniqueSubjects.values());
   }, [assignmentOptions, selectedClassId]);
 
-  // Reset subject when selected class changes
+  // --------------------------------
+  // Reset Subject when Class Changes
+  // --------------------------------
+
   useEffect(() => {
     setValue("subjectId", "");
   }, [selectedClassId, setValue]);
 
+  // --------------------------------
+  // Submit
+  // --------------------------------
 
   const onSubmit = async (data: CreateAssignmentFormData) => {
-    
     try {
       const deadline = new Date(data.deadline).toISOString();
+
       await createAssignmentMutation.mutateAsync({
         title: data.title,
         description: data.description,
@@ -127,7 +139,7 @@ export default function CreateAssignmentForm({
   const isSubmitting = createAssignmentMutation.isPending;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 sm:space-y-6">
       {/* Title */}
       <Input
         label="Title"
@@ -143,11 +155,13 @@ export default function CreateAssignmentForm({
         </label>
 
         <textarea
-          rows={4}
+          rows={5}
           placeholder="Enter assignment description"
           {...register("description")}
           className="
+            min-h-[120px]
             w-full
+            resize-y
             rounded-xl
             border
             border-input-border
@@ -155,141 +169,178 @@ export default function CreateAssignmentForm({
             px-4
             py-3
             text-sm
+            leading-6
             text-text-primary
             outline-none
             transition
+            placeholder:text-text-muted
             focus:border-primary
+            focus:ring-2
+            focus:ring-primary/10
           "
         />
 
         {errors.description?.message && (
-          <p className="mt-1 text-sm text-danger">
+          <p className="mt-1.5 text-sm text-danger">
             {errors.description.message}
           </p>
         )}
       </div>
 
-      {/* Deadline */}
-      <Input
-        type="datetime-local"
-        label="Deadline"
-        error={errors.deadline?.message}
-        {...register("deadline")}
-      />
+      {/* Deadline + Maximum Marks */}
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Input
+          type="datetime-local"
+          label="Deadline"
+          error={errors.deadline?.message}
+          {...register("deadline")}
+        />
 
-      {/* Maximum Marks */}
-      <Input
-        type="number"
-        label="Maximum Marks"
-        error={errors.maximumMarks?.message}
-        {...register("maximumMarks", {
-          valueAsNumber: true,
-        })}
-      />
-
-      {/* Class */}
-      <div>
-        <label className="mb-2 block text-sm font-medium text-text-primary">
-          Class
-        </label>
-
-        <select
-          {...register("classId")}
-          disabled={optionsLoading || optionsError}
-          className="
-            h-11
-            w-full
-            rounded-xl
-            border
-            border-input-border
-            bg-surface
-            px-3
-            text-sm
-            text-text-primary
-            outline-none
-            focus:border-primary
-            disabled:cursor-not-allowed
-            disabled:opacity-60
-          "
-        >
-          <option value="">
-            {optionsLoading
-              ? "Loading assigned classes..."
-              : optionsError
-                ? "Failed to load classes"
-                : "Select class"}
-          </option>
-
-          {classes.map((item) => (
-            <option key={item.classId} value={item.classId}>
-              {item.className}
-            </option>
-          ))}
-        </select>
-
-        {errors.classId?.message && (
-          <p className="mt-1 text-sm text-danger">{errors.classId.message}</p>
-        )}
+        <Input
+          type="number"
+          label="Maximum Marks"
+          error={errors.maximumMarks?.message}
+          {...register("maximumMarks", {
+            valueAsNumber: true,
+          })}
+        />
       </div>
 
-      {/* Subject */}
-      <div>
-        <label className="mb-2 block text-sm font-medium text-text-primary">
-          Subject
-        </label>
+      {/* Class + Subject */}
+      <div className="grid gap-5 sm:grid-cols-2">
+        {/* Class */}
+        <div>
+          <label className="mb-2 block text-sm font-medium text-text-primary">
+            Class
+          </label>
 
-        <select
-          {...register("subjectId")}
-          disabled={!selectedClassId || optionsLoading || optionsError}
-          className="
-            h-11
-            w-full
-            rounded-xl
-            border
-            border-input-border
-            bg-surface
-            px-3
-            text-sm
-            text-text-primary
-            outline-none
-            focus:border-primary
-            disabled:cursor-not-allowed
-            disabled:opacity-60
-          "
-        >
-          <option value="">
-            {!selectedClassId
-              ? "Select class first"
-              : optionsLoading
-                ? "Loading subjects..."
+          <select
+            {...register("classId")}
+            disabled={optionsLoading || optionsError}
+            className="
+              h-11
+              w-full
+              rounded-xl
+              border
+              border-input-border
+              bg-surface
+              px-3
+              text-sm
+              text-text-primary
+              outline-none
+              transition
+              focus:border-primary
+              focus:ring-2
+              focus:ring-primary/10
+              disabled:cursor-not-allowed
+              disabled:opacity-60
+            "
+          >
+            <option value="">
+              {optionsLoading
+                ? "Loading assigned classes..."
                 : optionsError
-                  ? "Failed to load subjects"
-                  : subjects.length === 0
-                    ? "No subjects assigned"
-                    : "Select subject"}
-          </option>
-
-          {subjects.map((item) => (
-            <option key={item.subjectId} value={item.subjectId}>
-              {item.subjectName}
+                  ? "Failed to load classes"
+                  : "Select class"}
             </option>
-          ))}
-        </select>
 
-        {errors.subjectId?.message && (
-          <p className="mt-1 text-sm text-danger">{errors.subjectId.message}</p>
-        )}
+            {classes.map((item) => (
+              <option key={item.classId} value={item.classId}>
+                {item.className}
+              </option>
+            ))}
+          </select>
+
+          {errors.classId?.message && (
+            <p className="mt-1.5 text-sm text-danger">
+              {errors.classId.message}
+            </p>
+          )}
+        </div>
+
+        {/* Subject */}
+        <div>
+          <label className="mb-2 block text-sm font-medium text-text-primary">
+            Subject
+          </label>
+
+          <select
+            {...register("subjectId")}
+            disabled={!selectedClassId || optionsLoading || optionsError}
+            className="
+              h-11
+              w-full
+              rounded-xl
+              border
+              border-input-border
+              bg-surface
+              px-3
+              text-sm
+              text-text-primary
+              outline-none
+              transition
+              focus:border-primary
+              focus:ring-2
+              focus:ring-primary/10
+              disabled:cursor-not-allowed
+              disabled:opacity-60
+            "
+          >
+            <option value="">
+              {!selectedClassId
+                ? "Select class first"
+                : optionsLoading
+                  ? "Loading subjects..."
+                  : optionsError
+                    ? "Failed to load subjects"
+                    : subjects.length === 0
+                      ? "No subjects assigned"
+                      : "Select subject"}
+            </option>
+
+            {subjects.map((item) => (
+              <option key={item.subjectId} value={item.subjectId}>
+                {item.subjectName}
+              </option>
+            ))}
+          </select>
+
+          {errors.subjectId?.message && (
+            <p className="mt-1.5 text-sm text-danger">
+              {errors.subjectId.message}
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 pt-2">
-        <Button type="button" variant="secondary" onClick={onCancel}>
+      <div
+        className="
+          flex
+          flex-col-reverse
+          gap-3
+          border-t
+          border-border
+          pt-5
+          sm:flex-row
+          sm:justify-end
+          sm:pt-6
+        "
+      >
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={onCancel}
+          disabled={isSubmitting}
+          className="w-full sm:w-auto"
+        >
           Cancel
         </Button>
 
         <Button
           type="submit"
           disabled={isSubmitting || optionsLoading || optionsError}
+          className="w-full sm:w-auto"
         >
           {isSubmitting ? "Creating..." : "Create Assignment"}
         </Button>
