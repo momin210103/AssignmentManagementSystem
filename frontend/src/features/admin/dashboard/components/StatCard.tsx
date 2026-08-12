@@ -18,40 +18,58 @@ export default function StatCard({
   trendType = "up",
 }: StatCardProps) {
   return (
-    <Card className="p-6">
-      <div className="flex items-start justify-between">
+    <Card className="p-4 sm:p-6">
+      {/* Top */}
+      <div className="flex items-start justify-between gap-3">
+        {/* Icon */}
         <div
           className="
             flex
-            h-12
-            w-12
+            h-10
+            w-10
+            shrink-0
             items-center
             justify-center
             rounded-xl
             bg-primary/10
             text-primary
+            sm:h-12
+            sm:w-12
           "
         >
           {icon}
         </div>
 
+        {/* Trend */}
         {trend && (
           <span
-            className={`rounded-full px-2 py-1 text-xs font-semibold ${
-              trendType === "up"
-                ? "bg-success/10 text-success"
-                : "bg-danger/10 text-danger"
-            }`}
+            className={`
+              shrink-0
+              rounded-full
+              px-2
+              py-1
+              text-[11px]
+              font-semibold
+              sm:text-xs
+              ${
+                trendType === "up"
+                  ? "bg-success/10 text-success"
+                  : "bg-danger/10 text-danger"
+              }
+            `}
           >
             {trend}
           </span>
         )}
       </div>
 
-      <div className="mt-6">
-        <h2 className="text-3xl font-extrabold text-text-primary">{value}</h2>
+      {/* Content */}
+      <div className="mt-4 sm:mt-6">
+        <h2 className="text-2xl font-extrabold text-text-primary sm:text-3xl">
+          {value}
+        </h2>
 
-        <p className="mt-1 text-sm text-text-secondary">{title}</p>
+        <p className="mt-1 text-xs text-text-secondary sm:text-sm">{title}</p>
       </div>
     </Card>
   );
