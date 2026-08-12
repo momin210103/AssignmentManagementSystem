@@ -3,6 +3,8 @@ import LoginForm from "@/features/auth/components/LoginForm";
 import DemoAccounts from "@/features/auth/components/DemoAccounts";
 import { theme } from "@/constants/theme";
 import { useLoginForm } from "@/features/auth/hooks/useLoginForm";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 export default function LoginPage() {
   const form = useLoginForm();
@@ -23,6 +25,7 @@ export default function LoginPage() {
         )`,
       }}
     >
+      <Navbar />
       <div className="mx-auto flex min-h-screen max-w-7xl items-center justify-center px-6">
         <div className="grid w-full grid-cols-1 items-center gap-14 lg:grid-cols-2">
           <LoginHero />
@@ -34,6 +37,7 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
