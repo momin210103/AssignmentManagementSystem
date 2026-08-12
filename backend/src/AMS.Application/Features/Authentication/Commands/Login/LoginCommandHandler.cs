@@ -30,6 +30,7 @@ public sealed class LoginCommandHandler
         return new LoginResponse
         {
             Token = result.Token,
+            RefreshToken = result.RefreshToken,
             FullName = result.FullName,
             Email = result.Email,
             Role = result.Role

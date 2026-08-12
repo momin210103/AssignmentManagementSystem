@@ -78,10 +78,15 @@ public class IdentityService : IIdentityService
             user.Id,
             user.Email!,
             roles);
+        var refreshToken =
+    await _jwtTokenGenerator.GenerateRefreshTokenAsync(
+        user.Id,
+        user.Email!);
 
         return new LoginResult
         {
             Token = token,
+            RefreshToken = refreshToken,
             FullName = user.FullName,
             Email = user.Email!,
             Role = roles.FirstOrDefault() ?? string.Empty

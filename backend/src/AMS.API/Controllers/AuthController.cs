@@ -1,4 +1,5 @@
 using AMS.Application.Features.Authentication.Commands.Login;
+using AMS.Application.Features.Authentication.Commands.RefreshToken;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ public class AuthController : ControllerBase
         _sender = sender;
     }
 
-    
+
     /*[HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
@@ -24,12 +25,22 @@ public class AuthController : ControllerBase
 
         return Ok(result);
     }*/
-    
+
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
         var result = await _sender.Send(new LoginCommand(request));
+
+        return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh(
+    [FromBody] RefreshTokenCommand command)
+    {
+        var result = await _sender.Send(command);
 
         return Ok(result);
     }
