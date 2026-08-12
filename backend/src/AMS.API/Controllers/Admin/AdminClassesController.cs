@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AMS.Application.Features.Admin.Classes.Commands.CreateClassCommands;
+using AMS.Application.Features.Admin.Classes.Commands.DeleteClassCommands;
 using AMS.Application.Features.Admin.Classes.Queries.GetAllClasses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -37,6 +38,14 @@ namespace AMS.API.Controllers.Admin
         public async Task<IActionResult> GetAll()
         {
             var result = await _mediator.Send(new GetAllClassesQuery());
+            return Ok(result);
+        }
+
+        [HttpDelete("{classId:guid}")]
+        public async Task<IActionResult> DeleteClass(Guid classId)
+        {
+            var command = new DeleteClassCommand(classId);
+            var result = await _mediator.Send(command);
             return Ok(result);
         }
 
