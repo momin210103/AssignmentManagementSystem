@@ -121,6 +121,9 @@ using (var scope = app.Services.CreateScope())
     await UserSeeder.SeedAsync(scope.ServiceProvider);
     await SubjectSeeder.SeedAsync(scope.ServiceProvider);
     await ClassSeeder.SeedAsync(scope.ServiceProvider);
+
+    // Seed application settings
+    await ApplicationSettingsSeeder.SeedAsync(scope.ServiceProvider);
 }
 
 if (app.Environment.IsDevelopment())

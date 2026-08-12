@@ -24,7 +24,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<StudentClass> StudentClasses => Set<StudentClass>();
 
     public DbSet<TeacherSubject> TeacherSubjects => Set<TeacherSubject>();
-    
+
+
+    // Settings
+    public DbSet<ApplicationSetting> ApplicationSettings => Set<ApplicationSetting>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

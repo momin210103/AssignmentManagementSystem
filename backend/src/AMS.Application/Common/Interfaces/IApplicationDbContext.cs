@@ -11,6 +11,9 @@ public interface IApplicationDbContext
     DbSet<TeacherSubject> TeacherSubjects { get; }
     DbSet<ClassRoom> ClassRooms { get; }
     DbSet<StudentClass> StudentClasses { get; }
-    
+
+    // Settings
+    DbSet<ApplicationSetting> ApplicationSettings { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
