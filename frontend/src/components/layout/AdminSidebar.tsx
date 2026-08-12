@@ -43,6 +43,11 @@ const menus = [
     path: "/admin/assignments",
     icon: ClipboardList,
   },
+  {
+    title: "Submissions",
+    path: "/admin/submissions",
+    icon: ClipboardList,
+  },
 ];
 
 type Props = {
