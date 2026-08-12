@@ -8,3 +8,8 @@ export interface CreateClassRequest {
   name: string;
   section: string;
 }
+
+export interface Student {
+  fullName: string;
+  email: string;
+}

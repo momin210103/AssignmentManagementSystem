@@ -1,6 +1,7 @@
 import Card from "@/components/ui/Card";
 
 import { useClasses } from "../hooks/useClasses";
+import { useNavigate } from "react-router-dom";
 
 type ClassTableProps = {
   search: string;
@@ -8,6 +9,7 @@ type ClassTableProps = {
 
 export default function ClassTable({ search }: ClassTableProps) {
   const { data: classes = [], isLoading, isError } = useClasses();
+  const navigate = useNavigate();
 
   const query = search.toLowerCase();
 
@@ -63,11 +65,16 @@ export default function ClassTable({ search }: ClassTableProps) {
               {filteredClasses.map((item, index) => (
                 <tr
                   key={item.id}
+                  onClick={() => {
+                    // Handle row click if needed
+                    navigate(`/admin/classes/${item.id}`);
+                  }}
                   className="
                     border-b
                     border-border
                     last:border-b-0
                     hover:bg-background
+                    cursor-pointer
                   "
                 >
                   <td className="px-5 py-4 text-sm text-text-muted">
@@ -102,7 +109,13 @@ export default function ClassTable({ search }: ClassTableProps) {
       {/* Mobile */}
       <div className="space-y-3 md:hidden">
         {filteredClasses.map((item) => (
-          <Card key={item.id} className="p-4">
+          <Card
+            key={item.id}
+            onClick={() => {
+              navigate(`/admin/classes/${item.id}`);
+            }}
+            className="p-4 cursor:pointer"
+          >
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-xs text-text-muted">Class</p>

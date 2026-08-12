@@ -1,5 +1,5 @@
 import { api } from "@/api/axios";
-import type { Class, CreateClassRequest } from "../types/class";
+import type { Class, CreateClassRequest, Student } from "../types/class";
 
 export const createClass = async (classData: CreateClassRequest): Promise<CreateClassRequest> => {
   const response = await api.post("/admin/classes", classData);
@@ -14,13 +14,13 @@ export const getClasses = async (): Promise<Class[]> => {
 };
 
 
-// // Get students by class 
-// export const getStudentsByClass = async (
-//   classId: string,
-// ): Promise<Student[]> => {
-//   const response = await api.get(
-//     `/admin/classes/${classId}/students`,
-//   );
+// Get students by class 
+export const getStudentsByClass = async (
+  classId: string,
+): Promise<Student[]> => {
+  const response = await api.get(
+    `/admin/classes/${classId}/students`,
+  );
 
-//   return response.data;
-// };
+  return response.data;
+};
