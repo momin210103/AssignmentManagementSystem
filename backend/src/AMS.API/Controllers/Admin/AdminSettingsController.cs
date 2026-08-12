@@ -1,3 +1,4 @@
+using AMS.Application.Features.Admin.Settings.Commands.UpdateSettings;
 using AMS.Application.Features.Admin.Settings.Queries.GetSettings;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -22,6 +23,15 @@ public class AdminSettingsController : ControllerBase
     {
         var result = await _sender.Send(
             new GetSettingsQuery());
+
+        return Ok(result);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateSettings(
+        [FromBody] UpdateSettingsCommand command)
+    {
+        var result = await _sender.Send(command);
 
         return Ok(result);
     }

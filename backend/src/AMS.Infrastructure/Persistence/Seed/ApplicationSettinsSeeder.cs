@@ -23,7 +23,7 @@ public static class ApplicationSettingsSeeder
         {
             Id = Guid.NewGuid(),
             ApplicationName = "AMS",
-            InstitutionName = "Your Institution",
+            InstitutionName = "OnnoRokom School",
             SupportEmail = "support@ams.com",
             AcademicYear = 2026,
             MaintenanceMode = false
