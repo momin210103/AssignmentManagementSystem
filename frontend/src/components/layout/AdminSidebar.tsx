@@ -34,6 +34,11 @@ const menus = [
     icon: ClipboardList,
   },
   {
+    title: "Classes",
+    path: "/admin/classes",
+    icon: LayoutDashboard,
+  },
+  {
     title: "Subjects",
     path: "/admin/subjects",
     icon: BookOpen,

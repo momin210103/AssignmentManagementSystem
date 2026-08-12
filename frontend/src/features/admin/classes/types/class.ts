@@ -3,3 +3,8 @@ export interface Class {
   name: string;
   section: string;
 }
+
+export interface CreateClassRequest {
+  name: string;
+  section: string;
+}
