@@ -78,10 +78,7 @@ export default function AdminDashboard() {
         </div>
       </section>
 
-      {/* Recent Assignments */}
-      <section>
-        <RecentAssignments />
-      </section>
+      
     </div>
   );
 }
