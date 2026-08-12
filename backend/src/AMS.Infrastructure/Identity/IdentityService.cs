@@ -113,26 +113,44 @@ public class IdentityService : IIdentityService
     }
     public async Task<List<StudentDto>> GetStudentsAsync()
     {
-        var students = await (
-            from user in _context.Users
-            join studentClass in _context.StudentClasses
-                on user.Id equals studentClass.StudentId
-            join classRoom in _context.ClassRooms
-                on studentClass.ClassId equals classRoom.Id
-            select new StudentDto
-            {
-                Id = user.Id,
-                FullName = user.FullName,
-                Email = user.Email!,
-                PhoneNumber = user.PhoneNumber,
+        var students = await _userManager.GetUsersInRoleAsync(Roles.Student);
 
-                ClassId = classRoom.Id,
-                ClassName = classRoom.Name,
-                Section = classRoom.Section
-            })
+        var studentIds = students
+            .Select(x => x.Id)
+            .ToList();
+
+        var studentClasses = await _context.StudentClasses
+            .Where(x => studentIds.Contains(x.StudentId))
+            .Join(
+                _context.ClassRooms,
+                studentClass => studentClass.ClassId,
+                classRoom => classRoom.Id,
+                (studentClass, classRoom) => new
+                {
+                    studentClass.StudentId,
+                    ClassId = classRoom.Id,
+                    ClassName = classRoom.Name,
+                    Section = classRoom.Section
+                })
             .ToListAsync();
 
-        return students;
+        return students.Select(student =>
+        {
+            var studentClass = studentClasses
+                .FirstOrDefault(x => x.StudentId == student.Id);
+
+            return new StudentDto
+            {
+                Id = student.Id,
+                FullName = student.FullName,
+                Email = student.Email!,
+                PhoneNumber = student.PhoneNumber,
+
+                ClassId = studentClass?.ClassId,
+                ClassName = studentClass?.ClassName,
+                Section = studentClass?.Section
+            };
+        }).ToList();
     }
     public async Task<Dictionary<Guid, string>> GetTeacherNamesAsync()
     {
