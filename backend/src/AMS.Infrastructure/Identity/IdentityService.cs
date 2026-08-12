@@ -288,4 +288,18 @@ public class IdentityService : IIdentityService
 
         return await _userManager.GetEmailAsync(user);
     }
+
+    public async Task<int> GetCountStudentAsync()
+    {
+        var students = await _userManager.GetUsersInRoleAsync("Student");
+        var count = students.Count;
+        return count;
+    }
+
+    public async Task<int> GetCountTeacherAsync()
+    {
+        var teachers = await _userManager.GetUsersInRoleAsync("Teacher");
+        var count = teachers.Count;
+        return count;
+    }
 }

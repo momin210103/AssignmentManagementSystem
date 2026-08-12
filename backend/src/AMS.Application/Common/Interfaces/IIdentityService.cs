@@ -52,4 +52,8 @@ public interface IIdentityService
     Task<string?> GetUserRoleAsync(Guid userId);
 
     Task<string?> GetUserEmailAsync(Guid userId);
+
+    //Count
+    Task<int> GetCountStudentAsync();
+    Task<int> GetCountTeacherAsync();
 }
