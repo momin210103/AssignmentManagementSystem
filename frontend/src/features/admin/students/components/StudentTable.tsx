@@ -92,7 +92,9 @@ export default function StudentTable({ search }: StudentTableProps) {
                   </td>
 
                   <td className="px-5 py-4 text-sm text-text-secondary">
-                    {student.className} ({student.section})
+                    {student.className
+                      ? `${student.className} (${student.section})`
+                      : "Not Assigned"}
                   </td>
 
                   <td className="px-5 py-4">
@@ -178,7 +180,9 @@ export default function StudentTable({ search }: StudentTableProps) {
                   </p>
 
                   <p className="mt-1 text-xs text-text-muted">
-                    {student.className} ({student.section})
+                    {student.className
+                      ? `${student.className} (${student.section})`
+                      : "Not Assigned"}
                   </p>
                 </div>
 
