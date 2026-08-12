@@ -17,7 +17,7 @@ public class AdminSubmissionsController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet]
+    [HttpGet("all")]
     public async Task<IActionResult> GetAll()
     {
         var result = await _mediator.Send(
