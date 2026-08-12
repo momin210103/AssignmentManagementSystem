@@ -30,6 +30,7 @@ import AdminAssignmentDetailsPage from "@/features/admin/assignments/pages/Admin
 import AllSubmissionsListPage from "@/features/admin/submissions/pages/AllSubmissionsListPage";
 import ClassListPage from "@/features/admin/classes/pages/ClassListPage";
 import ClassDetailsPage from "@/features/admin/classes/pages/ClassDetailsPage";
+import AdminSettingsPage from "@/features/admin/settings/pages/AdminSettingsPage";
 
 export const router = createBrowserRouter([
   {
@@ -74,12 +75,10 @@ export const router = createBrowserRouter([
       {
         path: "classes",
         element: <ClassListPage />,
-
       },
       {
         path: "classes/:classId",
         element: <ClassDetailsPage />,
-
       },
       {
         path: "subjects",
@@ -95,8 +94,12 @@ export const router = createBrowserRouter([
       },
       {
         path: "submissions",
-        element: <AllSubmissionsListPage/>
-      }
+        element: <AllSubmissionsListPage />,
+      },
+      {
+        path: "settings",
+        element: <AdminSettingsPage />,
+      },
     ],
   },
   {

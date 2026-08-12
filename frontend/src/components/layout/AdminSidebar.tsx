@@ -4,6 +4,7 @@ import {
   GraduationCap,
   LayoutDashboard,
   LogOut,
+  Settings,
   Users,
   X,
 } from "lucide-react";
@@ -53,6 +54,11 @@ const menus = [
     path: "/admin/submissions",
     icon: ClipboardList,
   },
+  {
+    title: "Settings",
+    path: "/admin/settings",
+    icon: Settings,
+  }
 ];
 
 type Props = {
