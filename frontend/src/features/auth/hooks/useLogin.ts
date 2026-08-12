@@ -1,15 +1,20 @@
 import { useMutation } from "@tanstack/react-query";
+
 import { login } from "../api/authApi";
-// import { saveToken } from "../utils/token";
-
-
+import { saveTokens, saveUser } from "../utils/token";
 
 export function useLogin() {
   return useMutation({
     mutationFn: login,
-    // onSuccess: (data) => {
-    //   saveToken(data.token);
-    //   console.log("Login successful:", data);
-    // }
+
+    onSuccess: (data) => {
+      saveTokens(data.token, data.refreshToken);
+
+      saveUser({
+        fullName: data.fullName,
+        email: data.email,
+        role: data.role,
+      });
+    },
   });
 }
