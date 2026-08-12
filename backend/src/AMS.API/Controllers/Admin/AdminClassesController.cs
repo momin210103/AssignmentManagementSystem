@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AMS.Application.Features.Admin.Classes.Commands.CreateClassCommands;
 using AMS.Application.Features.Admin.Classes.Commands.DeleteClassCommands;
+using AMS.Application.Features.Admin.Classes.Commands.RemoveStudentFromClass;
 using AMS.Application.Features.Admin.Classes.Queries.GetAllClasses;
 using AMS.Application.Features.Admin.Classes.Queries.GetStudentsByClass;
 using MediatR;
@@ -55,6 +56,20 @@ namespace AMS.API.Controllers.Admin
         public async Task<IActionResult> GetStudentsByClass(Guid classId)
         {
             var result = await _mediator.Send(new GetStudentsByClassQuery(classId));
+            return Ok(result);
+        }
+
+        // Remove student from class
+        [HttpDelete("{classId:guid}/students/{studentId:guid}")]
+        public async Task<IActionResult> RemoveStudentFromClass(
+    Guid classId,
+    Guid studentId)
+        {
+            var result = await _mediator.Send(
+                new RemoveStudentFromClassCommand(
+                    classId,
+                    studentId));
+
             return Ok(result);
         }
 
