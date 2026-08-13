@@ -12,59 +12,65 @@ public static class UserSeeder
         var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
         await SeedUserAsync(
-            userManager,
-            "Admin",
-            "admin@gmail.com",
-            "Admin@123",
-            Roles.Admin);
+           userManager,
+           "Admin",
+           "admin@gmail.com",
+           "Admin@123",
+           Roles.Admin);
 
         await SeedUserAsync(
             userManager,
-            "Teacher 1",
-            "teacher1@gmail.com",
-            "Teacher@123",
-            Roles.Teacher);
-        await SeedUserAsync(
-            userManager,
-            "Teacher 2",
-            "teacher2@gmail.com",
-            "Teacher@123",
-            Roles.Teacher);
-        await SeedUserAsync(
-            userManager,
-            "Teacher 3",
-            "teacher3@gmail.com",
+            "Dr. Sarah Ahmed",
+            "sarah.ahmed@gmail.com",
             "Teacher@123",
             Roles.Teacher);
 
         await SeedUserAsync(
             userManager,
-            "Student 1",
-            "student1@gmail.com",
-            "Student@123",
-            Roles.Student);
+            "Michael Johnson",
+            "michael.johnson@gmail.com",
+            "Teacher@123",
+            Roles.Teacher);
+
         await SeedUserAsync(
             userManager,
-            "Student 2",
-            "student2@gmail.com",
-            "Student@123",
-            Roles.Student);
+            "James Wilson",
+            "james.wilson@gmail.com",
+            "Teacher@123",
+            Roles.Teacher);
+
         await SeedUserAsync(
             userManager,
-            "Student 3",
-            "student3@gmail.com",
+            "Ayesha Rahman",
+            "ayesha.rahman@gmail.com",
             "Student@123",
             Roles.Student);
+
         await SeedUserAsync(
             userManager,
-            "Student 4",
-            "student4@gmail.com",
+            "Tanvir Hasan",
+            "tanvir.hasan@gmail.com",
             "Student@123",
             Roles.Student);
+
         await SeedUserAsync(
             userManager,
-            "Student 5",
-            "student5@gmail.com",
+            "Nusrat Jahan",
+            "nusrat.jahan@gmail.com",
+            "Student@123",
+            Roles.Student);
+
+        await SeedUserAsync(
+            userManager,
+            "Rakib Hossain",
+            "rakib.hossain@gmail.com",
+            "Student@123",
+            Roles.Student);
+
+        await SeedUserAsync(
+            userManager,
+            "Sadia Islam",
+            "sadia.islam@gmail.com",
             "Student@123",
             Roles.Student);
     }
