@@ -204,6 +204,19 @@ http://localhost:5173/
 VITE_API_BASE_URL=http://localhost:5175/api
 ```
 
+## Running Tests
+
+The project includes **15 unit tests** covering key application features.
+
+### Run All Tests
+
+Navigate to the backend directory:
+
+```bash
+cd backend
+dotnet test
+```
+
 ## Demo Credentials
 
 The application automatically creates demo users when the API starts with a fresh database.
