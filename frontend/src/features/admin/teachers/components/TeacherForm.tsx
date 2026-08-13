@@ -1,9 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import Alert from "@/components/ui/Alert";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import Toast from "@/components/ui/Toast";
 
 import { useCreateTeacher } from "../hooks/useCreateTeacher";
 import { useUpdateTeacher } from "../hooks/useUpdateTeacher";
@@ -30,13 +32,15 @@ export default function TeacherForm({
   onCancel,
 }: TeacherFormProps) {
   const isEdit = !!teacher;
+  const [formError, setFormError] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<TeacherFormData>({
     resolver: zodResolver(isEdit ? UpdateTeacherSchema : TeacherSchema),
     defaultValues: {
       fullName: "",
@@ -65,6 +69,7 @@ export default function TeacherForm({
   }, [teacher, reset]);
 
   const onSubmit = async (data: TeacherFormData) => {
+    setFormError(null);
     try {
       if (isEdit && teacher) {
         await updateTeacherMutation.mutateAsync({
@@ -75,7 +80,7 @@ export default function TeacherForm({
           },
         });
 
-        alert("Teacher updated successfully.");
+        setToastMessage("Teacher updated successfully.");
       } else {
         await createTeacherMutation.mutateAsync({
           fullName: data.fullName,
@@ -83,15 +88,14 @@ export default function TeacherForm({
           password: data.password!,
         });
 
-        alert("Teacher created successfully.");
+        setToastMessage("Teacher created successfully.");
       }
 
       reset();
       onSuccess();
     } catch (error) {
       console.error("Teacher operation failed:", error);
-
-      alert(isEdit ? "Failed to update teacher." : "Failed to create teacher.");
+      setFormError(isEdit ? "Failed to update teacher." : "Failed to create teacher.");
     }
   };
 
@@ -100,6 +104,8 @@ export default function TeacherForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      {toastMessage && <Toast message={toastMessage} type="success" />}
+      {formError && <Alert message={formError} />}
       <Input
         label="Full Name"
         placeholder="Enter full name"

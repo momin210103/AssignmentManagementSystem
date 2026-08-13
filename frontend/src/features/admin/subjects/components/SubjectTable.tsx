@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Trash2 } from "lucide-react";
 
 import Card from "@/components/ui/Card";
+import ConfirmAlert from "@/components/ui/ConfirmAlert";
 
 import { useSubjects } from "../hooks/useSubjects";
 import { useDeleteSubject } from "../hooks/useDeleteSubject";
@@ -11,6 +13,10 @@ type SubjectTableProps = {
 
 export default function SubjectTable({ search }: SubjectTableProps) {
   const { data: subjects = [], isLoading, isError } = useSubjects();
+  const [subjectToDelete, setSubjectToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const filteredSubjects = subjects.filter((subject) =>
     subject.name.toLowerCase().includes(search.toLowerCase()),
@@ -67,15 +73,9 @@ export default function SubjectTable({ search }: SubjectTableProps) {
               <td className="px-5 py-4 text-right">
                 <button
                   type="button"
-                  onClick={() => {
-                    const confirmed = window.confirm(
-                      `Are you sure you want to delete ${subject.name}?`,
-                    );
-
-                    if (confirmed) {
-                      deleteSubjectMutation.mutate(subject.id);
-                    }
-                  }}
+                  onClick={() =>
+                    setSubjectToDelete({ id: subject.id, name: subject.name })
+                  }
                   disabled={deleteSubjectMutation.isPending}
                   className="
           flex
@@ -108,6 +108,27 @@ export default function SubjectTable({ search }: SubjectTableProps) {
           )}
         </tbody>
       </table>
+
+      <ConfirmAlert
+        isOpen={subjectToDelete !== null}
+        title="Delete Subject"
+        message={
+          subjectToDelete
+            ? `Are you sure you want to delete ${subjectToDelete.name}?`
+            : ""
+        }
+        confirmText="Delete"
+        cancelText="Cancel"
+        isLoading={deleteSubjectMutation.isPending}
+        onCancel={() => setSubjectToDelete(null)}
+        onConfirm={() => {
+          if (subjectToDelete) {
+            deleteSubjectMutation.mutate(subjectToDelete.id, {
+              onSuccess: () => setSubjectToDelete(null),
+            });
+          }
+        }}
+      />
     </Card>
   );
 }

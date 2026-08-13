@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   ArrowLeft,
   BookOpen,
@@ -10,6 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import ConfirmAlert from "@/components/ui/ConfirmAlert";
 
 import { useGetAssignmentById } from "@/features/teacher/assignments/hooks/useGetAssignmentById";
 import { useDeleteAssignment } from "@/features/teacher/assignments/hooks/useDeleteAssignment";
@@ -17,6 +19,7 @@ import { useDeleteAssignment } from "@/features/teacher/assignments/hooks/useDel
 export default function AdminAssignmentDetailsPage() {
   const navigate = useNavigate();
   const deleteMutation = useDeleteAssignment();
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   const { assignmentId } = useParams<{
     assignmentId: string;
@@ -90,14 +93,16 @@ export default function AdminAssignmentDetailsPage() {
     );
   }
   const handleDelete = () => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${assignment.title}"?`,
-    );
+    setConfirmDeleteOpen(true);
+  };
 
-    if (!confirmed) return;
-
+  const handleConfirmDelete = () => {
+    if (!assignment) return;
     deleteMutation.mutate(assignment.id, {
-      onSuccess: () => navigate("/admin/assignments"),
+      onSuccess: () => {
+        setConfirmDeleteOpen(false);
+        navigate("/admin/assignments");
+      },
     });
   };
 
@@ -237,6 +242,17 @@ export default function AdminAssignmentDetailsPage() {
           {assignment.description || "No description provided."}
         </p>
       </Card>
+
+      <ConfirmAlert
+        isOpen={confirmDeleteOpen}
+        title="Delete Assignment"
+        message={`Are you sure you want to delete "${assignment.title}"?`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        isLoading={deleteMutation.isPending}
+        onCancel={() => setConfirmDeleteOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }

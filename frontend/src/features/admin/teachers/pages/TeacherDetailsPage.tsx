@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import ConfirmAlert from "@/components/ui/ConfirmAlert";
 import Modal from "@/components/ui/Modal";
 
 import TeacherForm from "../components/TeacherForm";
@@ -18,6 +19,7 @@ export default function TeacherDetailsPage() {
   }>();
 
   const [open, setOpen] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   const { data: teachers = [], isLoading, isError } = useTeachers();
 
@@ -30,16 +32,15 @@ export default function TeacherDetailsPage() {
   };
 
   const handleDelete = () => {
+    setConfirmDeleteOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
     if (!teacher) return;
-
-    const confirmed = window.confirm(
-      `Are you sure you want to delete ${teacher.fullName}?`,
-    );
-
-    if (!confirmed) return;
 
     deleteTeacherMutation.mutate(teacher.id, {
       onSuccess: () => {
+        setConfirmDeleteOpen(false);
         navigate("/admin/teachers");
       },
     });
@@ -244,6 +245,17 @@ export default function TeacherDetailsPage() {
           onCancel={handleClose}
         />
       </Modal>
+
+      <ConfirmAlert
+        isOpen={confirmDeleteOpen}
+        title="Delete Teacher"
+        message={`Are you sure you want to delete ${teacher ? teacher.fullName : ""}?`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        isLoading={deleteTeacherMutation.isPending}
+        onCancel={() => setConfirmDeleteOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }

@@ -1,8 +1,10 @@
+import { useState } from "react";
 import Card from "@/components/ui/Card";
+import ConfirmAlert from "@/components/ui/ConfirmAlert";
 
 import { useTeacherAssign } from "@/features/admin/teacher-assign/hooks/useTeacherAssign";
-
 import { useDeleteTeacherAssign } from "@/features/admin/teacher-assign/hooks/useDeleteTeacherAssign";
+
 type TeacherAssignTableProps = {
   search: string;
 };
@@ -11,8 +13,8 @@ export default function TeacherAssignTable({
   search,
 }: TeacherAssignTableProps) {
   const { data: assign = [], isLoading, isError } = useTeacherAssign();
-
   const deleteAssignMutation = useDeleteTeacherAssign();
+  const [assignToDelete, setAssignToDelete] = useState<string | null>(null);
 
   const filteredAssign = assign.filter(
     (assign) =>
@@ -88,15 +90,7 @@ export default function TeacherAssignTable({
                 <button
                   type="button"
                   disabled={deleteAssignMutation.isPending}
-                  onClick={() => {
-                    const confirmed = window.confirm(
-                      "Are you sure you want to delete this teacher assignment?",
-                    );
-
-                    if (confirmed) {
-                      deleteAssignMutation.mutate(assign.id);
-                    }
-                  }}
+                  onClick={() => setAssignToDelete(assign.id)}
                   className="
     text-danger
     transition
@@ -120,6 +114,23 @@ export default function TeacherAssignTable({
           )}
         </tbody>
       </table>
+
+      <ConfirmAlert
+        isOpen={assignToDelete !== null}
+        title="Delete Teacher Assignment"
+        message="Are you sure you want to delete this teacher assignment?"
+        confirmText="Delete"
+        cancelText="Cancel"
+        isLoading={deleteAssignMutation.isPending}
+        onCancel={() => setAssignToDelete(null)}
+        onConfirm={() => {
+          if (assignToDelete) {
+            deleteAssignMutation.mutate(assignToDelete, {
+              onSuccess: () => setAssignToDelete(null),
+            });
+          }
+        }}
+      />
     </Card>
   );
 }

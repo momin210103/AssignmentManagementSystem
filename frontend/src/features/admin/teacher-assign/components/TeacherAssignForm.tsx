@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import Alert from "@/components/ui/Alert";
 import Button from "@/components/ui/Button";
+import Toast from "@/components/ui/Toast";
 
 import { useTeachers } from "../../teachers/hooks/useTeachers";
 import { useClasses } from "../../classes/hooks/useClasses";
@@ -23,6 +26,9 @@ export default function TeacherAssignForm({
   onSuccess,
   onCancel,
 }: TeacherAssigntFormProps) {
+  const [formError, setFormError] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -39,17 +45,18 @@ export default function TeacherAssignForm({
   const createAssignmentMutation = useCreateTeacherAssignment();
 
   const onSubmit = async (data: TeacherAssignmentFormData) => {
+    setFormError(null);
     try {
       await createAssignmentMutation.mutateAsync(data);
 
-      alert("Teacher assigned successfully.");
+      setToastMessage("Teacher assigned successfully.");
 
       reset();
       onSuccess();
     } catch (error) {
       console.error(error);
 
-      alert("Failed to assign teacher.");
+      setFormError("Failed to assign teacher.");
     }
   };
 
@@ -57,6 +64,8 @@ export default function TeacherAssignForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      {toastMessage && <Toast message={toastMessage} type="success" />}
+      {formError && <Alert message={formError} />}
       {/* Teacher */}
       <div className="space-y-2">
         <label className="text-sm font-medium text-text-primary">Teacher</label>
