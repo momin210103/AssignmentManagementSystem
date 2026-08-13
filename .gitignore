@@ -480,3 +480,13 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+
+wwwroot/uploads/submissions
+!wwwroot/uploads/submissions/.gitkeep
+
+**/appsettings.json
+**/appsettings.Development.json
+
+# Keep example configuration
+!**/appsettings.example.json
