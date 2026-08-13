@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Eye, EyeOff } from "lucide-react";
 
 import Alert from "@/components/ui/Alert";
 import Button from "@/components/ui/Button";
@@ -34,6 +35,7 @@ export default function TeacherForm({
   const isEdit = !!teacher;
   const [formError, setFormError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -123,10 +125,20 @@ export default function TeacherForm({
 
       {!isEdit && (
         <Input
-          type="password"
+          type={showPassword ? "text" : "password"}
           label="Password"
           placeholder="********"
           error={errors.password?.message}
+          rightElement={
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="text-text-muted hover:text-text-primary p-1 transition"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          }
           {...register("password")}
         />
       )}
