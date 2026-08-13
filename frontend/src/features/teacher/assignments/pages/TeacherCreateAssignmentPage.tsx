@@ -1,15 +1,31 @@
 import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Card from "@/components/ui/Card";
+import Toast from "@/components/ui/Toast";
 
 import CreateAssignmentForm from "../components/CreateAssignmentForm";
 
 export default function CreateAssignmentPage() {
   const navigate = useNavigate();
 
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+
+  const showToast = (message: string, type: "success" | "error") => {
+    setToast({ message, type });
+
+    setTimeout(() => setToast(null), 3000);
+  };
+
   return (
     <div className="space-y-5 sm:space-y-6">
+      {/* Toast */}
+      {toast && <Toast message={toast.message} type={toast.type} />}
+
       {/* Header */}
       <div className="flex items-start gap-3 sm:gap-4">
         <button
@@ -51,7 +67,10 @@ export default function CreateAssignmentPage() {
       {/* Form */}
       <Card className="w-full p-4 sm:p-6 lg:max-w-3xl">
         <CreateAssignmentForm
-          onSuccess={() => navigate("/teacher/assignments")}
+          onSuccess={() => {
+            showToast("Assignment created successfully.", "success");
+            navigate("/teacher/assignments");
+          }}
           onCancel={() => navigate("/teacher/assignments")}
         />
       </Card>

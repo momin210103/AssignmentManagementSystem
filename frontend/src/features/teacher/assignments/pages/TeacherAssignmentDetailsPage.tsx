@@ -11,9 +11,11 @@ import {
   Users,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
 
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import ConfirmAlert from "@/components/ui/ConfirmAlert";
 
 import { useGetAssignmentById } from "../hooks/useGetAssignmentById";
 import { usePublishAssignment } from "@/features/teacher/assignments/hooks/usePublishAssignment";
@@ -24,11 +26,23 @@ export default function TeacherAssignmentDetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
-  const { data: assignment, isLoading, isError } = useGetAssignmentById(id ?? "");
+  const {
+    data: assignment,
+    isLoading,
+    isError,
+  } = useGetAssignmentById(id ?? "");
 
   const publishMutation = usePublishAssignment();
   const unpublishMutation = useUnpublishAssignment();
   const deleteMutation = useDeleteAssignment();
+
+  // Confirm dialog state (must be declared unconditionally)
+  const [confirm, setConfirm] = useState<{
+    isOpen: boolean;
+    title?: string;
+    message: string;
+    action?: "publish" | "unpublish" | "delete";
+  }>({ isOpen: false, message: "" });
 
   if (isLoading) {
     return (
@@ -64,39 +78,71 @@ export default function TeacherAssignmentDetailsPage() {
   const deadline = new Date(assignment.deadline);
 
   const handlePublish = () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to publish this assignment?",
-    );
-
-    if (!confirmed) return;
-
-    publishMutation.mutate(assignment.id);
+    setConfirm({
+      isOpen: true,
+      title: "Publish assignment",
+      message: "Are you sure you want to publish this assignment?",
+      action: "publish",
+    });
   };
 
   const handleUnpublish = () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to unpublish this assignment?",
-    );
-
-    if (!confirmed) return;
-
-    unpublishMutation.mutate(assignment.id);
+    setConfirm({
+      isOpen: true,
+      title: "Unpublish assignment",
+      message: "Are you sure you want to unpublish this assignment?",
+      action: "unpublish",
+    });
   };
 
   const handleDelete = () => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${assignment.title}"?`,
-    );
-
-    if (!confirmed) return;
-
-    deleteMutation.mutate(assignment.id, {
-      onSuccess: () => navigate("/teacher/assignments"),
+    setConfirm({
+      isOpen: true,
+      title: "Delete assignment",
+      message: `Are you sure you want to delete "${assignment.title}"?`,
+      action: "delete",
     });
+  };
+
+  const handleConfirm = () => {
+    if (!confirm.action) return;
+
+    if (confirm.action === "publish") {
+      publishMutation.mutate(assignment.id, {
+        onSuccess: () => setConfirm((c) => ({ ...c, isOpen: false })),
+      });
+      return;
+    }
+
+    if (confirm.action === "unpublish") {
+      unpublishMutation.mutate(assignment.id, {
+        onSuccess: () => setConfirm((c) => ({ ...c, isOpen: false })),
+      });
+      return;
+    }
+
+    if (confirm.action === "delete") {
+      deleteMutation.mutate(assignment.id, {
+        onSuccess: () => navigate("/teacher/assignments"),
+      });
+      return;
+    }
   };
 
   return (
     <div className="mx-auto max-w-8xl space-y-4 sm:space-y-6">
+      <ConfirmAlert
+        isOpen={confirm.isOpen}
+        title={confirm.title}
+        message={confirm.message}
+        isLoading={
+          (confirm.action === "publish" && publishMutation.isPending) ||
+          (confirm.action === "unpublish" && unpublishMutation.isPending) ||
+          (confirm.action === "delete" && deleteMutation.isPending)
+        }
+        onConfirm={handleConfirm}
+        onCancel={() => setConfirm((c) => ({ ...c, isOpen: false }))}
+      />
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
