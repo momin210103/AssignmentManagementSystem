@@ -10,11 +10,17 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import Toast from "@/components/ui/Toast";
 
 import { useCreateSubmission } from "../../submissions/hooks/useCreateSubmission";
 import { useMySubmissions } from "../../submissions/hooks/useMySubmissions";
 import { useResubmitSubmission } from "../../submissions/hooks/useResubmitSubmission";
 import { useUploadSubmissionFile } from "../../submissions/hooks/useUploadSubmissionFile";
+
+type ToastState = {
+  message: string;
+  type: "success" | "error";
+} | null;
 
 export default function StudentAssignmentSubmitPage() {
   const navigate = useNavigate();
@@ -23,6 +29,7 @@ export default function StudentAssignmentSubmitPage() {
   const [answer, setAnswer] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [toast, setToast] = useState<ToastState>(null);
 
   const { data: submissions = [] } = useMySubmissions();
 
@@ -43,6 +50,21 @@ export default function StudentAssignmentSubmitPage() {
       setAnswer(submission.answer);
     }
   }, [submission]);
+
+  // Auto-dismiss the toast, and leave the page after a successful submit
+  useEffect(() => {
+    if (!toast) return;
+
+    const timer = setTimeout(() => {
+      setToast(null);
+
+      if (toast.type === "success") {
+        navigate(`/student/assignments/${id}/details`);
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [toast, navigate, id]);
 
   const isSubmitted = !!submission;
   const isReadOnly = isSubmitted && !isEditing;
@@ -76,7 +98,10 @@ export default function StudentAssignmentSubmitPage() {
           fileUrl,
         });
 
-        window.alert("Assignment resubmitted successfully.");
+        setToast({
+          message: "Assignment resubmitted successfully.",
+          type: "success",
+        });
       }
       // Create new submission
       else {
@@ -86,18 +111,20 @@ export default function StudentAssignmentSubmitPage() {
           fileUrl,
         });
 
-        window.alert("Assignment submitted successfully.");
+        setToast({
+          message: "Assignment submitted successfully.",
+          type: "success",
+        });
       }
-
-      navigate(`/student/assignments/${id}/details`);
     } catch (error) {
       console.error("SUBMISSION ERROR:", error);
 
-      window.alert(
-        isEditing
+      setToast({
+        message: isEditing
           ? "Failed to resubmit assignment."
           : "Failed to submit assignment.",
-      );
+        type: "error",
+      });
     }
   };
 
@@ -201,7 +228,7 @@ export default function StudentAssignmentSubmitPage() {
               {/* Existing File - View Mode */}
               {isReadOnly && submission?.fileUrl && (
                 <a
-                  href={submittedFileUrl ?? '#'}
+                  href={submittedFileUrl ?? "#"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="
@@ -486,6 +513,9 @@ export default function StudentAssignmentSubmitPage() {
           </Card>
         </div>
       </div>
+
+      {/* Toast — replaces window.alert */}
+      {toast && <Toast message={toast.message} type={toast.type} />}
     </div>
   );
 }
