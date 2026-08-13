@@ -6,12 +6,12 @@ export const DEMO_ACCOUNTS = [
   },
   {
     role: "Teacher",
-    email: "teacher1@gmail.com",
+    email: "sarah.ahmed@gmail.com",
     password: "Teacher@123",
   },
   {
     role: "Student",
-    email: "student1@gmail.com",
+    email: "rakib.hossain@gmail.com",
     password: "Student@123",
   },
 ];
