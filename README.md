@@ -217,6 +217,19 @@ cd backend
 dotnet test
 ```
 
+### Seed Data
+
+The project includes seeders for initial application data, including:
+
+- User roles
+- Demo users
+- Classes
+- Subjects
+- Student-class assignments
+- Application settings
+
+Seed data is automatically initialized when the API starts.
+
 ## Demo Credentials
 
 The application automatically creates demo users when the API starts with a fresh database.
