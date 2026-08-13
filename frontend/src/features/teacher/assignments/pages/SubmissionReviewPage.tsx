@@ -1,9 +1,10 @@
 import { ArrowLeft, FileText } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import Toast from "@/components/ui/Toast";
 
 import { useGradeSubmission } from "../hooks/useGradeSubmission";
 import type { AssignmentSubmission } from "../types/submission";
@@ -11,6 +12,11 @@ import type { AssignmentSubmission } from "../types/submission";
 type LocationState = {
   submission?: AssignmentSubmission;
 };
+
+type ToastState = {
+  message: string;
+  type: "success" | "error";
+} | null;
 
 export default function SubmissionReviewPage() {
   const navigate = useNavigate();
@@ -20,8 +26,24 @@ export default function SubmissionReviewPage() {
 
   const [marks, setMarks] = useState(submission?.marks?.toString() ?? "");
   const [feedback, setFeedback] = useState(submission?.feedback ?? "");
+  const [toast, setToast] = useState<ToastState>(null);
 
   const gradeMutation = useGradeSubmission();
+
+  // Auto-dismiss the toast, and leave the page after a successful grade
+  useEffect(() => {
+    if (!toast) return;
+
+    const timer = setTimeout(() => {
+      setToast(null);
+
+      if (toast.type === "success" && submission) {
+        navigate(`/teacher/assignments/${submission.assignmentId}/submissions`);
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [toast, navigate, submission]);
 
   if (!submission) {
     return (
@@ -54,8 +76,16 @@ export default function SubmissionReviewPage() {
       },
       {
         onSuccess: () => {
-          window.alert("Submission graded successfully.");
-          navigate(`/teacher/assignments/${submission.assignmentId}/submissions`);
+          setToast({
+            message: "Submission graded successfully.",
+            type: "success",
+          });
+        },
+        onError: () => {
+          setToast({
+            message: "Failed to grade submission. Please try again.",
+            type: "error",
+          });
         },
       },
     );
@@ -267,6 +297,9 @@ export default function SubmissionReviewPage() {
           </Card>
         </div>
       </div>
+
+      {/* Toast — replaces window.alert */}
+      {toast && <Toast message={toast.message} type={toast.type} />}
     </div>
   );
 }
