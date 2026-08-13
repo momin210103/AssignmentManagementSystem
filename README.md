@@ -68,6 +68,30 @@ The system provides separate functionality for three roles:
 - React Router
 - Lucide React
 
+## Project Architecture
+
+The project follows a structured architecture for both the backend and frontend.
+
+### Backend
+
+The backend follows Clean Architecture principles with separate API, Application, Domain, and Infrastructure layers.
+
+Detailed backend architecture documentation is available in:
+
+```text
+docs/
+└── backend-architecture.md
+```
+
+### Frontend
+
+The frontend is built with React and TypeScript and follows a hybrid role-based and feature-based architecture.
+Detailed frontend architecture is available in:
+
+```text
+docs/frontend-architecture.md
+```
+
 ## Prerequisites
 
 Before running the project, make sure the following software is installed.

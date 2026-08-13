@@ -4,9 +4,7 @@
 
 **Version:** 1.0
 
-**Status:** ✅ Frozen
-
-**Last Updated:** 2026-08-07
+**Last Updated:** 2026-08-13
 
 ---
 
@@ -29,96 +27,130 @@ This architecture is considered **frozen** for this project and should not be mo
 - React Hook Form
 - Zod
 - Tailwind CSS
-- shadcn/ui
+
 
 ---
 
 # Folder Structure
 
 ```text
-frontend/
-│
-├── public/
-│
-├── src/
-│   │
-│   ├── app/
-│   │   ├── App.tsx
-│   │   ├── main.tsx
-│   │   └── providers.tsx
-│   │
-│   ├── api/
-│   │   ├── axios.ts
-│   │   ├── endpoints.ts
-│   │   └── interceptors.ts
-│   │
-│   ├── assets/
-│   │   ├── images/
-│   │   ├── icons/
-│   │   └── logo/
-│   │
-│   ├── components/
-│   │   ├── common/
-│   │   ├── layout/
-│   │   └── ui/
-│   │
-│   ├── features/
-│   │   │
-│   │   ├── auth/
-│   │   │
-│   │   ├── admin/
-│   │   │   ├── dashboard/
-│   │   │   ├── students/
-│   │   │   ├── teachers/
-│   │   │   ├── subjects/
-│   │   │   ├── classrooms/
-│   │   │   ├── teacher-assignment/
-│   │   │   └── profile/
-│   │   │
-│   │   ├── teacher/
-│   │   │   ├── dashboard/
-│   │   │   ├── assignments/
-│   │   │   ├── submissions/
-│   │   │   ├── grading/
-│   │   │   └── profile/
-│   │   │
-│   │   └── student/
-│   │       ├── dashboard/
-│   │       ├── assignments/
-│   │       ├── submissions/
-│   │       └── profile/
-│   │
-│   ├── hooks/
-│   │
-│   ├── layouts/
-│   │   ├── AuthLayout.tsx
-│   │   ├── AdminLayout.tsx
-│   │   ├── TeacherLayout.tsx
-│   │   └── StudentLayout.tsx
-│   │
-│   ├── routes/
-│   │   ├── index.tsx
-│   │   ├── ProtectedRoute.tsx
-│   │   ├── RoleGuard.tsx
-│   │   ├── AdminRoutes.tsx
-│   │   ├── TeacherRoutes.tsx
-│   │   └── StudentRoutes.tsx
-│   │
-│   ├── constants/
-│   │
-│   ├── types/
-│   │
-│   ├── utils/
-│   │
-│   ├── lib/
-│   │
-│   └── styles/
-│
-├── .env.example
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-└── README.md
+src
+├── api
+├── app
+├── assets
+│   ├── icons
+│   ├── images
+│   └── logo
+├── components
+│   ├── common
+│   ├── layout
+│   └── ui
+├── constants
+├── contexts
+├── features
+│   ├── admin
+│   │   ├── assignments
+│   │   │   ├── components
+│   │   │   ├── hooks
+│   │   │   ├── pages
+│   │   │   ├── services
+│   │   │   └── types
+│   │   ├── classes
+│   │   │   ├── components
+│   │   │   ├── hooks
+│   │   │   ├── pages
+│   │   │   ├── services
+│   │   │   └── types
+│   │   ├── dashboard
+│   │   │   ├── components
+│   │   │   ├── hooks
+│   │   │   ├── pages
+│   │   │   └── services
+│   │   ├── profile
+│   │   ├── settings
+│   │   │   ├── components
+│   │   │   ├── hooks
+│   │   │   ├── pages
+│   │   │   ├── services
+│   │   │   └── types
+│   │   ├── students
+│   │   │   ├── components
+│   │   │   ├── hooks
+│   │   │   ├── pages
+│   │   │   ├── schemas
+│   │   │   ├── services
+│   │   │   └── types
+│   │   ├── subjects
+│   │   │   ├── components
+│   │   │   ├── hooks
+│   │   │   ├── pages
+│   │   │   └── services
+│   │   ├── submissions
+│   │   │   ├── components
+│   │   │   ├── hooks
+│   │   │   ├── pages
+│   │   │   └── services
+│   │   ├── teacher-assign
+│   │   │   ├── components
+│   │   │   ├── hooks
+│   │   │   ├── pages
+│   │   │   └── services
+│   │   └── teachers
+│   │       ├── components
+│   │       ├── hooks
+│   │       ├── pages
+│   │       ├── schemas
+│   │       ├── services
+│   │       └── types
+│   ├── auth
+│   │   ├── api
+│   │   ├── components
+│   │   ├── hooks
+│   │   ├── pages
+│   │   ├── types
+│   │   ├── utils
+│   │   └── validation
+│   ├── profile
+│   │   ├── hooks
+│   │   ├── services
+│   │   └── types
+│   ├── student
+│   │   ├── assignments
+│   │   │   ├── hooks
+│   │   │   ├── pages
+│   │   │   ├── services
+│   │   │   └── types
+│   │   ├── dashboard
+│   │   │   ├── components
+│   │   │   └── pages
+│   │   ├── profile
+│   │   └── submissions
+│   │       ├── hooks
+│   │       ├── pages
+│   │       ├── services
+│   │       └── types
+│   └── teacher
+│       ├── assignments
+│       │   ├── components
+│       │   ├── hooks
+│       │   ├── pages
+│       │   ├── schemas
+│       │   ├── services
+│       │   └── types
+│       ├── dashboard
+│       │   ├── components
+│       │   └── pages
+│       ├── grading
+│       ├── profile
+│       └── submissions
+│           ├── components
+│           ├── hooks
+│           ├── services
+│           └── types
+├── hooks
+├── layouts
+├── routes
+└── types
 ```
 
 ---
@@ -335,7 +367,6 @@ Examples:
 - chat
 - analytics
 
-No existing folder structure should be modified.
 
 ---
 
