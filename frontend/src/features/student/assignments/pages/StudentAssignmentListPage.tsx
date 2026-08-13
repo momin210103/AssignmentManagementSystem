@@ -106,13 +106,18 @@ export default function StudentAssignmentListPage() {
             );
 
             const isSubmitted = !!submission;
-
             const isReviewed = submission?.status === "Reviewed";
-
             const isDeadlinePassed =
               new Date(assignment.deadline).getTime() < currentTime;
-
             const canResubmit = isSubmitted && !isReviewed && !isDeadlinePassed;
+
+            const buttonLabel = canResubmit
+              ? "Resubmit Assignment"
+              : isSubmitted
+                ? "View Assignment"
+                : isDeadlinePassed
+                  ? "View Assignment"
+                  : "Submit Assignment";
 
             return (
               <Card key={assignment.id} className="flex flex-col p-5">
@@ -177,6 +182,23 @@ export default function StudentAssignmentListPage() {
                     >
                       {isSubmitted ? "Submitted" : "Not Yet Submitted"}
                     </span>
+
+                    {/* Resubmit Badge */}
+                    {canResubmit && (
+                      <span
+                        className="
+                          rounded-full
+                          bg-info/10
+                          px-3
+                          py-1
+                          text-xs
+                          font-semibold
+                          text-info
+                        "
+                      >
+                        Resubmission Open
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -220,7 +242,7 @@ export default function StudentAssignmentListPage() {
                       navigate(`/student/assignments/${assignment.id}/details`)
                     }
                   >
-                    View Assignment
+                    {buttonLabel}
                   </Button>
                 </div>
               </Card>

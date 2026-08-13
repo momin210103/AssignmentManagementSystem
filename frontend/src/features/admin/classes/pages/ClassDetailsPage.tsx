@@ -2,7 +2,6 @@ import { ArrowLeft, Trash2, Users } from "lucide-react";
 import { useNavigate, useParams, } from "react-router-dom";
 import { useState } from "react";
 
-import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import ConfirmAlert from "@/components/ui/ConfirmAlert";
 import Toast from "@/components/ui/Toast";

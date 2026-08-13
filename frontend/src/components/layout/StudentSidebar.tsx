@@ -1,5 +1,4 @@
 import {
-  BookOpen,
   ClipboardCheck,
   ClipboardList,
   GraduationCap,

@@ -1,4 +1,4 @@
-import { BookOpen, ClipboardList, GraduationCap, Users } from "lucide-react";
+import { BookOpen, ClipboardList, GraduationCap} from "lucide-react";
 import { useMemo } from "react";
 
 import Card from "@/components/ui/Card";

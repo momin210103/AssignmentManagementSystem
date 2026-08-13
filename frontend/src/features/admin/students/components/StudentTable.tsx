@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import Card from "@/components/ui/Card";
 
 import { useStudents } from "../hooks/useStudents";
-import type { Student } from "../services/studentApi";
 
 type StudentTableProps = {
   search: string;

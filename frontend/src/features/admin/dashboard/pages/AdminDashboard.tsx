@@ -1,11 +1,10 @@
 import { BookOpen, ClipboardList, GraduationCap, Users } from "lucide-react";
 
 import StatCard from "../components/StatCard";
-import RecentAssignments from "../components/RecentAssignments";
 import { useDashboardSummary } from "../hooks/useDashboardSummary";
 
 export default function AdminDashboard() {
-  const { data: summary, isLoading, isError } = useDashboardSummary();
+  const { data: summary } = useDashboardSummary();
   console.log("summary", summary);
   return (
     <div className="space-y-6 sm:space-y-8">

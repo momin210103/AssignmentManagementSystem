@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Card from "@/components/ui/Card";
 
 import { useTeachers } from "../hooks/useTeachers";
-import type { Teacher } from "../types/teacher";
+// import type { Teacher } from "../types/teacher";
 
 type TeacherTableProps = {
   search: string;

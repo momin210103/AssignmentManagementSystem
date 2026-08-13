@@ -208,7 +208,6 @@ export default function TeacherAssignmentSubmissionsPage() {
                   <td className="px-5 py-4 text-right">
                     <Button
                       type="button"
-                      size="sm"
                       leftIcon={<Eye size={16} />}
                       onClick={() =>
                         navigate(
@@ -304,7 +303,6 @@ export default function TeacherAssignmentSubmissionsPage() {
               <div className="border-t border-border p-4">
                 <Button
                   type="button"
-                  size="sm"
                   leftIcon={<Eye size={16} />}
                   className="w-full"
                   onClick={() =>

@@ -80,11 +80,11 @@ export default function StudentAssignmentDetailsPage() {
     navigate(`/student/assignments/${assignment.id}/submit`);
   };
 
-  const handleViewSubmission = () => {
-    if (!submission) return;
+  // const handleViewSubmission = () => {
+  //   if (!submission) return;
 
-    navigate(`/student/submissions/${submission.id}`);
-  };
+  //   navigate(`/student/submissions/${submission.id}`);
+  // };
 
   return (
     <div className="mx-auto max-w-8xl space-y-4 sm:space-y-6">
