@@ -3,6 +3,7 @@ import { Trash2 } from "lucide-react";
 
 import Card from "@/components/ui/Card";
 import ConfirmAlert from "@/components/ui/ConfirmAlert";
+import Toast from "@/components/ui/Toast";
 
 import { useSubjects } from "../hooks/useSubjects";
 import { useDeleteSubject } from "../hooks/useDeleteSubject";
@@ -17,6 +18,7 @@ export default function SubjectTable({ search }: SubjectTableProps) {
     id: string;
     name: string;
   } | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const filteredSubjects = subjects.filter((subject) =>
     subject.name.toLowerCase().includes(search.toLowerCase()),
@@ -124,11 +126,16 @@ export default function SubjectTable({ search }: SubjectTableProps) {
         onConfirm={() => {
           if (subjectToDelete) {
             deleteSubjectMutation.mutate(subjectToDelete.id, {
-              onSuccess: () => setSubjectToDelete(null),
+              onSuccess: () => {
+                setSubjectToDelete(null);
+                setToastMessage("Subject deleted successfully.");
+                setTimeout(() => setToastMessage(null), 3000);
+              },
             });
           }
         }}
       />
+      {toastMessage && <Toast message={toastMessage} type="success" />}
     </Card>
   );
 }

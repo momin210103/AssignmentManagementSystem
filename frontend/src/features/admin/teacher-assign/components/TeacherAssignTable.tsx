@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Card from "@/components/ui/Card";
 import ConfirmAlert from "@/components/ui/ConfirmAlert";
+import Toast from "@/components/ui/Toast";
 
 import { useTeacherAssign } from "@/features/admin/teacher-assign/hooks/useTeacherAssign";
 import { useDeleteTeacherAssign } from "@/features/admin/teacher-assign/hooks/useDeleteTeacherAssign";
@@ -15,6 +16,7 @@ export default function TeacherAssignTable({
   const { data: assign = [], isLoading, isError } = useTeacherAssign();
   const deleteAssignMutation = useDeleteTeacherAssign();
   const [assignToDelete, setAssignToDelete] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const filteredAssign = assign.filter(
     (assign) =>
@@ -126,11 +128,16 @@ export default function TeacherAssignTable({
         onConfirm={() => {
           if (assignToDelete) {
             deleteAssignMutation.mutate(assignToDelete, {
-              onSuccess: () => setAssignToDelete(null),
+              onSuccess: () => {
+                setAssignToDelete(null);
+                setToastMessage("Teacher assignment deleted successfully.");
+                setTimeout(() => setToastMessage(null), 3000);
+              },
             });
           }
         }}
       />
+      {toastMessage && <Toast message={toastMessage} type="success" />}
     </Card>
   );
 }

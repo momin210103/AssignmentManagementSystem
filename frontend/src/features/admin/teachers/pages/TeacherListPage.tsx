@@ -1,30 +1,29 @@
 import { useState } from "react";
 
 import Modal from "@/components/ui/Modal";
+import Toast from "@/components/ui/Toast";
 
 import TeacherForm from "../components/TeacherForm";
 import TeacherTable from "../components/TeacherTable";
 import TeacherToolbar from "../components/TeacherToolbar";
-import type { Teacher } from "../types/teacher";
 
 export default function TeacherListPage() {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
-  const [selectedTeacher, setSelectedTeacher] = useState<Teacher | undefined>();
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const handleAddTeacher = () => {
-    setSelectedTeacher(undefined);
-    setOpen(true);
-  };
-
-  const handleEditTeacher = (teacher: Teacher) => {
-    setSelectedTeacher(teacher);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedTeacher(undefined);
+  };
+
+  const handleSuccess = () => {
+    setOpen(false);
+    setToastMessage("Teacher saved successfully!");
+    setTimeout(() => setToastMessage(null), 3000);
   };
 
   return (
@@ -35,19 +34,19 @@ export default function TeacherListPage() {
         onAddTeacher={handleAddTeacher}
       />
 
-      <TeacherTable search={search} onEditTeacher={handleEditTeacher} />
+      <TeacherTable search={search} />
 
       <Modal
         isOpen={open}
-        title={selectedTeacher ? "Edit Teacher" : "Add Teacher"}
+        title="Add Teacher"
         onClose={handleClose}
       >
         <TeacherForm
-          teacher={selectedTeacher}
-          onSuccess={handleClose}
+          onSuccess={handleSuccess}
           onCancel={handleClose}
         />
       </Modal>
+      {toastMessage && <Toast message={toastMessage} type="success" />}
     </div>
   );
 }

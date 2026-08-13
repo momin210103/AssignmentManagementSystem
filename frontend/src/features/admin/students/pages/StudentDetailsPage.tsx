@@ -13,6 +13,7 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import ConfirmAlert from "@/components/ui/ConfirmAlert";
 import Modal from "@/components/ui/Modal";
+import Toast from "@/components/ui/Toast";
 
 import StudentForm from "../components/StudentForm";
 import { useDeleteStudent } from "../hooks/useDeleteStudent";
@@ -27,6 +28,7 @@ export default function StudentDetailsPage() {
 
   const [open, setOpen] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const { data: students = [], isLoading, isError } = useStudents();
 
@@ -36,6 +38,12 @@ export default function StudentDetailsPage() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleEditSuccess = () => {
+    setOpen(false);
+    setToastMessage("Student details updated successfully.");
+    setTimeout(() => setToastMessage(null), 3000);
   };
 
   const handleDelete = () => {
@@ -256,7 +264,7 @@ export default function StudentDetailsPage() {
       <Modal isOpen={open} title="Edit Student" onClose={handleClose}>
         <StudentForm
           student={student}
-          onSuccess={handleClose}
+          onSuccess={handleEditSuccess}
           onCancel={handleClose}
         />
       </Modal>
@@ -271,6 +279,7 @@ export default function StudentDetailsPage() {
         onCancel={() => setConfirmDeleteOpen(false)}
         onConfirm={handleConfirmDelete}
       />
+      {toastMessage && <Toast message={toastMessage} type="success" />}
     </div>
   );
 }

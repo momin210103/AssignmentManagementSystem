@@ -1,13 +1,14 @@
 import { ArrowLeft, Trash2, Users } from "lucide-react";
 import { useNavigate, useParams, } from "react-router-dom";
+import { useState } from "react";
 
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import ConfirmAlert from "@/components/ui/ConfirmAlert";
+import Toast from "@/components/ui/Toast";
 
 import { useRemoveStudentFromClass } from "../hooks/useRemoveStudentFromClass";
 import { useStudentsByClass } from "../hooks/useStudentsByClass";
-import ConfirmAlert from "@/components/ui/ConfirmAlert";
-import { useState } from "react";
 
 export default function ClassDetailsPage() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function ClassDetailsPage() {
     id: string;
     name: string;
   } | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const { classId } = useParams<{
     classId: string;
@@ -39,6 +41,8 @@ export default function ClassDetailsPage() {
       {
         onSuccess: () => {
           setStudentToRemove(null);
+          setToastMessage("Student removed from class successfully.");
+          setTimeout(() => setToastMessage(null), 3000);
         },
       },
     );
@@ -268,6 +272,7 @@ export default function ClassDetailsPage() {
         }}
         onConfirm={handleRemoveStudent}
       />
+      {toastMessage && <Toast message={toastMessage} type="success" />}
     </div>
   );
 }
