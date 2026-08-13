@@ -22,7 +22,7 @@ export default function Topbar({ isSidebarOpen, onMenuClick }: Props) {
       "
     >
       <div className="flex min-w-0 flex-1 items-center gap-3">
-        {/* Sidebar toggle — visible only below lg */}
+        {/* Sidebar toggle */}
         <button
           type="button"
           onClick={onMenuClick}
@@ -51,25 +51,28 @@ export default function Topbar({ isSidebarOpen, onMenuClick }: Props) {
           )}
         </button>
 
-        {/* Search */}
+        {/* Search - Disabled */}
         <div className="relative w-full max-w-md">
           <Search
             size={18}
             className="
+              pointer-events-none
               absolute
               left-4
               top-1/2
               -translate-y-1/2
-              text-text-muted
+              text-text-disabled
             "
           />
 
           <input
             type="text"
             placeholder="Search..."
+            disabled
             className="
               h-11
               w-full
+              cursor-not-allowed
               rounded-xl
               border
               border-input-border
@@ -77,11 +80,10 @@ export default function Topbar({ isSidebarOpen, onMenuClick }: Props) {
               pl-11
               pr-4
               text-sm
-              text-text-primary
+              text-text-disabled
               outline-none
-              transition-all
-              focus:border-primary
-              focus:bg-surface
+              placeholder:text-text-disabled
+              opacity-60
             "
           />
         </div>
@@ -89,26 +91,27 @@ export default function Topbar({ isSidebarOpen, onMenuClick }: Props) {
 
       {/* Right */}
       <div className="flex shrink-0 items-center gap-4">
-        {/* Notification */}
+        {/* Notification - Disabled */}
         <button
           type="button"
+          disabled
           className="
             relative
             flex
             h-11
             w-11
+            cursor-not-allowed
             items-center
             justify-center
             rounded-xl
             border
             border-border
             bg-surface
-            transition
-            hover:bg-background
+            opacity-50
           "
-          title="Notifications"
+          title="Notifications unavailable"
         >
-          <Bell size={20} className="text-text-secondary" />
+          <Bell size={20} className="text-text-disabled" />
 
           <span
             className="
@@ -118,7 +121,7 @@ export default function Topbar({ isSidebarOpen, onMenuClick }: Props) {
               h-2
               w-2
               rounded-full
-              bg-danger
+              bg-text-disabled
             "
           />
         </button>
