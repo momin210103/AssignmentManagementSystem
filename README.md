@@ -42,6 +42,23 @@ The system provides separate functionality for three roles:
 - View marks
 - View teacher feedback
 
+## 🚀 Live Deployment
+
+| Service           | URL                                                  |
+| ----------------- | ---------------------------------------------------- |
+| Frontend          | https://assignmentmanagementsystem-t11y.onrender.com |
+| Backend API       | https://ams-web-api.onrender.com                     |
+| API Documentation | https://ams-web-api.onrender.com/swagger             |
+| Database          | PostgreSQL (Neon)                                    |
+
+### Deployment Stack
+
+- **Frontend:** React + TypeScript + Vite
+- **Backend:** ASP.NET Core Web API (.NET 10)
+- **Database:** PostgreSQL (Neon)
+- **Backend Deployment:** Render
+- **Containerization:** Docker
+
 ## Technology Stack
 
 ### Backend
