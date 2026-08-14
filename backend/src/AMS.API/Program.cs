@@ -133,11 +133,17 @@ using (var scope = app.Services.CreateScope())
     await ApplicationSettingsSeeder.SeedAsync(scope.ServiceProvider);
 }
 
-if (app.Environment.IsDevelopment())
+app.MapGet("/", () => Results.Ok(new
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    message = "Assignment Management System API is running.",
+}));
+
+
+//? Enable Swagger for all live production and development environments
+app.UseSwagger();
+app.UseSwaggerUI();
+
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
