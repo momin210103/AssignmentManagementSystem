@@ -269,6 +269,7 @@ The application automatically creates demo users when the API starts with a fres
 
 ## Known Limitations
 
+- In frontend Navbar, Topbar (search and notifications) and Footer components now disable for not implemented. It will be implemented in future.
 - The application is primarily configured for local development and demonstration.
 - Production deployment configuration is not included.
 - Production secrets must be configured separately.
