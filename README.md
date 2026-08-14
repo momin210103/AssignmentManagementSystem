@@ -143,6 +143,7 @@ backend/src/AMS.API/
 ```
 
 Update the connection string in `appsettings.json` (or `appsettings.Development.json`) to match your local PostgreSQL configuration.
+and see my `appsettings.example.json` for reference.`
 
 ### 3. Apply Database Migrations
 
@@ -198,7 +199,7 @@ The frontend will be available at:
 http://localhost:5173/
 ```
 
-.env file in the frontend directory should contain the backend API URL:
+.env file `see .env.example as reference` in the frontend directory should contain the backend API URL:
 
 ```text
 VITE_API_BASE_URL=http://localhost:5175/api
