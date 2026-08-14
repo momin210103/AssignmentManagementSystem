@@ -18,12 +18,16 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// Configure CORS to allow requests from the frontend
+var frontendUrl = builder.Configuration["FrontendUrl"]
+    ?? throw new InvalidOperationException(
+        "FrontendUrl configuration is missing.");
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173")
+            .WithOrigins(frontendUrl)
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
